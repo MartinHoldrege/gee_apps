@@ -13,11 +13,35 @@ var figp = require("users/MartinHoldrege/gee_apps:src/fig_params.js");
 // params ---------------------------------------------------------------------------------
 
 var path = 'projects/ee-martinholdrege/assets/misc/newRR3/'; // where images are read in from
-var fontText = '10px'; // font size for general descriptions etc. 
 
+// visualization params
+var visT1 = figp.visT1;
+var visT2 = figp.visT2;
+var visT3 = figp.visT3;
+
+var testRun = true; // fewer images displayed for test run
 // read in layers ---------------------------------------------------------------------------
 
 var mask = ee.Image(path + 'negMask');
+
+// note--this list of image names and visparms was created in 00_newRR_file-name_lists.R
+// and then pasted here
+// these file names are used to read in images below, an
+var imageNamesL = ['Resist-cats_2064-2099-RCP85', 'Resist-cont_2064-2099-RCP85', 'Resil-cats_2064-2099-RCP85', 
+'Resil-cont_2064-2099-RCP85', 'Resist-cont_2064-2099-RCP85-delta', 'Resil-cont_2064-2099-RCP85-delta', 
+'Resist-cats_2029-2064-RCP85', 'Resist-cont_2029-2064-RCP85', 'Resil-cats_2029-2064-RCP85', 'Resil-cont_2029-2064-RCP85',
+'Resist-cont_2029-2064-RCP85-delta', 'Resil-cont_2029-2064-RCP85-delta', 'Resist-cats_2064-2099-RCP45', 
+'Resist-cont_2064-2099-RCP45', 'Resil-cats_2064-2099-RCP45', 'Resil-cont_2064-2099-RCP45', 'Resist-cont_2064-2099-RCP45-delta', 
+'Resil-cont_2064-2099-RCP45-delta', 'Resist-cats_2029-2064-RCP45', 'Resist-cont_2029-2064-RCP45', 'Resil-cats_2029-2064-RCP45', 
+'Resil-cont_2029-2064-RCP45', 'Resist-cont_2029-2064-RCP45-delta', 'Resil-cont_2029-2064-RCP45-delta', 'Resist-cats_1980-2020-Ambient',
+'Resist-cont_1980-2020-Ambient', 'Resil-cats_1980-2020-Ambient', 'Resil-cont_1980-2020-Ambient'];
+
+var visParamsL = [visT2, visT1, visT2, visT1, visT3, visT3, visT2, visT1, visT2, visT1, visT3, visT3, visT2, visT1, visT2, visT1, 
+visT3, visT3, visT2, visT1, visT2, visT1, visT3, visT3, visT2, visT1, visT2, visT1];
+
+if (testRun) {
+  var imageNamesL = imageNamesL.slice(0, 3);
+}
 
 // for testing
 var imagetype1 = ee.Image(path + 'Resil-cats_2029-2064-RCP45');
@@ -48,13 +72,13 @@ var styleHeader = {fontSize: '15px', fontWeight: 'bold'};
 //App title
 var title = ui.Label('Resistance and Resilience Projections', {fontSize: '18px', fontWeight: 'bold', color: '4A997E'});
 
-//3.2) Create a panel to hold text
+// Create a panel to hold text
 var panel = ui.Panel({
   widgets:[title],//Adds header and text
-  style:{width: '300px',position:'middle-left'}});
+  style:{width: '250px',position:'middle-left'}});
 
 
-//This creates another panel to house a line separator and instructions for the user
+// text for the main panel
 
 // first paragraph
 var par1 = 'This app visualizes the impacts of projected future climate on' +
@@ -67,8 +91,9 @@ var par2 = 'Data shown here are available from https://doi.org/10.5066/P928Y2GF.
 'Published article with further details is available from XXX.';
 
 // how to use
-var howTo = 'Select layer(s) to view from the dropdown "Layers" menu.' +
-    'Note, by default the mask is selected so that only projections from sagebrush rangelands are shown.'
+var howTo = 'Select layer(s) to view from the dropdown "Layers" menu. ' +
+    'Note, by default the mask is selected so that only projections from' +
+    ' sagebrush rangelands are shown, and other areas are covered.';
 
 // abbrevations
 var abbrev = 'resil = ecological resilience indicator;' + 
@@ -120,10 +145,25 @@ var description = ui.Panel([
 //Add this new panel to the larger panel we created 
 panel.add(description);
 
-//3.4) Add our main panel to the root of our GUI
-// ui.root.insert(1,panel);
+// Add our main panel to the root of our GUI
+ui.root.insert(1,panel);
 
-// create panel for legends -------------------------------
+// add legends  -------------------------------
 
-//map.add(figp.legendRr)
-// ui.root.insert(1, figp.legendRr)
+map.add(figp.legendsRr);
+
+
+///////////////////////////////////////////////////////////////
+//      add maps                                            //
+///////////////////////////////////////////////////////////////
+
+for (var i = 0; i < imageNamesL.length; i++) {
+  var imageName = imageNamesL[i];
+  var vis = visParamsL[i];
+  
+  var image = ee.Image(path + imageName);
+  map.addLayer(image, vis, imageName, false);
+
+}
+
+map.addLayer(mask, {palette: 'white'}, 'negative mask', true);
