@@ -77,11 +77,7 @@ var abbrev = 'resil = ecological resilience indicator;' +
 'H+MH = medium-high to high); RCP = representative concentration pathway;' + 
 ' delta = difference between projected future R&R and historical reference.';
 
-var emptyLine =  ui.Label({
-    value: '            ',
-    style: styleText,
-  });
-  
+
 var description = ui.Panel([
   ui.Label({
     value:'Description',
@@ -122,13 +118,12 @@ var description = ui.Panel([
 ]);
 
 //Add this new panel to the larger panel we created 
-panel.add(description)
-  .add(figp.legendT1);
+panel.add(description);
 
 //3.4) Add our main panel to the root of our GUI
-ui.root.insert(1,panel);
+// ui.root.insert(1,panel);
 
 // create panel for legends -------------------------------
 
-var legends = ui.Panel({
-  style:{width: '300px',position:'middle-left'}}).add(figp.legendT1);
+//map.add(figp.legendRr)
+// ui.root.insert(1, figp.legendRr)
