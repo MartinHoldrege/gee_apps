@@ -7,7 +7,7 @@
 */
 
 // dependencies --------------------------------------------------------------------------
-ui.root.clear(); // for testing
+
 var figf = require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
 // color palettes, see https://github.com/gee-community/ee-palettes
 var palettes = require('users/gena/packages:palettes');
@@ -52,7 +52,7 @@ var emptyLine = {
 
 var legends = ui.Panel({
   style: {
-    position: 'bottom-right',
+    position: 'bottom-left',
     padding: '6px 6px'
   }
 });
@@ -81,13 +81,11 @@ legends.add(ui.Label(emptyLine));
 var legends = figf.makeVisParamsRampLegend(legends, visT3, 'Delta R&R');
 // exports.legendT3 = legendT3;
 
-exports.legendsRr = legends
+exports.legendsRr = legends;
 
 // testing -------------------------------------
-
-
-
-/*var map = ui.Map();
-
+/*print(legends)
+var map = ui.Map();
+ui.root.clear(); // for testing
 ui.root.add(map);
 map.add(legends)*/
