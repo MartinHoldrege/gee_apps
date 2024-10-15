@@ -74,11 +74,10 @@ exports.makeVisParamsRampLegend = function(existing_panel, visParams, title) {
       value: title,
       style: {
         fontWeight: 'bold',
-        fontSize: '10px',
+        fontSize: '11px',
         margin: '0 0 4px 0',
-        padding: '0',
-        textAlign: 'center'
-        }
+        padding: '0'
+    }
   }))
     .add(panel2)
     .add(thumb);
