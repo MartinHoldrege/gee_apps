@@ -8,6 +8,7 @@ Started: October 14, 2024
 
 // dependencies -----------------------------------------------------------------------------
 
+var figp = require("users/MartinHoldrege/gee_apps:src/fig_params.js");
 
 // params ---------------------------------------------------------------------------------
 
@@ -50,7 +51,7 @@ var title = ui.Label('Resistance and Resilience Projections', {fontSize: '18px',
 //3.2) Create a panel to hold text
 var panel = ui.Panel({
   widgets:[title],//Adds header and text
-  style:{width: '400px',position:'middle-right'}});
+  style:{width: '300px',position:'middle-left'}});
 
 
 //This creates another panel to house a line separator and instructions for the user
@@ -62,7 +63,7 @@ var par1 = 'This app visualizes the impacts of projected future climate on' +
 'climate-sensitive predictors of climate and ecological drought.';
 
 // 2nd paragraph
-var par2 = 'Data are available from https://doi.org/10.5066/P928Y2GF. ' + 
+var par2 = 'Data shown here are available from https://doi.org/10.5066/P928Y2GF. ' + 
 'Published article with further details is available from XXX.';
 
 // how to use
@@ -122,8 +123,12 @@ var description = ui.Panel([
 
 //Add this new panel to the larger panel we created 
 panel.add(description)
+  .add(figp.legendT1);
 
 //3.4) Add our main panel to the root of our GUI
-ui.root.insert(1,panel)
+ui.root.insert(1,panel);
 
+// create panel for legends -------------------------------
 
+var legends = ui.Panel({
+  style:{width: '300px',position:'middle-left'}}).add(figp.legendT1);
