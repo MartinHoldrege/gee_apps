@@ -75,7 +75,7 @@ exports.makeVisParamsRampLegend = function(existing_panel, visParams, title) {
       style: {
         fontWeight: 'bold',
         fontSize: '11px',
-        margin: '0 0 4px 0',
+        margin: '0 0 2px 0',
         padding: '0'
     }
   }))
