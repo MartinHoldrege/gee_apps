@@ -50,7 +50,7 @@ var emptyLine = {
     style: {fontSize: '6px'},
   };
 
-var panel = ui.Panel({
+var legends = ui.Panel({
   style: {
     position: 'bottom-right',
     padding: '6px 6px'
@@ -58,7 +58,7 @@ var panel = ui.Panel({
 });
 
 // continous RR legend
-var panel = figf.makeVisParamsRampLegend(panel, visT1, 'Continuous R&R');
+var legends = figf.makeVisParamsRampLegend(legends, visT1, 'Continuous R&R');
 
 // categorical RR legend (i.e., type 2 colors)
 
@@ -69,25 +69,25 @@ var legendTitleT2 = ui.Label({
 });
  
 // Add the title to the panel
-panel.add(ui.Label(emptyLine)).add(legendTitleT2);
+legends.add(ui.Label(emptyLine)).add(legendTitleT2);
 // Add color and and names
 for (var i = 0; i < rrT2Palette.length; i++) {
-  panel.add(figf.makeRow(rrT2Palette[i], rrT2Names[i]));
+  legends.add(figf.makeRow(rrT2Palette[i], rrT2Names[i]));
   }  
  
 
 // delta R&R
-panel.add(ui.Label(emptyLine));
-var panel = figf.makeVisParamsRampLegend(panel, visT3, 'Delta R&R');
+legends.add(ui.Label(emptyLine));
+var legends = figf.makeVisParamsRampLegend(legends, visT3, 'Delta R&R');
 // exports.legendT3 = legendT3;
 
-exports.legendsRr = panel
+exports.legendsRr = legends
 
 // testing -------------------------------------
 
-/*
 
-var map = ui.Map();
+
+/*var map = ui.Map();
 
 ui.root.add(map);
-map.add(panel)*/
+map.add(legends)*/
