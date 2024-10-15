@@ -15,7 +15,7 @@ exports.makeRow = function(color, name) {
         style: {
           backgroundColor: color,
           // Use padding to give the box height and width.
-          padding: '4px',
+          padding: '6px',
           margin: '0 0 1px 0'
         }
       });
