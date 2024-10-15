@@ -7,7 +7,7 @@
 */
 
 // dependencies --------------------------------------------------------------------------
-
+ui.root.clear(); // for testing
 var figf = require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
 // color palettes, see https://github.com/gee-community/ee-palettes
 var palettes = require('users/gena/packages:palettes');
@@ -42,23 +42,29 @@ var styleLegendTitle = {
     fontSize: '11px',
     margin: '0 0 4px 0',
     padding: '0'
-    }
+    };
     
+var emptyLine =  ui.Label({
+    value: '            ',
+    style: {fontSize: '6px'},
+  });
+    
+var panel = ui.Panel({
+  style: {
+    position: 'bottom-left',
+    padding: '6px 6px'
+  }
+});
 // continous RR legend
-var legendT1 = figf.makeVisParamsRampLegend(ui.Panel(), visT1, 'Continuous R&R')
-exports.legendT1 = legendT1;
+var panel = figf.makeVisParamsRampLegend(panel, visT1, 'Continuous R&R');
+panel.add(emptyLine)
+
+// exports.legendT1 = legendT1;
 
 
 // categorical RR legend (i.e., type 2 colors)
 
-// set position of panel
-var legendT2 = ui.Panel({
-  style: {
-    position: 'bottom-left',
-    padding: '5px 5px'
-  }
-});
- 
+
 // Create legend title
 var legendTitleT2 = ui.Label({
   value: 'Categorical R&R',
@@ -66,26 +72,26 @@ var legendTitleT2 = ui.Label({
 });
  
 // Add the title to the panel
-legendT2.add(legendTitleT2);
+panel.add(legendTitleT2);
 // Add color and and names
 for (var i = 0; i < rrT2Palette.length; i++) {
-  legendT2.add(figf.makeRow(rrT2Palette[i], rrT2Names[i]));
+  panel.add(figf.makeRow(rrT2Palette[i], rrT2Names[i]));
   }  
  
-exports.legendT2 = legendT2;
+//exports.legendT2 = legendT2;
 
 // delta R&R
-
-var legendT3 = figf.makeVisParamsRampLegend(ui.Panel(), visT3, 'Delta R&R');
-exports.legendT3 = legendT3;
+panel.add(emptyLine);
+var panel = figf.makeVisParamsRampLegend(panel, visT3, 'Delta R&R');
+// exports.legendT3 = legendT3;
 
 
 
 // testing -------------------------------------
 
-/*ui.root.clear();
+
 
 var map = ui.Map();
 
-ui.root.add(map);
-map.add(legendT2).add(legendT1).add(legendT3)*/
+// ui.root.add(map);
+map.add(panel)
