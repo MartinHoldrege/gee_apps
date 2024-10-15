@@ -56,15 +56,11 @@ var panel = ui.Panel({
     padding: '6px 6px'
   }
 });
+
 // continous RR legend
 var panel = figf.makeVisParamsRampLegend(panel, visT1, 'Continuous R&R');
-// panel.add(emptyLine)
-
-// exports.legendT1 = legendT1;
-
 
 // categorical RR legend (i.e., type 2 colors)
-
 
 // Create legend title
 var legendTitleT2 = ui.Label({
@@ -79,20 +75,19 @@ for (var i = 0; i < rrT2Palette.length; i++) {
   panel.add(figf.makeRow(rrT2Palette[i], rrT2Names[i]));
   }  
  
-//exports.legendT2 = legendT2;
 
 // delta R&R
 panel.add(ui.Label(emptyLine));
 var panel = figf.makeVisParamsRampLegend(panel, visT3, 'Delta R&R');
 // exports.legendT3 = legendT3;
 
-
+exports.legendsRr = panel
 
 // testing -------------------------------------
 
-
+/*
 
 var map = ui.Map();
 
 ui.root.add(map);
-map.add(panel)
+map.add(panel)*/
