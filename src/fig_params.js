@@ -9,6 +9,8 @@
 // dependencies --------------------------------------------------------------------------
 
 var figf = require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
+// color palettes, see https://github.com/gee-community/ee-palettes
+var palettes = require('users/gena/packages:palettes');
 
 // colors ---------------------------------------------------------------------------------
 
@@ -18,7 +20,11 @@ var rrT2Names = ['L', 'ML', 'M', 'H+MH'];
 
 // mapping visualizing elements -----------------------------------------------------------
 
-exports.visT2 = {"opacity":1,"min":1,"max":4, "palette":rrT2Palette};
+
+exports.visT1 = {"min":-1, max: 1, "palette": palettes.matplotlib.viridis[7]}; // type 1
+exports.visT2 = {"opacity":1,"min":1,"max":4, "palette":rrT2Palette}; // type 2
+// purple white green
+exports.visT3 = {"opacity":1,"min":-1,"max":1, "palette": palettes.matplotlib.colorbrewer.PRGn[7]}; // type 3
 
 // building legends ------------------------------------------------------------------------
 
@@ -29,13 +35,13 @@ exports.visT2 = {"opacity":1,"min":1,"max":4, "palette":rrT2Palette};
 var legendT2 = ui.Panel({
   style: {
     position: 'bottom-left',
-    padding: '8px 12px'
+    padding: '5px 5px'
   }
 });
  
 // Create legend title
 var legendTitleT2 = ui.Label({
-  value: 'Categorical',
+  value: 'Category',
   style: {
     fontWeight: 'bold',
     fontSize: '11px',
@@ -53,7 +59,16 @@ for (var i = 0; i < rrT2Palette.length; i++) {
  
 exports.legendT2 = legendT2;
 
+// Continuous RR legend 
+
+
+
+
 // testing -------------------------------------
 
+ui.root.clear();
+
 var map = ui.Map();
+
+ui.root.add(map);
 map.add(legendT2)
