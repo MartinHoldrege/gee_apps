@@ -43,21 +43,22 @@ var styleLegendTitle = {
     margin: '0 0 4px 0',
     padding: '0'
     };
-    
-var emptyLine =  ui.Label({
+ 
+// no wrapping in 'ui.label' so can't reuse and not get 'component already rendered' error   
+var emptyLine = {
     value: '            ',
     style: {fontSize: '6px'},
-  });
-    
+  };
+
 var panel = ui.Panel({
   style: {
-    position: 'bottom-left',
+    position: 'bottom-right',
     padding: '6px 6px'
   }
 });
 // continous RR legend
 var panel = figf.makeVisParamsRampLegend(panel, visT1, 'Continuous R&R');
-panel.add(emptyLine)
+// panel.add(emptyLine)
 
 // exports.legendT1 = legendT1;
 
@@ -72,7 +73,7 @@ var legendTitleT2 = ui.Label({
 });
  
 // Add the title to the panel
-panel.add(legendTitleT2);
+panel.add(ui.Label(emptyLine)).add(legendTitleT2);
 // Add color and and names
 for (var i = 0; i < rrT2Palette.length; i++) {
   panel.add(figf.makeRow(rrT2Palette[i], rrT2Names[i]));
@@ -81,7 +82,7 @@ for (var i = 0; i < rrT2Palette.length; i++) {
 //exports.legendT2 = legendT2;
 
 // delta R&R
-panel.add(emptyLine);
+panel.add(ui.Label(emptyLine));
 var panel = figf.makeVisParamsRampLegend(panel, visT3, 'Delta R&R');
 // exports.legendT3 = legendT3;
 
@@ -93,5 +94,5 @@ var panel = figf.makeVisParamsRampLegend(panel, visT3, 'Delta R&R');
 
 var map = ui.Map();
 
-// ui.root.add(map);
+ui.root.add(map);
 map.add(panel)
