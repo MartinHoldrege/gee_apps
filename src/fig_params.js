@@ -6,6 +6,10 @@
   Started: Oct 14, 2024
 */
 
+// dependencies --------------------------------------------------------------------------
+
+var figf = require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
+
 // colors ---------------------------------------------------------------------------------
 
 // type 2 RR colors (i.e categorical RR)
@@ -19,8 +23,6 @@ exports.visT2 = {"opacity":1,"min":1,"max":4, "palette":rrT2Palette};
 // building legends ------------------------------------------------------------------------
 
 
- 
- 
 // categorical RR legend (i.e., type 2 colors)
 
 // set position of panel
@@ -45,8 +47,13 @@ var legendTitleT2 = ui.Label({
 // Add the title to the panel
 legendT2.add(legendTitleT2);
 // Add color and and names
-for (var i = 0; i < c9Palette.length; i++) {
-  legendT2.add(makeRow(rrT2Palette[i], rrT2Names[i]));
+for (var i = 0; i < rrT2Palette.length; i++) {
+  legendT2.add(figf.makeRow(rrT2Palette[i], rrT2Names[i]));
   }  
  
 exports.legendT2 = legendT2;
+
+// testing -------------------------------------
+
+var map = ui.Map();
+map.add(legendT2)
