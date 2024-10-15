@@ -8,7 +8,7 @@ Description: functions for visualizations
 
 
 // Creates and styles 1 row of the legend.
-var makeRow = function(color, name) {
+exports.makeRow = function(color, name) {
  
       // Create the label that is actually the colored box.
       var colorBox = ui.Label({
