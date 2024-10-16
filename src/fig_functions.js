@@ -41,11 +41,21 @@ exports.makeRow = function(color, name) {
  * @param {ui.panel} existing_panel to add new panel additions to (this panel specificies the location)
  * @param {vizParams} dictionary containing min, max and palette
  * @param {string} legend title
+ * @param {label1} (optional) label for left of color bar
+ * @param {label2} (optional) label for right of color bar
  * @return {ui} ui object that 
  */
-exports.makeVisParamsRampLegend = function(existing_panel, visParams, title) {
+exports.makeVisParamsRampLegend = function(existing_panel, visParams, title, label1, label2) {
   var min = visParams.min;
   var max = visParams.max;
+  
+  if (label1 === undefined || label1 === null){
+    var label1 = min;
+  }
+  
+  if (label2 === undefined || label2 === null){
+    var label2 = max;
+  }
   var lon = ee.Image.pixelLonLat().select('longitude');
   var gradient = lon.multiply((max - min)/100.0).add(min);
   var legendImage = gradient.visualize(visParams);
@@ -60,9 +70,9 @@ exports.makeVisParamsRampLegend = function(existing_panel, visParams, title) {
 
   var panel2 = ui.Panel({
     widgets: [
-      ui.Label(min),
+      ui.Label(label1),
       ui.Label({style: {stretch: 'horizontal'}}),
-      ui.Label(max) 
+      ui.Label(label2) 
       ],
     layout: ui.Panel.Layout.flow('horizontal'),
     style: {stretch: 'horizontal', maxWidth: '270px', padding: '0px 0px 0px 0px'}
