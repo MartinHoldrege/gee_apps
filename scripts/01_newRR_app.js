@@ -19,7 +19,7 @@ var visT1 = figp.visT1;
 var visT2 = figp.visT2;
 var visT3 = figp.visT3;
 
-var testRun = true; // fewer images displayed for test run
+var testRun = false; // fewer images displayed for test run
 // read in layers ---------------------------------------------------------------------------
 
 var mask = ee.Image(path + 'negMask');
@@ -42,11 +42,6 @@ visT3, visT3, visT2, visT1, visT2, visT1, visT3, visT3, visT2, visT1, visT2, vis
 if (testRun) {
   var imageNamesL = imageNamesL.slice(0, 3);
 }
-
-// for testing
-var imagetype1 = ee.Image(path + 'Resil-cats_2029-2064-RCP45');
-var imagetype2 = ee.Image(path + 'Resil-cont_2029-2064-RCP45');
-var imagetype3 = ee.Image(path + 'Resil-cont_2029-2064-RCP45-delta');
 
 // setup ---------------------------------------------------
 
@@ -92,7 +87,7 @@ var par2 = 'Data shown here are available from https://doi.org/10.5066/P928Y2GF.
 
 // how to use
 var howTo = 'Select layer(s) to view from the dropdown "Layers" menu. ' +
-    'Note, by default the mask is selected so that only projections from' +
+    'Note, by default the mask layer is selected so that only projections from' +
     ' sagebrush rangelands are shown, and other areas are covered.';
 
 // abbrevations
@@ -161,8 +156,14 @@ for (var i = 0; i < imageNamesL.length; i++) {
   var imageName = imageNamesL[i];
   var vis = visParamsL[i];
   
+  // by default have one layer display
+  if(imageName == 'Resil-cats_1980-2020-Ambient') {
+    var shown =true;
+  } else {
+    var shown = false;
+  }
   var image = ee.Image(path + imageName);
-  map.addLayer(image, vis, imageName, false);
+  map.addLayer(image, vis, imageName, shown);
 
 }
 
