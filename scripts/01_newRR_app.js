@@ -77,13 +77,13 @@ var panel = ui.Panel({
 
 // first paragraph
 var par1 = 'This app visualizes the impacts of projected future climate on' +
-' resistance to cheatgrass invasion and ecological resilience (R&R) in the' + 
+' resistance to cheatgrass invasion and ecological resilience (R&R) in the ' + 
 'sagebrush region using algorithms based on ecologically relevant and ' + 
 'climate-sensitive predictors of climate and ecological drought.';
 
 // 2nd paragraph
 var par2 = 'Data shown here are available from https://doi.org/10.5066/P928Y2GF. ' + 
-'Published article with further details is available from XXX.';
+'Further details are available in Schlaepfer et al. (In press) (link TBD).';
 
 // how to use
 var howTo = 'Select layer(s) to view from the dropdown "Layers" menu. ' +
