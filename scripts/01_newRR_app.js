@@ -9,7 +9,7 @@ Started: October 14, 2024
 // dependencies -----------------------------------------------------------------------------
 
 var figp = require("users/MartinHoldrege/gee_apps:src/fig_params.js");
-
+var f = require("users/MartinHoldrege/gee_apps:src/general_functions.js");
 // params ---------------------------------------------------------------------------------
 
 var path = 'projects/ee-martinholdrege/assets/misc/newRR3/'; // where images are read in from
@@ -19,7 +19,7 @@ var visT1 = figp.visT1;
 var visT2 = figp.visT2;
 var visT3 = figp.visT3;
 
-var testRun = false; // fewer images displayed for test run
+var testRun = true; // fewer images displayed for test run
 // read in layers ---------------------------------------------------------------------------
 
 var mask = ee.Image(path + 'negMask');
@@ -59,8 +59,15 @@ map.centerObject(mask, 6);
 //      Set up panels and widgets for display             //
 ///////////////////////////////////////////////////////////////
 
-var styleText = {fontSize: '11px'};
+var styleText = {fontSize: '11px', margin: '10px 10px 10px 10px'};
 var styleHeader = {fontSize: '15px', fontWeight: 'bold'};
+
+var styleUrl = {
+  fontSize: '11px', 
+  color: 'blue', 
+  textDecoration: 'underline',
+  margin: '0px 10px 0px 10px'
+};
 
 //3.1) Set up title and summary widgets
 
@@ -82,8 +89,24 @@ var par1 = 'This app visualizes the impacts of projected future climate on' +
 'climate-sensitive predictors of climate and ecological drought.';
 
 // 2nd paragraph
-var par2 = 'Data shown here are available from https://doi.org/10.5066/P928Y2GF. ' + 
-'Further details are available in Schlaepfer et al. (In press) (link TBD).';
+var par2a =    ui.Label({
+    value: 'Data shown here are available from',
+    style: f.updateDict(styleText, 'margin', '10px 10px 0px 10px'), // no bottom margin
+  });
+
+var par2b =    ui.Label({
+    value: 'https://doi.org/10.5066/P928Y2GF.',
+    targetUrl: 'https://doi.org/10.5066/P928Y2GF',
+    style: styleUrl
+  });
+
+var par2 = ui.Panel({
+  widgets: [par2a, par2b],
+  layout: ui.Panel.Layout.Flow('vertical')
+});
+
+
+var par3 = ' Further details are available in Schlaepfer et al. (In press) (link TBD).';
 
 // how to use
 var howTo = 'Select layer(s) to view from the dropdown "Layers" menu. ' +
@@ -107,10 +130,7 @@ var description = ui.Panel([
     value: par1,
     style: styleText
   }),
-  ui.Label({
-    value: par2,
-    style: styleText
-  }),
+  par2a, par2b,
   ui.Label({
     value:'How to Use',
     style: styleHeader,
@@ -167,4 +187,4 @@ for (var i = 0; i < imageNamesL.length; i++) {
 
 }
 
-map.addLayer(mask, {palette: 'white'}, 'negative mask', true);
+map.addLayer(mask, {palette: 'white'}, 'mask non-sagebrush rangelands', true);
