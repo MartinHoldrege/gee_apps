@@ -19,7 +19,7 @@ var T1Palette = palettes.matplotlib.viridis[7];
 
 // type 2 RR colors (i.e categorical RR)
 var rrT2Palette = ['#D7191C', '#FDAE61', '#ABD9E9', '#2C7BB6']; 
-var rrT2Names = ['L', 'ML', 'M', 'H+MH'];
+var rrT2Names = ['Low', 'Medium-Low', 'Medium', 'Medium-High to High'];
 
 // type 3, delta rr
 var T3Palette = palettes.colorbrewer.PRGn[7]; // 
@@ -58,7 +58,7 @@ var legends = ui.Panel({
 });
 
 // continous RR legend
-var legends = figf.makeVisParamsRampLegend(legends, visT1, 'Continuous R&R');
+var legends = figf.makeVisParamsRampLegend(legends, visT1, 'Continuous R&R', 'Low', 'High');
 
 // categorical RR legend (i.e., type 2 colors)
 
@@ -78,14 +78,14 @@ for (var i = 0; i < rrT2Palette.length; i++) {
 
 // delta R&R
 legends.add(ui.Label(emptyLine));
-var legends = figf.makeVisParamsRampLegend(legends, visT3, 'Delta R&R');
+var legends = figf.makeVisParamsRampLegend(legends, visT3, 'Delta R&R', 'Decrease', 'Increase');
 // exports.legendT3 = legendT3;
 
 exports.legendsRr = legends;
 
 // testing -------------------------------------
-/*print(legends)
+//print(legends)
 var map = ui.Map();
 ui.root.clear(); // for testing
 ui.root.add(map);
-map.add(legends)*/
+map.add(legends)
