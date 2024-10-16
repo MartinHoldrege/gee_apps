@@ -61,7 +61,7 @@ exports.makeVisParamsRampLegend = function(existing_panel, visParams, title, lab
   var legendImage = gradient.visualize(visParams);
   var thumb = ui.Thumbnail({
     image: legendImage,
-    params: {bbox:'0,0,100,8', dimensions:'128x8'},
+    params: {bbox:'0,0,100,8', dimensions:'128x10'},
     style: {
       position: 'bottom-center',
       padding: '0px 0px 0px 0px'
@@ -89,7 +89,7 @@ exports.makeVisParamsRampLegend = function(existing_panel, visParams, title, lab
       style: {
         fontWeight: 'bold',
         fontSize: '11px',
-        margin: '0 0 2px 0',
+        margin: '0 0 4px 0',
         padding: '0'
     }
   }))
