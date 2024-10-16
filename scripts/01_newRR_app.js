@@ -58,7 +58,7 @@ map.centerObject(mask, 6);
 ///////////////////////////////////////////////////////////////
 //      Set up panels and widgets for display             //
 ///////////////////////////////////////////////////////////////
-
+var marginNoTB = '0px 10px 0px 10px'; // no top and bottom margines
 var styleText = {fontSize: '11px', margin: '10px 10px 10px 10px'};
 var styleHeader = {fontSize: '15px', fontWeight: 'bold'};
 
@@ -66,7 +66,7 @@ var styleUrl = {
   fontSize: '11px', 
   color: 'blue', 
   textDecoration: 'underline',
-  margin: '0px 10px 0px 10px'
+  margin: marginNoTB
 };
 
 //3.1) Set up title and summary widgets
@@ -91,7 +91,7 @@ var par1 = 'This app visualizes the impacts of projected future climate on' +
 // 2nd paragraph
 var par2a =    ui.Label({
     value: 'Data shown here are available from',
-    style: f.updateDict(styleText, 'margin', '10px 10px 0px 10px'), // no bottom margin
+    style: f.updateDict(styleText, 'margin', marginNoTB), // no bottom margin
   });
 
 var par2b =    ui.Label({
