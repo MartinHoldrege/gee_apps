@@ -84,8 +84,8 @@ var legends = figf.makeVisParamsRampLegend(legends, visT3, 'Delta R&R', 'Decreas
 exports.legendsRr = legends;
 
 // testing -------------------------------------
-//print(legends)
+/*//print(legends)
 var map = ui.Map();
 ui.root.clear(); // for testing
 ui.root.add(map);
-map.add(legends)
+map.add(legends)*/
