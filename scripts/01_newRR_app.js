@@ -100,13 +100,12 @@ var par2b =    ui.Label({
     style: styleUrl
   });
 
-var par2 = ui.Panel({
-  widgets: [par2a, par2b],
-  layout: ui.Panel.Layout.Flow('vertical')
-});
 
+var par3a = 'Further details about the research that developed these ' + 
+'projections can be found in Schlaepfer et al. (In press) (link TBD).';
 
-var par3 = ' Further details are available in Schlaepfer et al. (In press) (link TBD).';
+var par3b = 'Specific information about how the R&R algorithms themselves can ' +
+'be found in '; // put chambers link here
 
 // how to use
 var howTo = 'Select layer(s) to view from the dropdown "Layers" menu. ' +
