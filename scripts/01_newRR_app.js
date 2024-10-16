@@ -100,7 +100,7 @@ var par2b =    ui.Label({
     style: styleUrl
   });
 
-
+// CONTINUE HERE
 var par3a = 'Further details about the research that developed these ' + 
 'projections can be found in Schlaepfer et al. (In press) (link TBD).';
 
