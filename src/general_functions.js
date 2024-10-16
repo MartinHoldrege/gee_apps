@@ -5,8 +5,8 @@
 */
 
 
-// Function to copy the dictionary and update a key
-exports.copyAndUpdateDictfunction = function(originalDict, key, newValue) {
+// Function to copy the dictionary and update a key (i.e. not change in place)
+exports.updateDict = function(originalDict, key, newValue) {
   var newDict = {}; // Create an empty object
 
   // Copy all key-value pairs from the original dictionary to the new one
