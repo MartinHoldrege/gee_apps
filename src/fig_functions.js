@@ -89,7 +89,7 @@ exports.makeVisParamsRampLegend = function(existing_panel, visParams, title, lab
       style: {
         fontWeight: 'bold',
         fontSize: '11px',
-        margin: '0 0 4px 0',
+        margin: '0px 0px 4px 0px',
         padding: '0'
     }
   }))
