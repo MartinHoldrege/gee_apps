@@ -67,12 +67,14 @@ exports.makeVisParamsRampLegend = function(existing_panel, visParams, title, lab
       padding: '0px 0px 0px 0px'
     } 
   });
-
+  var styleLabel = {
+        fontSize: '10px'
+    };
   var panel2 = ui.Panel({
     widgets: [
-      ui.Label(label1),
+      ui.Label({value: label1, style: styleLabel}),
       ui.Label({style: {stretch: 'horizontal'}}),
-      ui.Label(label2) 
+      ui.Label({value: label2, style: styleLabel}) 
       ],
     layout: ui.Panel.Layout.flow('horizontal'),
     style: {stretch: 'horizontal', maxWidth: '270px', padding: '0px 0px 0px 0px'}
