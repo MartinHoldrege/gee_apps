@@ -68,7 +68,9 @@ exports.makeVisParamsRampLegend = function(existing_panel, visParams, title, lab
     } 
   });
   var styleLabel = {
-        fontSize: '10px'
+        fontSize: '10px',
+        margin: '0 0 0 0',
+        padding: '0'
     };
   var panel2 = ui.Panel({
     widgets: [
