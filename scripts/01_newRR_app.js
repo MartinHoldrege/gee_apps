@@ -132,7 +132,7 @@ var howTo = 'Select layer(s) to view from the dropdown "Layers" menu.' +
 
 // abbrevations --------------------------
 var abbrevExplain = ui.Label({
-    value: 'The components of the layer names describe what the layer represents:',
+    value: 'The components of the layer name describe what the layer represents:',
     style: f.updateDict(styleText, 'margin', marginNoT), // 
   });
 
