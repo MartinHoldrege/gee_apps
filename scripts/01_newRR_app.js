@@ -19,7 +19,7 @@ var visT1 = figp.visT1;
 var visT2 = figp.visT2;
 var visT3 = figp.visT3;
 
-var testRun = true; // fewer images displayed for test run
+var testRun = false; // fewer images displayed for test run
 // read in layers ---------------------------------------------------------------------------
 
 var mask = ee.Image(path + 'negMask');
