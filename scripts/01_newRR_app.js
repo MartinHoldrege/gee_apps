@@ -91,10 +91,13 @@ var panel = ui.Panel({
 // text for the main panel
 
 // first paragraph
-var par1 = 'This app visualizes the impacts of projected future climate on' +
-' resistance to cheatgrass invasion and ecological resilience (R&R) in the ' + 
-'sagebrush region using algorithms based on ecologically relevant and ' + 
-'climate-sensitive predictors of climate and ecological drought.';
+var par1 = 'This app visualizes where climate change alters the distribution of resistance to' +
+' cheatgrass invasion and ecological resilience (R&R) indicators in the sagebrush region' +
+' using algorithms based on ecologically relevant and climate-sensitive predictors of' +
+' climate and ecological drought. Overall, these results suggest widespread future' +
+' declines in R&R which highlight a growing challenge for natural resource managers' +
+' in the region. The spatially explicit datasets provide information that could be used' +
+' for long-term risk assessments, prioritizations, and climate adaptation efforts.';
 
 // 2nd paragraph
 var par2a =    ui.Label({
