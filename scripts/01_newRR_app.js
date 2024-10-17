@@ -58,18 +58,26 @@ map.centerObject(mask, 6);
 ///////////////////////////////////////////////////////////////
 //      Set up panels and widgets for display             //
 ///////////////////////////////////////////////////////////////
-var marginNoTB = '0px 10px 0px 10px'; // no top and bottom margines
-var styleText = {fontSize: '11px', margin: '10px 10px 10px 10px'};
+
+// style elements for text
+var mt = '10px'; var mr = ' 10px'; var mb = ' 10px'; var ml = ' 10px'; // top, right, bottom and left margins
+var margin = mt + mr + mb + ml;
+var marginNoTB = '0px' + mr + ' 0px' + ml; // no top and bottom margines
+var marginNoT = '0px' + mr + mb + ml; // no top  margin's
+var marginNoB = mt + mr + ' 0px' + ml; // no bottom  margin's
+var fontSizeText = '11px';
+var styleText = {fontSize: fontSizeText, margin: mt + mr + mb + ml};
+var styleTextNoTB =  f.updateDict(styleText, 'margin', marginNoTB);
 var styleHeader = {fontSize: '15px', fontWeight: 'bold'};
 
 var styleUrl = {
-  fontSize: '11px', 
+  fontSize: fontSizeText, 
   color: 'blue', 
   textDecoration: 'underline',
   margin: marginNoTB
 };
 
-//3.1) Set up title and summary widgets
+// Set up title and summary widgets
 
 //App title
 var title = ui.Label('Resistance and Resilience Projections', {fontSize: '18px', fontWeight: 'bold', color: '4A997E'});
@@ -77,7 +85,7 @@ var title = ui.Label('Resistance and Resilience Projections', {fontSize: '18px',
 // Create a panel to hold text
 var panel = ui.Panel({
   widgets:[title],//Adds header and text
-  style:{width: '250px',position:'middle-left'}});
+  style:{width: '300px',position:'middle-left'}});
 
 
 // text for the main panel
@@ -90,35 +98,71 @@ var par1 = 'This app visualizes the impacts of projected future climate on' +
 
 // 2nd paragraph
 var par2a =    ui.Label({
-    value: 'Data shown here are available from',
-    style: f.updateDict(styleText, 'margin', marginNoTB), // no bottom margin
+    value: 'Data shown are available from ScienceBase',
+    style: styleTextNoTB, // no bottom margin
   });
 
 var par2b =    ui.Label({
-    value: 'https://doi.org/10.5066/P928Y2GF.',
+    value: '(https://doi.org/10.5066/P928Y2GF).',
     targetUrl: 'https://doi.org/10.5066/P928Y2GF',
     style: styleUrl
   });
 
-// CONTINUE HERE
-var par3a = 'Further details about the research that developed these ' + 
-'projections can be found in Schlaepfer et al. (In press) (link TBD).';
+var par3a = ui.Label({
+    value: 'Further details about the research that developed these ' + 
+'projections are available in Schlaepfer et al. (In press) (link TBD).',
+    style: f.updateDict(styleText, 'margin', marginNoB), // no bottom margin
+  });
 
-var par3b = 'Specific information about how the R&R algorithms themselves can ' +
-'be found in '; // put chambers link here
+var par3b = ui.Label({
+    value: 'The R&R algorithms are described in Chambers et al. 2023' ,
+    style: styleTextNoTB, // no bottom margin
+  });
+  
+var chambersLink = ui.Label({
+    value: '(https://doi.org/10.3389/fevo.2022.1009268).',
+    targetUrl: 'https://doi.org/10.3389/fevo.2022.1009268',
+    style: f.updateDict(styleUrl, 'margin', marginNoT)
+  });
 
 // how to use
-var howTo = 'Select layer(s) to view from the dropdown "Layers" menu. ' +
-    'Note, by default the mask layer is selected so that only projections from' +
-    ' sagebrush rangelands are shown, and other areas are covered.';
+var howTo = 'Select layer(s) to view from the dropdown "Layers" menu.' + 
+' Note, by default the mask layer is selected so that only areas with' + 
+' sagebrush rangelands and open woodlands are shown, and other areas are covered.';
 
-// abbrevations
-var abbrev = 'resil = ecological resilience indicator;' + 
-' resist = invasion resistance indicator; cont = continuous R&R indicator;' + 
-' cats = categorical R&R indicator (L = low, ML = medium-low, M = medium, ' + 
-'H+MH = medium-high to high); RCP = representative concentration pathway;' + 
-' delta = difference between projected future R&R and historical reference.';
+// abbrevations --------------------------
+var abbrevExplain = ui.Label({
+    value: 'The components of the layer names describe what the layer represents:',
+    style: f.updateDict(styleText, 'margin', marginNoT), // 
+  });
 
+// bullets describing the abbreviation
+var bulletsText = [
+  'Ecological resilience (resil) or invasion resistance (resist)',
+  'Continuous (cont) or categorical (cats) R&R indicator',
+  'Time period (e.g., calendar years 1980-2020)',
+  'Ambient climate (ambient) or future projected climate based on two representative concentration pathways (RCP4.5, RCP8.5)',
+  'If present in the name, "Delta" indicates the layer shows the difference between projected future' +
+  ' R&R and historical reference (i.e., 1980-2020 ambient conditions)'
+  ];
+  
+var abbrevExample = ui.Label({
+    value: 'For example the "Resil-cats_2064-2099-RCP45" layer represents projections' +
+    ' of resilience, as a categorical variable, for the 2064-2099 time-period under the RCP4.5 emissions scenario.',
+    style: styleText 
+  });
+  
+var bulletsLabel = bulletsText.map(function(x) {
+  return ui.Label({
+    value: '• ' + x,
+    style: {fontSize: fontSizeText, margin: '0px' + mr + ' 0px 20px'},
+  });
+});
+
+var bulletsPanel = ui.Panel({
+  widgets: [abbrevExplain].concat(bulletsLabel).concat([abbrevExample]),
+  layout: ui.Panel.Layout.Flow('vertical')
+});
 
 var description = ui.Panel([
   ui.Label({
@@ -130,6 +174,7 @@ var description = ui.Panel([
     style: styleText
   }),
   par2a, par2b,
+  par3a, par3b, chambersLink,
   ui.Label({
     value:'How to Use',
     style: styleHeader,
@@ -138,21 +183,19 @@ var description = ui.Panel([
     value: howTo,
     style: styleText
   }),
-  ui.Label({
-    value:'Abbreviations',
-    style: styleHeader,
-  }),
-  ui.Label({
-    value: abbrev,
-    style: styleText
-  }),
+  bulletsPanel,
   ui.Label({
     value:'Disclaimer',
     style: styleHeader,
   }),
   ui.Label({
-    value: 'This app is not official and comes with absolutely no warranty.',
+    value: 'Although the data and article have been reviewed and published,' + 
+    ' this app is not official and comes with no warranty.',
     style: styleText
+  }),
+  ui.Label({
+    value: 'App created by Martin Holdrege',
+    style: {fontSize: '10px', margin: margin}
   }),
 ]);
 
