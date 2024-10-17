@@ -150,7 +150,7 @@ var bulletsText = [
   ];
   
 var abbrevExample = ui.Label({
-    value: 'For example the "Resil-cats_2064-2099-RCP45" layer represents projections' +
+    value: 'For example, the "Resil-cats_2064-2099-RCP45" layer represents projections' +
     ' of resilience, as a categorical variable, for the 2064-2099 time-period under the RCP4.5 emissions scenario.',
     style: styleText 
   });
