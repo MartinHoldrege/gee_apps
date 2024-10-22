@@ -6,25 +6,6 @@ Author: Martin Holdrege
 Started: October 14, 2024
 */
 
-// page tracking ---------------------------------------------------------------------
-// to see how many page views
-
-// Insert Google Analytics tracking script using ui.Label
-var trackingScript = ui.Label({
-  value: '<script async src="https://www.googletagmanager.com/gtag/js?id=G-WPQ7QZG05V"></script>' +
-  '<script>' +
-  'window.dataLayer = window.dataLayer || [];' +
-  'function gtag(){dataLayer.push(arguments);}' +
-  "gtag('js', new Date());" +
-
-  "gtag('config', 'G-WPQ7QZG05V');" +
-  '</script>',
-  style: {shown: false},  // Hide the label from the user
-  targetUrl: null
-});
-
-// Add the tracking script to the app's root
-ui.root.widgets().add(trackingScript);
 
 // dependencies -----------------------------------------------------------------------------
 
