@@ -112,8 +112,10 @@ var par2b =    ui.Label({
   });
 
 var par3a = ui.Label({
-    value: 'Further details about the research that developed these ' + 
-'projections are available in Schlaepfer et al. (In press) (link TBD).',
+    value: 'Further details about the research that developed these projections' + 
+    ' are available in Schlaepfer et al. (in press) Declining ecological' + 
+    ' resilience and invasion resistance under climate change in the sagebrush' + 
+    ' region, United States. Ecological Applications (link TBD).',
     style: f.updateDict(styleText, 'margin', marginNoB), // no bottom margin
   });
 
