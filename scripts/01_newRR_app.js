@@ -121,7 +121,7 @@ var par3a = ui.Label({
 
 var par3b = ui.Label({
     value: 'The R&R algorithms are described in Chambers et al. 2023' ,
-    style: styleTextNoTB, // no bottom margin
+    style: f.updateDict(styleText, 'margin', marginNoB), // no bottom margin
   });
   
 var chambersLink = ui.Label({
