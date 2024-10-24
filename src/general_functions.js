@@ -24,7 +24,7 @@ exports.updateDict = function(originalDict, key, newValue) {
 
 // takes a dictionary, and list of keys in that dictionary,
 // returns copy of dictionary with specified keys removed. 
-var updateDict = function(originalDict, keysToRemove) {
+exports.removeKeys = function(originalDict, keysToRemove) {
   var newDict = {}; // Create an empty object
 
   // Copy all key-value pairs from the original dictionary to the new one
