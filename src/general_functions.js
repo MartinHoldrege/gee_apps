@@ -22,6 +22,8 @@ exports.updateDict = function(originalDict, key, newValue) {
   return newDict;
 };
 
+
+
 // takes a dictionary, and list of keys in that dictionary,
 // returns copy of dictionary with specified keys removed. 
 exports.removeKeys = function(originalDict, keysToRemove) {
@@ -41,3 +43,21 @@ exports.removeKeys = function(originalDict, keysToRemove) {
 
   return newDict;
 };
+
+// determine if an item exists in a list
+var listIncludes = function(list, item) {
+  if (list.indexOf(item) !== -1) {
+    return true;
+  } else {
+    return false;
+  } 
+};
+
+exports.listIncludes = listIncludes;
+
+/*
+// Example:
+var x = ['a', 'b']
+print(listIncludes(x, 'b'))
+print(listIncludes(x, 'c'))
+*/
