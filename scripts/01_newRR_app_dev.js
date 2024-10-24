@@ -163,15 +163,15 @@ function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
           var availableScenarios = availableScenariosD[selections.varType] || Object.keys(scenarioD);
 
           // Update the items in the selectScenario dropdown
-          selectScenario.items().reset(availableScenarios);
+          selectScenario.items().reset(availableScenarios); // then re-fill
 
           // Reset to the first available scenario or the default one if available (this is an ifelse statement)
           var defaultScenarioForVar = f.listIncludes(availableScenarios, selections.scenario)
             ? selections.scenario // if true
             : availableScenarios[0]; // if false
-          selectScenario.setValue(defaultScenarioForVar, true);
+          // selectScenario.setValue(defaultScenarioForVar, true);
           selections.scenario = defaultScenarioForVar;
-
+          selectScenario.setValue(defaultScenarioForVar, true);  // Explicitly set the selected value in the dropdown
           // Update the map with the new selection
           updateMap();
       }
@@ -179,7 +179,8 @@ function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
     
     // Selector for scenario type
     var selectScenario = ui.Select({
-        items: availableScenariosD[defaultVarType] || Object.keys(scenarioD),
+        // items: availableScenariosD[defaultVarType] || Object.keys(scenarioD),
+        items: Object.keys(scenarioD),
         onChange: function(newScenarioSelection) {
             selections.scenario = newScenarioSelection;  // Update the scenario selection
             updateMap();  // Update the map with the current variable and scenario
@@ -200,77 +201,7 @@ function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
     mapToChange.add(controlPanel);
 }
 
-/*function addLayerSelectors(mapToChange, defaultScenario) {
-    var labelVar = ui.Label('Select Variable:');
-    var labelScenario = ui.Label('Select Climate Scenario:');
 
-    // This function changes the given map to show the selected image.
-    var updateMap = function(scenarioSelection) {
-      mapToChange.layers().set(0, getImage(defaultVarType, scenarioSelection));
-    };
-
-    // Configure a selection dropdown to allow the user to choose
-    // between images, and set the map to update when a user 
-    // makes a selection.
-    
-    // selector for variable type
-    // var selectVar = ui.Select({
-    //     items: Object.keys(varTypesD),
-    //     onChange: updateMap
-    // });
-    
-    // selector for scenario type
-    var selectScenario = ui.Select({
-        items: Object.keys(scenarioD),
-        onChange: updateMap
-    });
-    
-    // selectVar.setValue(defaultVarType, true);
-    selectScenario.setValue(defaultScenario, true);
-    
-    var controlPanel =
-        ui.Panel({
-            widgets: [labelScenario, selectScenario],
-            style: {
-                position: 'top-left'
-            }
-        });
-
-    mapToChange.add(controlPanel);
-}*/
-
-/*function addLayerSelectors(mapToChange, defaultVarType) {
-    var labelVar = ui.Label('Select Variable:');
-    var labelScenario = ui.Label('Select Climate Scenario:');
-
-    // This function changes the given map to show the selected image.
-    var updateMap = function(varSelection) {
-      mapToChange.layers().set(0, getImage(varSelection, defaultScenario));
-    };
-
-    // Configure a selection dropdown to allow the user to choose
-    // between images, and set the map to update when a user 
-    // makes a selection.
-    
-    // selector for variable type
-    var selectVar = ui.Select({
-        items: Object.keys(varTypesD),
-        onChange: updateMap
-    });
-    
-
-    selectVar.setValue(defaultVarType, true);
-
-    var controlPanel =
-        ui.Panel({
-            widgets: [labelVar, selectVar],
-            style: {
-                position: 'top-left'
-            }
-        });
-
-    mapToChange.add(controlPanel);
-}*/
 
 /*
   Setup interactive selectors
