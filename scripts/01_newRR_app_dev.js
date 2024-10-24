@@ -137,13 +137,17 @@ function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
     // between images, and set the map to update when a user 
     // makes a selection.
     
-       // Variables to store current selections
-    var currentVarSelection = defaultVarType;
-    var currentScenarioSelection = defaultScenario;
+    // Variables to store current selections
+    // using a dictionary that can be updated in child
+    // environments (so don't have scoping issues)
+    var selections = {
+        varType: defaultVarType,
+        scenario: defaultScenario
+    };
 
     // This function changes the map to show the selected image.
     var updateMap = function() {
-      mapToChange.layers().set(0, getImage(currentVarSelection, currentScenarioSelection));
+      mapToChange.layers().set(0, getImage(selections.varType, selections.scenario));
     };
 
     // Configure a selection dropdown to allow the user to choose
@@ -151,33 +155,33 @@ function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
 
     // Selector for variable type
     var selectVar = ui.Select({
-        items: Object.keys(varTypesD),
-        onChange: function(newVarSelection) {
-            currentVarSelection = newVarSelection;  // Update the variable selection
+      items: Object.keys(varTypesD),
+      onChange: function(newVarSelection) {
+          selections.varType = newVarSelection;  // Update the variable selection
 
-            // Update the available scenarios based on the selected variable
-            var availableScenarios = availableScenariosD[newVarSelection] || Object.keys(scenarioD);
+          // Update the available scenarios based on the selected variable
+          var availableScenarios = availableScenariosD[selections.varType] || Object.keys(scenarioD);
 
-            // Update the items in the selectScenario dropdown
-            selectScenario.items().reset(availableScenarios);
+          // Update the items in the selectScenario dropdown
+          selectScenario.items().reset(availableScenarios);
 
-            // Reset to the first available scenario or the default one if available (this is an ifelse statement)
-            var defaultScenarioForVar = f.listIncludes(availableScenarios, currentScenarioSelection)
-              ? currentScenarioSelection // if true
-              : availableScenarios[0]; // if false
-            selectScenario.setValue(defaultScenarioForVar, true);
-            currentScenarioSelection = defaultScenarioForVar;
+          // Reset to the first available scenario or the default one if available (this is an ifelse statement)
+          var defaultScenarioForVar = f.listIncludes(availableScenarios, selections.scenario)
+            ? selections.scenario // if true
+            : availableScenarios[0]; // if false
+          selectScenario.setValue(defaultScenarioForVar, true);
+          selections.scenario = defaultScenarioForVar;
 
-            // Update the map with the new selection
-            updateMap();
-        }
+          // Update the map with the new selection
+          updateMap();
+      }
     });
     
     // Selector for scenario type
     var selectScenario = ui.Select({
         items: availableScenariosD[defaultVarType] || Object.keys(scenarioD),
         onChange: function(newScenarioSelection) {
-            currentScenarioSelection = newScenarioSelection;  // Update the scenario selection
+            selections.scenario = newScenarioSelection;  // Update the scenario selection
             updateMap();  // Update the map with the current variable and scenario
         }
     });
