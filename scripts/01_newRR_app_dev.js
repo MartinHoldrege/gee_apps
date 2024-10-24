@@ -11,6 +11,7 @@ Started: October 14, 2024
 
 var figp = require("users/MartinHoldrege/gee_apps:src/fig_params.js");
 var f = require("users/MartinHoldrege/gee_apps:src/general_functions.js");
+
 // params ---------------------------------------------------------------------------------
 
 var path = 'projects/ee-martinholdrege/assets/misc/newRR3/'; // where images are read in from
@@ -24,7 +25,7 @@ var visT3 = figp.visT3; // type 3
 var defaultVarType = 'Resilience (categorical)';
 var defaultScenario = 'Ambient (1980-2020)';
 
-var testRun = true; // fewer images displayed for test run
+var testRun = false; // fewer images displayed for test run
 // read in layers ---------------------------------------------------------------------------
 
 var mask = ee.Image(path + 'negMask');
@@ -87,6 +88,15 @@ var scenarioD = {
   'RCP8.5 (2064-2099)': '2064-2099-RCP85'
 };
 
+var ambient = 'Ambient (1980-2020)';
+
+// some variable types can't take on all of the scenarios
+// (i.e. there is no delta layer for ambient conditions)
+var availableScenariosD = {
+  'Change in Resilience (continuous)': Object.keys(f.removeKeys(scenarioD, [ambient])),
+  'Change in Resistance (continuous)': Object.keys(f.removeKeys(scenarioD, [ambient]))
+};
+
 // dictionary of the visualization parameters
 var visParamsD = {
   'Resilience (categorical)': visT2,
@@ -108,115 +118,209 @@ var createRrImageName = function(varTypeName, scenarioName) {
   var scenario = scenarioD[scenarioName];
   return varType[0] + '_' + scenario + varType[1];
 };
-var varTypeName = defaultVarType;
-var scenarioName = defaultScenario;
-    var imageName = createRrImageName(varTypeName, scenarioName); 
-    print(imageName)
-    var image = imagesD[imageName];// return the image from dictionary
-    print(image)
-    var vis = visParamsD[varTypeName]; 
+
 // plot the image based in the variable and scenario names 
 var getImage = function(varTypeName, scenarioName) {
     // form the image name
     var imageName = createRrImageName(varTypeName, scenarioName); 
     var image = imagesD[imageName];// return the image from dictionary
     var vis = visParamsD[varTypeName]; // return the vis params
-    return map.addLayer(image, vis, imageName);
+    return ui.Map.Layer(image, vis, imageName);
 };
-// getImage(defaultVarType, defaultScenario);
+getImage(defaultVarType, defaultScenario);
 
-// function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
-//     var labelVar = ui.Label('Select Variable:');
-//     var labelScenario = ui.Label('Select Climate Scenario:');
+function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
+    var labelVar = ui.Label('Select Variable:');
+    var labelScenario = ui.Label('Select Climate Scenario:');
 
-//     // This function changes the given map to show the selected image.
-//     var updateMap = function(varSelection, scenarioSelection) {
-//       mapToChange.layers().set(0, getImage(varSelection, scenarioSelection));
-//     };
-
-//     // Configure a selection dropdown to allow the user to choose
-//     // between images, and set the map to update when a user 
-//     // makes a selection.
+    // Configure a selection dropdown to allow the user to choose
+    // between images, and set the map to update when a user 
+    // makes a selection.
     
-//     // selector for variable type
-//     var selectVar = ui.Select({
-//         items: Object.keys(varTypesD),
-//         onChange: updateMap
-//     });
-    
-//     // selector for scenario type
-//     var selectScenario = ui.Select({
-//         items: Object.keys(scenarioD),
-//         onChange: updateMap
-//     });
-    
-//     selectVar.setValue(defaultVarType, true);
-//     selectScenario.setValue(defaultScenarioType, true);
-    
-//     var controlPanel =
-//         ui.Panel({
-//             widgets: [labelVar, selectVar, labelScenario, selectScenario],
-//             style: {
-//                 position: 'top-left'
-//             }
-//         });
+       // Variables to store current selections
+    var currentVarSelection = defaultVarType;
+    var currentScenarioSelection = defaultScenario;
 
-//     mapToChange.add(controlPanel);
-// }
+    // This function changes the map to show the selected image.
+    var updateMap = function() {
+      mapToChange.layers().set(0, getImage(currentVarSelection, currentScenarioSelection));
+    };
 
-// /*
-//   Setup interactive selectors
+    // Configure a selection dropdown to allow the user to choose
+    // between variable types and climate scenarios, and set the map to update.
+
+    // Selector for variable type
+    var selectVar = ui.Select({
+        items: Object.keys(varTypesD),
+        onChange: function(newVarSelection) {
+            currentVarSelection = newVarSelection;  // Update the variable selection
+
+            // Update the available scenarios based on the selected variable
+            var availableScenarios = availableScenariosD[newVarSelection] || Object.keys(scenarioD);
+
+            // Update the items in the selectScenario dropdown
+            selectScenario.items().reset(availableScenarios);
+
+            // Reset to the first available scenario or the default one if available (this is an ifelse statement)
+            var defaultScenarioForVar = f.listIncludes(availableScenarios, currentScenarioSelection)
+              ? currentScenarioSelection // if true
+              : availableScenarios[0]; // if false
+            selectScenario.setValue(defaultScenarioForVar, true);
+            currentScenarioSelection = defaultScenarioForVar;
+
+            // Update the map with the new selection
+            updateMap();
+        }
+    });
+    
+    // Selector for scenario type
+    var selectScenario = ui.Select({
+        items: availableScenariosD[defaultVarType] || Object.keys(scenarioD),
+        onChange: function(newScenarioSelection) {
+            currentScenarioSelection = newScenarioSelection;  // Update the scenario selection
+            updateMap();  // Update the map with the current variable and scenario
+        }
+    });
+    
+    selectVar.setValue(defaultVarType, true);
+    selectScenario.setValue(defaultScenario, true);
+    
+    var controlPanel =
+        ui.Panel({
+            widgets: [labelVar, selectVar, labelScenario, selectScenario],
+            style: {
+                position: 'top-left'
+            }
+        });
+
+    mapToChange.add(controlPanel);
+}
+
+/*function addLayerSelectors(mapToChange, defaultScenario) {
+    var labelVar = ui.Label('Select Variable:');
+    var labelScenario = ui.Label('Select Climate Scenario:');
+
+    // This function changes the given map to show the selected image.
+    var updateMap = function(scenarioSelection) {
+      mapToChange.layers().set(0, getImage(defaultVarType, scenarioSelection));
+    };
+
+    // Configure a selection dropdown to allow the user to choose
+    // between images, and set the map to update when a user 
+    // makes a selection.
+    
+    // selector for variable type
+    // var selectVar = ui.Select({
+    //     items: Object.keys(varTypesD),
+    //     onChange: updateMap
+    // });
+    
+    // selector for scenario type
+    var selectScenario = ui.Select({
+        items: Object.keys(scenarioD),
+        onChange: updateMap
+    });
+    
+    // selectVar.setValue(defaultVarType, true);
+    selectScenario.setValue(defaultScenario, true);
+    
+    var controlPanel =
+        ui.Panel({
+            widgets: [labelScenario, selectScenario],
+            style: {
+                position: 'top-left'
+            }
+        });
+
+    mapToChange.add(controlPanel);
+}*/
+
+/*function addLayerSelectors(mapToChange, defaultVarType) {
+    var labelVar = ui.Label('Select Variable:');
+    var labelScenario = ui.Label('Select Climate Scenario:');
+
+    // This function changes the given map to show the selected image.
+    var updateMap = function(varSelection) {
+      mapToChange.layers().set(0, getImage(varSelection, defaultScenario));
+    };
+
+    // Configure a selection dropdown to allow the user to choose
+    // between images, and set the map to update when a user 
+    // makes a selection.
+    
+    // selector for variable type
+    var selectVar = ui.Select({
+        items: Object.keys(varTypesD),
+        onChange: updateMap
+    });
+    
+
+    selectVar.setValue(defaultVarType, true);
+
+    var controlPanel =
+        ui.Panel({
+            widgets: [labelVar, selectVar],
+            style: {
+                position: 'top-left'
+            }
+        });
+
+    mapToChange.add(controlPanel);
+}*/
+
+/*
+  Setup interactive selectors
   
-//   this code sets up the components so that users can select the
-//   layers of interest via drop down menus
-// */
+  this code sets up the components so that users can select the
+  layers of interest via drop down menus
+*/
 
-// addLayerSelectors(map, defaultVarType, defaultScenario)
+addLayerSelectors(map, defaultVarType, defaultScenario);
 
-// ///////////////////////////////////////////////////////////////
-// //      Set up panels and for Description            //
-// ///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+//      Set up panels and for Description            //
+///////////////////////////////////////////////////////////////
 
-// // style elements for text
-// var mt = '10px'; var mr = ' 10px'; var mb = ' 10px'; var ml = ' 10px'; // top, right, bottom and left margins
-// var margin = mt + mr + mb + ml;
-// var marginNoTB = '0px' + mr + ' 0px' + ml; // no top and bottom margines
-// var marginNoT = '0px' + mr + mb + ml; // no top  margin's
-// var marginNoB = mt + mr + ' 0px' + ml; // no bottom  margin's
-// var fontSizeText = '11px';
-// var styleText = {fontSize: fontSizeText, margin: mt + mr + mb + ml};
-// var styleTextNoTB =  f.updateDict(styleText, 'margin', marginNoTB);
-// var styleHeader = {fontSize: '15px', fontWeight: 'bold'};
+// style elements for text
+var mt = '10px'; var mr = ' 10px'; var mb = ' 10px'; var ml = ' 10px'; // top, right, bottom and left margins
+var margin = mt + mr + mb + ml;
+var marginNoTB = '0px' + mr + ' 0px' + ml; // no top and bottom margines
+var marginNoT = '0px' + mr + mb + ml; // no top  margin's
+var marginNoB = mt + mr + ' 0px' + ml; // no bottom  margin's
+var fontSizeText = '11px';
+var styleText = {fontSize: fontSizeText, margin: mt + mr + mb + ml};
+var styleTextNoTB =  f.updateDict(styleText, 'margin', marginNoTB);
+var styleHeader = {fontSize: '15px', fontWeight: 'bold'};
 
-// var styleUrl = {
-//   fontSize: fontSizeText, 
-//   color: 'blue', 
-//   textDecoration: 'underline',
-//   margin: marginNoTB
-// };
+var styleUrl = {
+  fontSize: fontSizeText, 
+  color: 'blue', 
+  textDecoration: 'underline',
+  margin: marginNoTB
+};
 
-// // Set up title and summary widgets
+// Set up title and summary widgets
 
-// //App title
-// var title = ui.Label('Resistance and Resilience Projections', {fontSize: '18px', fontWeight: 'bold', color: '4A997E'});
+//App title
+var title = ui.Label('Resistance and Resilience Projections', {fontSize: '18px', fontWeight: 'bold', color: '4A997E'});
 
-// // Create a panel to hold text
-// var panel = ui.Panel({
-//   widgets:[title],//Adds header and text
-//   style:{width: '300px',position:'middle-left'}});
+// Create a panel to hold text
+var panel = ui.Panel({
+  widgets:[title],//Adds header and text
+  style:{width: '300px',position:'middle-left'}});
 
-// // Add our main panel to the root of our GUI
-// //ui.root.insert(1,panel);
+// Add our main panel to the root of our GUI
+//ui.root.insert(1,panel);
 
-// // add legends  -------------------------------
+// add legends  -------------------------------
 
-// //map.add(figp.legendsRr);
-
-
-// ///////////////////////////////////////////////////////////////
-// //      add maps                                            //
-// ///////////////////////////////////////////////////////////////
+//map.add(figp.legendsRr);
 
 
+///////////////////////////////////////////////////////////////
+//      add maps                                            //
+///////////////////////////////////////////////////////////////
 
-// // map.addLayer(mask, {palette: 'white'}, 'mask non-sagebrush rangelands', true);
+
+
+// map.addLayer(mask, {palette: 'white'}, 'mask non-sagebrush rangelands', true);
