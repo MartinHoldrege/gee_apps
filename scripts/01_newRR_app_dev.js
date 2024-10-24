@@ -108,7 +108,13 @@ var createRrImageName = function(varTypeName, scenarioName) {
   var scenario = scenarioD[scenarioName];
   return varType[0] + '_' + scenario + varType[1];
 };
-
+var varTypeName = defaultVarType;
+var scenarioName = defaultScenario;
+    var imageName = createRrImageName(varTypeName, scenarioName); 
+    print(imageName)
+    var image = imagesD[imageName];// return the image from dictionary
+    print(image)
+    var vis = visParamsD[varTypeName]; 
 // plot the image based in the variable and scenario names 
 var getImage = function(varTypeName, scenarioName) {
     // form the image name
@@ -117,100 +123,100 @@ var getImage = function(varTypeName, scenarioName) {
     var vis = visParamsD[varTypeName]; // return the vis params
     return map.addLayer(image, vis, imageName);
 };
+// getImage(defaultVarType, defaultScenario);
 
-function addLayerSelector(mapToChange, defaultVarType, defaultScenario) {
-    var labelVar = ui.Label('Select Variable:');
-    var labelScenario = ui.Label('Select Climate Scenario:');
+// function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
+//     var labelVar = ui.Label('Select Variable:');
+//     var labelScenario = ui.Label('Select Climate Scenario:');
 
-    // This function changes the given map to show the selected image.
-    function updateMap(varSelection, scenarioSelection) {
-      
-        mapToChange.layers().set(0, getImage(varSelection, sceionarSelection));
-    }
+//     // This function changes the given map to show the selected image.
+//     var updateMap = function(varSelection, scenarioSelection) {
+//       mapToChange.layers().set(0, getImage(varSelection, scenarioSelection));
+//     };
 
-    // Configure a selection dropdown to allow the user to choose
-    // between images, and set the map to update when a user 
-    // makes a selection.
+//     // Configure a selection dropdown to allow the user to choose
+//     // between images, and set the map to update when a user 
+//     // makes a selection.
     
-    // selector for variable type
-    var selectVar = ui.Select({
-        items: Object.keys(varTypesD),
-        onChange: updateMap
-    });
+//     // selector for variable type
+//     var selectVar = ui.Select({
+//         items: Object.keys(varTypesD),
+//         onChange: updateMap
+//     });
     
-    // selector for scenario type
-    var selectScenario = ui.Select({
-        items: Object.keys(scenarioD),
-        onChange: updateMap
-    });
+//     // selector for scenario type
+//     var selectScenario = ui.Select({
+//         items: Object.keys(scenarioD),
+//         onChange: updateMap
+//     });
     
-    selectVar.setValue(Object.keys(varTypesD)[defaultVarType], true);
-    selectScenario.setValue(Object.keys(scenarioD)[defaultScenarioType], true);
+//     selectVar.setValue(defaultVarType, true);
+//     selectScenario.setValue(defaultScenarioType, true);
     
-    var controlPanel =
-        ui.Panel({
-            widgets: [labelVar, selectVar, labelScenario, selectScenario],
-            style: {
-                position: 'top-left'
-            }
-        });
+//     var controlPanel =
+//         ui.Panel({
+//             widgets: [labelVar, selectVar, labelScenario, selectScenario],
+//             style: {
+//                 position: 'top-left'
+//             }
+//         });
 
-    mapToChange.add(controlPanel);
-}
+//     mapToChange.add(controlPanel);
+// }
 
-/*
-  Setup interactive selectors
+// /*
+//   Setup interactive selectors
   
-  this code sets up the components so that users can select the
-  layers of interest via drop down menus
-*/
+//   this code sets up the components so that users can select the
+//   layers of interest via drop down menus
+// */
+
+// addLayerSelectors(map, defaultVarType, defaultScenario)
+
+// ///////////////////////////////////////////////////////////////
+// //      Set up panels and for Description            //
+// ///////////////////////////////////////////////////////////////
+
+// // style elements for text
+// var mt = '10px'; var mr = ' 10px'; var mb = ' 10px'; var ml = ' 10px'; // top, right, bottom and left margins
+// var margin = mt + mr + mb + ml;
+// var marginNoTB = '0px' + mr + ' 0px' + ml; // no top and bottom margines
+// var marginNoT = '0px' + mr + mb + ml; // no top  margin's
+// var marginNoB = mt + mr + ' 0px' + ml; // no bottom  margin's
+// var fontSizeText = '11px';
+// var styleText = {fontSize: fontSizeText, margin: mt + mr + mb + ml};
+// var styleTextNoTB =  f.updateDict(styleText, 'margin', marginNoTB);
+// var styleHeader = {fontSize: '15px', fontWeight: 'bold'};
+
+// var styleUrl = {
+//   fontSize: fontSizeText, 
+//   color: 'blue', 
+//   textDecoration: 'underline',
+//   margin: marginNoTB
+// };
+
+// // Set up title and summary widgets
+
+// //App title
+// var title = ui.Label('Resistance and Resilience Projections', {fontSize: '18px', fontWeight: 'bold', color: '4A997E'});
+
+// // Create a panel to hold text
+// var panel = ui.Panel({
+//   widgets:[title],//Adds header and text
+//   style:{width: '300px',position:'middle-left'}});
+
+// // Add our main panel to the root of our GUI
+// //ui.root.insert(1,panel);
+
+// // add legends  -------------------------------
+
+// //map.add(figp.legendsRr);
+
+
+// ///////////////////////////////////////////////////////////////
+// //      add maps                                            //
+// ///////////////////////////////////////////////////////////////
 
 
 
-///////////////////////////////////////////////////////////////
-//      Set up panels and for Description            //
-///////////////////////////////////////////////////////////////
-
-// style elements for text
-var mt = '10px'; var mr = ' 10px'; var mb = ' 10px'; var ml = ' 10px'; // top, right, bottom and left margins
-var margin = mt + mr + mb + ml;
-var marginNoTB = '0px' + mr + ' 0px' + ml; // no top and bottom margines
-var marginNoT = '0px' + mr + mb + ml; // no top  margin's
-var marginNoB = mt + mr + ' 0px' + ml; // no bottom  margin's
-var fontSizeText = '11px';
-var styleText = {fontSize: fontSizeText, margin: mt + mr + mb + ml};
-var styleTextNoTB =  f.updateDict(styleText, 'margin', marginNoTB);
-var styleHeader = {fontSize: '15px', fontWeight: 'bold'};
-
-var styleUrl = {
-  fontSize: fontSizeText, 
-  color: 'blue', 
-  textDecoration: 'underline',
-  margin: marginNoTB
-};
-
-// Set up title and summary widgets
-
-//App title
-var title = ui.Label('Resistance and Resilience Projections', {fontSize: '18px', fontWeight: 'bold', color: '4A997E'});
-
-// Create a panel to hold text
-var panel = ui.Panel({
-  widgets:[title],//Adds header and text
-  style:{width: '300px',position:'middle-left'}});
-
-// Add our main panel to the root of our GUI
-//ui.root.insert(1,panel);
-
-// add legends  -------------------------------
-
-//map.add(figp.legendsRr);
-
-
-///////////////////////////////////////////////////////////////
-//      add maps                                            //
-///////////////////////////////////////////////////////////////
-
-
-
-// map.addLayer(mask, {palette: 'white'}, 'mask non-sagebrush rangelands', true);
+// // map.addLayer(mask, {palette: 'white'}, 'mask non-sagebrush rangelands', true);
