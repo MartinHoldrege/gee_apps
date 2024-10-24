@@ -16,12 +16,15 @@ var f = require("users/MartinHoldrege/gee_apps:src/general_functions.js");
 var path = 'projects/ee-martinholdrege/assets/misc/newRR3/'; // where images are read in from
 
 // visualization params
-var visT1 = figp.visT1;
-var visT2 = figp.visT2;
-var visT3 = figp.visT3;
+var visT1 = figp.visT1; // type 1
+var visT2 = figp.visT2; // type 2
+var visT3 = figp.visT3; // type 3
 
+// default layer the app shows
+var defaultVarType = 'Resilience (categorical)';
+var defaultScenario = 'Ambient (1980-2020)';
 
-var testRun = false; // fewer images displayed for test run
+var testRun = true; // fewer images displayed for test run
 // read in layers ---------------------------------------------------------------------------
 
 var mask = ee.Image(path + 'negMask');
@@ -38,11 +41,8 @@ var imageNamesL = ['Resist-cats_2064-2099-RCP85', 'Resist-cont_2064-2099-RCP85',
 'Resil-cont_2029-2064-RCP45', 'Resist-cont_2029-2064-RCP45-delta', 'Resil-cont_2029-2064-RCP45-delta', 'Resist-cats_1980-2020-Ambient',
 'Resist-cont_1980-2020-Ambient', 'Resil-cats_1980-2020-Ambient', 'Resil-cont_1980-2020-Ambient'];
 
-var visParamsL = [visT2, visT1, visT2, visT1, visT3, visT3, visT2, visT1, visT2, visT1, visT3, visT3, visT2, visT1, visT2, visT1, 
-visT3, visT3, visT2, visT1, visT2, visT1, visT3, visT3, visT2, visT1, visT2, visT1];
-
 if (testRun) {
-  var imageNamesL = imageNamesL.slice(0, 3);
+  var imageNamesL = imageNamesL.slice(imageNamesL.length - 4, imageNamesL.length - 1);
 }
 
 // setup ---------------------------------------------------
@@ -56,9 +56,119 @@ ui.root.add(map);
 map.style().set('cursor', 'crosshair');
 map.centerObject(mask, 6);
 
+// create dictionaries ---------------------------------------------
+
+// dictionary of the images
+var imagesD = imageNamesL.reduce(function(acc, key) {
+  acc[key] = ee.Image(path + key);
+  return acc;
+}, {});
+
+
+// components of the image names that correspond to the types of variables
+// note--be careful with these hand written dictionaries if the key/value 
+// pairs aren't correct the wrong layer will be shown! the key's 
+// are the names that will be shown in the drop-down menus
+var varTypesD = {
+  'Resilience (categorical)': ['Resil-cats', ''],
+  'Resilience (continuous)': ['Resil-cont', ''],
+  'Resistance (categorical)': ['Resil-cats', ''],
+  'Resistance (continuous)': ['Resil-cont', ''],
+  'Change in Resilience (continuous)': ['Resil-cont', '-delta'],
+  'Change in Resistance (continuous)': ['Resist-cont', '-delta']
+};
+
+// components of the image names that correspond to the climate scenario
+var scenarioD = {
+  'Ambient (1980-2020)': '1980-2020-Ambient',
+  'RCP4.5 (2029-2064)': '2029-2064-RCP45',
+  'RCP4.5 (2064-2099)': '2064-2099-RCP45',
+  'RCP8.5 (2029-2064)': '2029-2064-RCP85',
+  'RCP8.5 (2064-2099)': '2064-2099-RCP85'
+};
+
+// dictionary of the visualization parameters
+var visParamsD = {
+  'Resilience (categorical)': visT2,
+  'Resilience (continuous)': visT1,
+  'Resistance (categorical)': visT2,
+  'Resistance (continuous)': visT1,
+  'Change in Resilience (continuous)': visT3,
+  'Change in Resistance (continuous)': visT3
+};
+
+// functions ---------------------------------------------------------------------
+
+
+// functions that rely on objects in the environment (therefore shouldn't be sourced from a different script)
+
+// return the name of the RR asset based on components of the name
+var createRrImageName = function(varTypeName, scenarioName) {
+  var varType = varTypesD[varTypeName];
+  var scenario = scenarioD[scenarioName];
+  return varType[0] + '_' + scenario + varType[1];
+};
+
+// plot the image based in the variable and scenario names 
+var getImage = function(varTypeName, scenarioName) {
+    // form the image name
+    var imageName = createRrImageName(varTypeName, scenarioName); 
+    var image = imagesD[imageName];// return the image from dictionary
+    var vis = visParamsD[varTypeName]; // return the vis params
+    return map.addLayer(image, vis, imageName);
+};
+
+function addLayerSelector(mapToChange, defaultVarType, defaultScenario) {
+    var labelVar = ui.Label('Select Variable:');
+    var labelScenario = ui.Label('Select Climate Scenario:');
+
+    // This function changes the given map to show the selected image.
+    function updateMap(varSelection, scenarioSelection) {
+      
+        mapToChange.layers().set(0, getImage(varSelection, sceionarSelection));
+    }
+
+    // Configure a selection dropdown to allow the user to choose
+    // between images, and set the map to update when a user 
+    // makes a selection.
+    
+    // selector for variable type
+    var selectVar = ui.Select({
+        items: Object.keys(varTypesD),
+        onChange: updateMap
+    });
+    
+    // selector for scenario type
+    var selectScenario = ui.Select({
+        items: Object.keys(scenarioD),
+        onChange: updateMap
+    });
+    
+    selectVar.setValue(Object.keys(varTypesD)[defaultVarType], true);
+    selectScenario.setValue(Object.keys(scenarioD)[defaultScenarioType], true);
+    
+    var controlPanel =
+        ui.Panel({
+            widgets: [labelVar, selectVar, labelScenario, selectScenario],
+            style: {
+                position: 'top-left'
+            }
+        });
+
+    mapToChange.add(controlPanel);
+}
+
+/*
+  Setup interactive selectors
+  
+  this code sets up the components so that users can select the
+  layers of interest via drop down menus
+*/
+
+
 
 ///////////////////////////////////////////////////////////////
-//      Set up panels and widgets for display             //
+//      Set up panels and for Description            //
 ///////////////////////////////////////////////////////////////
 
 // style elements for text
@@ -89,11 +199,8 @@ var panel = ui.Panel({
   widgets:[title],//Adds header and text
   style:{width: '300px',position:'middle-left'}});
 
-
-
-
 // Add our main panel to the root of our GUI
-ui.root.insert(1,panel);
+//ui.root.insert(1,panel);
 
 // add legends  -------------------------------
 
@@ -104,19 +211,6 @@ ui.root.insert(1,panel);
 //      add maps                                            //
 ///////////////////////////////////////////////////////////////
 
-for (var i = 0; i < imageNamesL.length; i++) {
-  var imageName = imageNamesL[i];
-  var vis = visParamsL[i];
-  
-  // by default have one layer display
-  if(imageName == 'Resil-cats_1980-2020-Ambient') {
-    var shown =true;
-  } else {
-    var shown = false;
-  }
-  var image = ee.Image(path + imageName);
-  map.addLayer(image, vis, imageName, shown);
 
-}
 
-map.addLayer(mask, {palette: 'white'}, 'mask non-sagebrush rangelands', true);
+// map.addLayer(mask, {palette: 'white'}, 'mask non-sagebrush rangelands', true);
