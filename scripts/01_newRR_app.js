@@ -366,7 +366,7 @@ var bulletsText = [
   'Ecological resilience (resilience) or invasion resistance (resistance) can be displayed' +
   ' as categorical (4 categories) or continuous variables.',
   "'Change' layers show the difference between projected future resistance or resilience and a" +
-  " historical reference (i.e., 1980-2020 ambient conditions)." +
+  " historical reference." +
   "These change layers are a continuous variable.",
   'Climate scenarios include ambient climate (ambient) or future projected climate based on two representative concentration pathways (RCP4.5, RCP8.5).'
   ];
