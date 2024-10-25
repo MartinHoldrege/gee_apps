@@ -28,7 +28,8 @@ var defaultScenario = 'Ambient (1980-2020)';
 var testRun = false; // fewer images displayed for test run
 // read in layers ---------------------------------------------------------------------------
 
-var mask = ee.Image(path + 'negMask');
+var mask = ee.Image(path + 'negMask')
+  .unmask().eq(0);
 
 // note--this list of image names and visparms was created in 00_newRR_file-name_lists.R
 // and then pasted here
@@ -120,14 +121,16 @@ var createRrImageName = function(varTypeName, scenarioName) {
 };
 
 // plot the image based in the variable and scenario names 
-var getImage = function(varTypeName, scenarioName) {
+var getImage = function(varTypeName, scenarioName, applyMask) {
     // form the image name
     var imageName = createRrImageName(varTypeName, scenarioName); 
     var image = imagesD[imageName];// return the image from dictionary
     var vis = visParamsD[varTypeName]; // return the vis params
+    if(applyMask) {
+      var image = image.updateMask(mask);
+    }
     return ui.Map.Layer(image, vis, imageName);
 };
-getImage(defaultVarType, defaultScenario);
 
 function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
     var labelVar = ui.Label('Select Variable:');
@@ -142,12 +145,13 @@ function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
     // environments (so don't have scoping issues)
     var selections = {
         varType: defaultVarType,
-        scenario: defaultScenario
+        scenario: defaultScenario,
+        applyMask: true
     };
 
     // This function changes the map to show the selected image.
     var updateMap = function() {
-      mapToChange.layers().set(0, getImage(selections.varType, selections.scenario));
+      mapToChange.layers().set(0, getImage(selections.varType, selections.scenario, selections.applyMask));
     };
 
     // Configure a selection dropdown to allow the user to choose
@@ -189,9 +193,18 @@ function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
     selectVar.setValue(defaultVarType, true);
     selectScenario.setValue(defaultScenario, true);
     
+    var applyMaskCheckbox = ui.Checkbox({
+      label: 'Only show data for sagebrush rangelands and open woodlands',
+      value: true,  // Initially checked
+      onChange: function(checked) {
+          selections.applyMask = checked
+          updateMap();  // Update the map when the checkbox is toggled
+      }
+    });
+    
     var controlPanel =
         ui.Panel({
-            widgets: [labelVar, selectVar, labelScenario, selectScenario],
+            widgets: [labelVar, selectVar, labelScenario, selectScenario, applyMaskCheckbox],
             style: {
                 position: 'top-left'
             }
