@@ -62,7 +62,7 @@ map.style().set('cursor', 'crosshair');
 map.centerObject(mask, 6);
 
 // styles ---------------------------------------------------------
-var styleCheckbox = {fontSize: '12px', width: '150px'}
+var styleCheckbox = {fontSize: '12px', width: '200px'}
 
 // create dictionaries ---------------------------------------------
 
@@ -120,7 +120,8 @@ var visParamsD = {
 var selections = {
     varType: defaultVarType,
     scenario: defaultScenario,
-    applyMask: true
+    applyMask: true,
+    showBackground:false
 };
 
 // functions ---------------------------------------------------------------------
@@ -139,8 +140,15 @@ var createRrImageName = function(varTypeName, scenarioName) {
 var getImage = function(varTypeName, scenarioName, applyMask) {
     // form the image name
     var imageName = createRrImageName(varTypeName, scenarioName); 
+    
+    if(!(imageName in imagesD)) {
+      // creating a transparent layer
+      return ui.Map.Layer(ee.Image(0).selfMask(), {}, 'this layer does not exist');
+    }
+    
     var image = imagesD[imageName];// return the image from dictionary
     var vis = visParamsD[varTypeName]; // return the vis params
+    
     if(applyMask) {
       var image = image.updateMask(mask);
     }
@@ -167,25 +175,24 @@ var createMaskCheckbox = function(mapToChange) {
 };
 
 // create states outlines and blank background
-var updateBackground = function(mapToChange, show) {
-  var background = ui.Map.Layer(ee.Image(0), {palette: 'light gray'}, 'background', show);
-  var states = ui.Map.Layer(figP.statesOutline, {}, 'state outlines', show); // outline of states (white background)
-  mapToChange.layers().set(0, states);
+// Function to update the background and state outlines based on checkbox status
+// Function to toggle the visibility of the background and states outline
+var updateBackgroundVisibility = function(show) {
+    backgroundLayer.setShown(show);  // Toggle visibility of the background layer
+    statesLayer.setShown(show);      // Toggle visibility of the states outline layer
 };
 
-// create checkbox for applying background
-var createBackgroundCheckbox = function(mapToChange) {
-  var out = ui.Checkbox({
-    label: 'Apply plain background and outline of states',
-    value: false,  // Initially checked
-    onChange: function(checked) {
-        updateBackground(mapToChange, checked);  // Update the background
-    },
-    style: styleCheckbox
-  });
-  return out;
+// Checkbox for toggling the visibility of the background and states outline
+var createBackgroundCheckbox = function() {
+    return ui.Checkbox({
+        label: 'Apply plain background and state outlines',
+        value: false,  // Initially unchecked
+        onChange: function(checked) {
+            updateBackgroundVisibility(checked);  // Toggle visibility based on checkbox state
+        },
+        style: styleCheckbox
+    });
 };
-
 
   // Configure a selection dropdown to allow the user to choose
   // between variable types and climate scenarios, and set the map to update.
@@ -236,7 +243,7 @@ function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
         ui.Panel({
             widgets: [labelVar, selectVar, labelScenario, selectScenario, 
                       createMaskCheckbox(mapToChange),
-                      createBackgroundCheckbox(mapToChange)],
+                      createBackgroundCheckbox()],
             style: {
                 position: 'top-left'
             }
@@ -248,13 +255,21 @@ function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
 // end functions --------------------------------------------------------------------
 
 /*
-  Setup interactive selectors
-  
-  this code sets up the components so that users can select the
-  layers of interest via drop down menus
+  Add selectors and layers
 */
 
+// add the main layer and selectors
 addLayerSelectors(map, defaultVarType, defaultScenario);
+
+// Add the background layer
+var background = ee.Image(0).visualize({palette: ['lightgray']});  // Plain gray background
+var backgroundLayer = ui.Map.Layer(background, {}, 'Background', false, 1.0);
+map.layers().set(0, backgroundLayer); // 0 index (on bottom, so appears behind other layers)
+
+// Add the states outline layer 
+var statesLayer = ui.Map.Layer(figPScd.statesOutline, {color: 'black', lineWidth: 2}, 'State Outlines', false, 1.0);
+map.layers().set(2, statesLayer); // 2 index, so on top of ther layers
+
 
 ///////////////////////////////////////////////////////////////
 //      Set up panels and for Description            //
