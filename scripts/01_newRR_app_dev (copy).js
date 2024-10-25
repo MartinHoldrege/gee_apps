@@ -29,6 +29,7 @@ var testRun = false; // fewer images displayed for test run
 // read in layers ---------------------------------------------------------------------------
 
 var mask = ee.Image(path + 'negMask')
+  .unmask().eq(0);
 
 // note--this list of image names and visparms was created in 00_newRR_file-name_lists.R
 // and then pasted here
@@ -145,19 +146,13 @@ function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
     var selections = {
         varType: defaultVarType,
         scenario: defaultScenario,
-        applyMask: true // by default cover with a mask layer
+        applyMask: true
     };
 
     // This function changes the map to show the selected image.
     var updateMap = function() {
-      mapToChange.layers().set(0, getImage(selections.varType, selections.scenario));
+      mapToChange.layers().set(0, getImage(selections.varType, selections.scenario, selections.applyMask));
     };
-    
-    var updateMask = function() {
-      mapToChange.layers().set(1, ui.Map.Layer(mask, {palette:'white'}, 'mask', selections.applyMask));
-    };
-    
-    updateMask()
 
     // Configure a selection dropdown to allow the user to choose
     // between variable types and climate scenarios, and set the map to update.
@@ -195,18 +190,17 @@ function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
         }
     });
     
-    var applyMaskCheckbox = ui.Checkbox({
-      label: 'Only show data for sagebrush rangelands and open woodlands',
-      value: selections.applyMask,  // Initially checked
-      onChange: function(checked) {
-          selections.applyMask = checked;
-          updateMask();  // Update the map when the checkbox is toggled
-      }
-    });
-    
     selectVar.setValue(defaultVarType, true);
     selectScenario.setValue(defaultScenario, true);
-
+    
+    var applyMaskCheckbox = ui.Checkbox({
+      label: 'Only show data for sagebrush rangelands and open woodlands',
+      value: true,  // Initially checked
+      onChange: function(checked) {
+          selections.applyMask = checked
+          updateMap();  // Update the map when the checkbox is toggled
+      }
+    });
     
     var controlPanel =
         ui.Panel({
