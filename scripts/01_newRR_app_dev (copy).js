@@ -351,32 +351,27 @@ var chambersLink = ui.Label({
   });
 
 // how to use
-var howTo = 'Select layer(s) to view from the dropdown "Layers" menu.' + 
-' Note, by default the mask layer is selected so that only areas with' + 
-' sagebrush rangelands and open woodlands are shown, and other areas are covered.';
+var howTo = "Use the 'Select Variable' drop down menu to select the" + 
+" R&R variable to display on the map," + 
+" and use the 'Select Climate Scenario' dropdown menu to select the time-period and climate scenario.";
 
 // abbrevations --------------------------
 var abbrevExplain = ui.Label({
-    value: 'The components of the layer name describe what the layer represents:',
+    value: 'Descriptions of variables and climate scenarios:',
     style: f.updateDict(styleText, 'margin', marginNoT), // 
   });
 
 // bullets describing the abbreviation
 var bulletsText = [
-  'Ecological resilience (resil) or invasion resistance (resist)',
-  'Continuous (cont) or categorical (cats) R&R indicator',
-  'Time period (e.g., calendar years 1980-2020)',
-  'Ambient climate (ambient) or future projected climate based on two representative concentration pathways (RCP4.5, RCP8.5)',
-  'If present in the name, "Delta" indicates the layer shows the difference between projected future' +
-  ' R&R and historical reference (i.e., 1980-2020 ambient conditions)'
+  'Ecological resilience (resilience) or invasion resistance (resistance) can be displayed' +
+  ' as categorical (4 categories) or continuous variables.',
+  "'Change' layers show the difference between projected future resistance or resilience and a" +
+  " historical reference (i.e., 1980-2020 ambient conditions)." +
+  "These change layers are a continuous variable.",
+  'Climate scenarios include ambient climate (ambient) or future projected climate based on two representative concentration pathways (RCP4.5, RCP8.5).'
   ];
   
-var abbrevExample = ui.Label({
-    value: 'For example, the "Resil-cats_2064-2099-RCP45" layer represents projections' +
-    ' of resilience, as a categorical variable, for the 2064-2099 time-period under the RCP4.5 emissions scenario.',
-    style: styleText 
-  });
-  
+
 var bulletsLabel = bulletsText.map(function(x) {
   return ui.Label({
     value: '• ' + x,
@@ -385,7 +380,7 @@ var bulletsLabel = bulletsText.map(function(x) {
 });
 
 var bulletsPanel = ui.Panel({
-  widgets: [abbrevExplain].concat(bulletsLabel).concat([abbrevExample]),
+  widgets: [abbrevExplain].concat(bulletsLabel),
   layout: ui.Panel.Layout.Flow('vertical')
 });
 
