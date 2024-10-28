@@ -17,6 +17,7 @@ var SEI = require("users/MartinHoldrege/SEI:src/SEIModule.js");
 // where the data layers  from the data_publication live
 // these are the exact same layers as on science base
 var pathPub = SEI.path + 'data_publication2/' 
+var path = SEI.path;
 
 // this is where the data wrangling occurs
 // contains one main function
@@ -25,22 +26,24 @@ var pathPub = SEI.path + 'data_publication2/'
 // so will render more slowly)
 var lyrsF = require("users/MartinHoldrege/SEI:scripts/05_lyrs_for_apps.js").main;
 
+var resolution = 90;
+var v = 'vsw4-3-4';
 // helper dictionaries -----------------------------------------------------------
 // for various 'lookup' tasks
 
 // names of the different types of runs
 var runD = {
-  'Default': 'fire1_eind1_c4grass1_co20_2311_',
-  'CO2Fert': 'fire1_eind1_c4grass1_co21_2311_',
-  'NoC4Exp': 'fire1_eind1_c4grass0_co20_2311_',
-  'NoFire' : 'fire0_eind1_c4grass1_co20_2311_'
+  'Default': 'fire1_eind1_c4grass1_co20_2311',
+  'CO2Fert': 'fire1_eind1_c4grass1_co21_2311',
+  'NoC4Exp': 'fire1_eind1_c4grass0_co20_2311',
+  'NoFire' : 'fire0_eind1_c4grass1_co20'
 };
 
 var scenarioD = {
-  'RCP4.5 (2031-2060)': 'RCP45_2031-2060',
-  'RCP4.5 (2071-2100)': 'RCP45_2071-2100',
-  'RCP8.5 (2031-2060)': 'RCP85_2031-2060',
-  'RCP8.5 (2071-2100)': 'RCP85_2071-2100'
+  'RCP4.5 (2031-2060)': 'RCP45_2030-2060',
+  'RCP4.5 (2071-2100)': 'RCP45_2070-2100',
+  'RCP8.5 (2031-2060)': 'RCP85_2030-2060',
+  'RCP8.5 (2071-2100)': 'RCP85_2070-2100'
 };
 
 var varsD = {
@@ -50,12 +53,23 @@ var varsD = {
   'Change in Q2 (Perennials; %)': 'Q2',
   'Change in Q1 (Annuals; %)': 'Q3',
   'Drivers of SEI Change (R = sage, G = perennials, B = annuals)': 'rgb',
-  'Agreement among GCMs': 'NumGCMGood'
+  'Agreement among GCMs': 'numGcmGood'
 };
 
 var dict = {}; // master dictionary
 
 // add numGCM good to dictionary -----------------------------------------------------
-print(numGcm)
+
+var pathProducts = path + SEI.removePatch(v) + '/products/';
+Object.keys(runD).forEach(function(nameRun) { // iterating over the images for the different runs
+  var image = ee.Image(pathProducts + v + '_numGcmGood_' + resolution + '_' + runD[nameRun]);
+  Object.keys(scenarioD).forEach(function(nameScen) { // iteration over the bands in each image (climate scenarios)
+    var newKey = 'numGcmGood_' + nameRun + '_' + scenarioD[nameScen];
+    dict[newKey] = image.select('numGcmGood_' + scenarioD[nameScen]);
+  });
+});
+
+
+
 
 
