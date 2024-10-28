@@ -56,7 +56,6 @@ var varsD = {
 var dict = {}; // master dictionary
 
 // add numGCM good to dictionary -----------------------------------------------------
-var numGcm = ee.Image('projects/usgs-gee-drylandecohydrology/assets/SEI/products/vsw4-3-4_gcmAgreement_RCP45_2070-2100');
 print(numGcm)
 
 
