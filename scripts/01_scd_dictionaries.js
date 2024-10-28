@@ -16,7 +16,7 @@
 var SEI = require("users/MartinHoldrege/SEI:src/SEIModule.js");
 // where the data layers  from the data_publication live
 // these are the exact same layers as on science base
-var pathPub = SEI.path + 'data_publication2/' 
+var pathPub = SEI.path + 'data_publication2/';
 var path = SEI.path;
 
 // this is where the data wrangling occurs
@@ -59,7 +59,7 @@ var varsD = {
 var dict = {}; // master dictionary
 
 // add numGCM good to dictionary -----------------------------------------------------
-
+// one image per scenario 
 var pathProducts = path + SEI.removePatch(v) + '/products/';
 Object.keys(runD).forEach(function(nameRun) { // iterating over the images for the different runs
   var image = ee.Image(pathProducts + v + '_numGcmGood_' + resolution + '_' + runD[nameRun]);
@@ -69,7 +69,29 @@ Object.keys(runD).forEach(function(nameRun) { // iterating over the images for t
   });
 });
 
+// add RGB layer to dictionary ----------------------------------------------------------
 
+// contributions by each Q compontent to changes --------------------------------------
+
+// STOP--continue here
+var qBands = ['Q1raw', 'Q2raw', 'Q3raw'];
+
+// creating RGB maps
+// R = sage, G = perennials, B = annuals
+
+var rgbViz = {
+  bands: qBands,
+  min: 0,
+  max: 1
+};
+
+var rgbLab = ' (R = Q1 [sage], G = Q2 [perennials], B = Q3 [annuals])';
+
+var diffRedImg2 = ee.Image(d.get('diffRed2Img'));
+var forRgb = ee.Image(d.get('qPropMed2'))
+  // areas with < 0.01 delta sei are shown as grey
+  .where(diffRedImg2.select('Q5s_median').abs().lt(0.01), 211/255);
+map.addLayer(forRgb, rgbViz, 'RGB' + rgbLab, false);
 
 
 
