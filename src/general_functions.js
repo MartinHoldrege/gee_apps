@@ -4,10 +4,9 @@
 
 */
 
-
-// Function to copy the dictionary and update a key (i.e. not change in place)
-exports.updateDict = function(originalDict, key, newValue) {
-  var newDict = {}; // Create an empty object
+// create a copy of a dictionary 
+var copyDict = function(originalDict) {
+    var newDict = {}; // Create an empty object
 
   // Copy all key-value pairs from the original dictionary to the new one
   for (var k in originalDict) {
@@ -15,6 +14,15 @@ exports.updateDict = function(originalDict, key, newValue) {
       newDict[k] = originalDict[k];
     }
   }
+  
+  return newDict;
+}
+
+exports.copyDict = copyDict;
+
+// Function to copy the dictionary and update a key (i.e. not change in place)
+exports.updateDict = function(originalDict, key, newValue) {
+  var newDict = copyDict(originalDict);
 
   // Update the specified key with the new value
   newDict[key] = newValue;
