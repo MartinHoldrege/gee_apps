@@ -46,6 +46,8 @@ var scenarioD = {
   'RCP8.5 (2071-2100)': 'RCP85_2070-2100'
 };
 
+var scenarioD2 = 
+
 var varsD = {
   'Change in SEI Class': 'c9',
   'Change in SEI': 'SEI',
