@@ -1,20 +1,15 @@
 /*
-  Purpose: Create a dictionary of image (layers) to be used for the
-  app showing SCD layers (from Holdrege et al. 2024, Rangeland Ecology and Mgmt),
-  also various other helper dictionaries
+  Purpose: Create functions for loading layers for each variable
+  type that will be shown in the app. 
+  
+  Note most of the functions defined here rely on objects
+  that are in the environment, so shouldn't be copied and defined elsewhere. 
 
   Author: Martin Holdrege
   
   Started: October 28, 2024
 */
 
-// parameters ---------------------------------------------------------------------
-
-/*
-  new approach--develop functions for each layer,
-  input is scenario and run and visualization parameters
-  output is map layer
-*/
 
 // dependencies --------------------------------------------------------------------
 
