@@ -4,6 +4,49 @@ Description: functions for visualizations
 
 */
 
+
+// create styled layer discriptor ----------------------------------------------
+
+
+
+// input quantity (number), and color (hex code)
+var createColorMapEntry = function(quantity, color) {
+  return '<ColorMapEntry color="' + color + '" quantity="' + quantity + '" label=""/>';
+};
+
+// inputs are lists of break points and colors
+var createColorMapEntries = function(breaks, colors) {
+  if ((breaks.length - 1) !== colors.length) {
+    throw new Error("colors should have one less element than breaks");
+  }
+  
+  var string = '';
+  for (var i = 0; i < colors.length; i++) {
+    var lower = createColorMapEntry(breaks[i], colors[i]);
+    // want colors to be in blocks (not gradations) and the next 'block'
+    // will be sligher higher (hence the small amount added) than the previous block
+    var upper = createColorMapEntry(breaks[i + 1] - 0.0001, colors[i]);
+    var string = string + lower + upper;
+  }
+  return string
+}
+
+// creates a rasterSymbolizer string for assigning colors
+// to intervals, described by breaks (list of numbers),
+// and their colors (list of colors)
+// this is a hacky approach where the color ramp
+// changes very quickly so colors look discrete
+exports.createSldColorBlocks = function(breaks, colors) {
+  var prefix = '<RasterSymbolizer>' +
+    '<ColorMap type="ramp" extended="true" >';
+  var middle = createColorMapEntries(breaks, colors);
+  
+  var suffix =   '</ColorMap>' + '</RasterSymbolizer>';
+  
+  return prefix + middle + suffix;
+};
+
+
 // creating legends -------------------------------------------------------------
 
 
