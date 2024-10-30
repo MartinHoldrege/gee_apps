@@ -54,7 +54,8 @@ var scenD = {
   'RCP8.5 (2031-2060)': 'RCP85_2030-2060',
   'RCP8.5 (2071-2100)': 'RCP85_2070-2100'
 };
-var scenDS = ee.Dictionary(scenD); 
+
+var runScenDS = runD.keys
 
 var scenNames = Object.keys(scenD);
 // create another version with more correct dates
@@ -74,18 +75,19 @@ var varsD = {
   'Agreement among GCMs': 'gcmAgree'
 };
 
-var dict = {}; // master dictionary
+var dict = ee.Dictionary({}); // master dictionary
 
 // add numGCM good to dictionary -----------------------------------------------------
+
 // one image per scenario 
 var pathProducts = path + SEI.removePatch(v) + '/products/';
-runNames.forEach(function(nameRun) { // iterating over the images for the different runs
+/*gcmrunNames.forEach(function(nameRun) { // iterating over the images for the different runs
   var image = ee.Image(pathProducts + v + '_numGcmGood_' + resolution + '_' + runD[nameRun]);
   scenNames.forEach(function(nameScen) { // iteration over the bands in each image (climate scenarios)
     var newKey = 'gcmAgree_' + nameRun + '_' + scenD[nameScen];
-    dict[newKey] = image.select('numGcmGood_' + scenD[nameScen]);
+    var dict = dict.set(newKey, image.select('numGcmGood_' + scenD[nameScen]));
   });
-});
+});*/
 
 // add RGB layer to dictionary ----------------------------------------------------------
 
@@ -114,6 +116,8 @@ var rgbViz = {
   max: 1
 };
 
+// make this inside server side map functions? probably still won't work because of the call
+// to ee.Image() inside lyr.main()?
 runNames.forEach(function(nameRun) { // iterating over the images for the different runs
   scenNames.forEach(function(nameScen) {
     var root =  runD[nameRun] + '_';
@@ -132,11 +136,11 @@ runNames.forEach(function(nameRun) { // iterating over the images for the differ
     // areas with < 0.01 delta sei are shown as grey
       .where(diffRedImg2.select('Q5s_median').abs().lt(0.01), 211/255);
     var newKey = 'rgb_' + nameRun + '_' + scenD[nameScen];
-    dict[newKey] = ui.Map.Layer(forRgb, rgbViz, newKey);
+    dict = dict.set(newKey, forRgb);
   });
 });
 
-print(Object.keys(dict))
+print(dict.keys());
 
 
 
