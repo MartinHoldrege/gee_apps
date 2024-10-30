@@ -10,6 +10,11 @@
 
 // parameters ---------------------------------------------------------------------
 
+/*
+  new approach--develop functions for each layer,
+  input is scenario and run and visualization parameters
+  output is map layer
+*/
 
 // dependencies --------------------------------------------------------------------
 
