@@ -1,76 +1,87 @@
 /*
-  Purpose: functions and other elements for visualizations of future SCD app
+  Purpose: functions and other elements for visualizations
 
   Author: Martin Holdrege
   
-  Started: Oct 30, 2024
+  Started: Oct 14, 2024
 */
 
 // dependencies --------------------------------------------------------------------------
 
-var figF = require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
-
+var figf = require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
 // color palettes, see https://github.com/gee-community/ee-palettes
 var palettes = require('users/gena/packages:palettes');
 
-// colors  ----------------------------------------------------------------------------
+// colors ---------------------------------------------------------------------------------
 
-var colsNumGcm = ['#053061',
-                '#92c5de',
-                 '#e31a1c',
-                 '#800026',
-                 '#252525',
-                 '#bdbdbd',
-                 '#ffeda0',
-                 '#fd8d3c',
-                 '#eee1ba'];
+// type 1, continuous RR
+var T1Palette = palettes.matplotlib.viridis[7]; 
 
-exports.visNumGcm = {min: 1, max: 9, palette: colsNumGcm};
+// type 2 RR colors (i.e categorical RR)
+var rrT2Palette = ['#D7191C', '#FDAE61', '#ABD9E9', '#2C7BB6']; 
+var rrT2Names = ['Low', 'Medium-Low', 'Medium', 'Medium-High to High'];
 
-
-//legends
-var labelsNumGcm = ["Stable CSA (robust agreement)", 
-                    "Stable CSA (non-robust agreement)", 
-                    "Loss of CSA (non-robust agreement)", 
-                    "Loss of CSA (robust agreement)", 
-                    "Stable (or improved) GOA (robust agreement)", 
-                    "Stable (or improved) GOA (non-robust agreement)", 
-                    "Loss of GOA (non-robust agreement)", 
-                    "Loss of GOA (robust agreement)", 
-                    "Other rangeland area"];
-
-// styled layer descriptor for delta SEI
-
-// cols delta SEI
-var colsDelta = ['#67001F', '#B2182B', '#D6604D', '#F4A582', '#FDDBC7', 
-  'grey', '#D1E5F0', '#92C5DE', '#4393C3', '#2166AC', '#053061'];
-var breaksDeltaSEI = [-1, -0.2, -0.1, -0.05, -0.02, -0.01, 0.01, 0.02, 0.05, 0.1, 0.2, 1];
-
-
-exports.sldDiff1 = figF.createSldColorBlocks(breaksDeltaSEI, colsDelta);
-
-// // set position of panel
-// var legend = ui.Panel({
-//   style: {
-//     position: 'bottom-left',
-//     padding: '8px 15px'
-//   }
-// });
- 
-// // Create legend title
-// var legendTitle = ui.Label({
-//   value: 'Agreement among GCMs',
-//   style: {
-//     fontWeight: 'bold',
-//     fontSize: '12px',
-//     margin: '0 0 4px 0',
-//     padding: '0'
-//     }
-// });
+// type 3, delta rr
+var T3Palette = palettes.colorbrewer.PRGn[7]; // 
 
 // mapping visualizing elements -----------------------------------------------------------
 
+var visT1 = {"min":-1, max: 1, "palette": T1Palette}; // type 1
+exports.visT1 = visT1;
 
+exports.visT2 = {"opacity":1,"min":1,"max":4, "palette":rrT2Palette}; // type 2
+// purple white green
+ 
+var visT3 = {"opacity":1,"min":-1,"max":1, "palette": T3Palette}; // type 3
+exports.visT3 = visT3;
+
+// building legends ------------------------------------------------------------------------
+
+var styleLegendTitle = {
+    fontWeight: 'bold',
+    fontSize: '11px',
+    margin: '0 0 4px 0',
+    padding: '0'
+    };
+ 
+// no wrapping in 'ui.label' so can't reuse and not get 'component already rendered' error   
+var emptyLine = {
+    value: '            ',
+    style: {fontSize: '6px'},
+  };
+
+var legends = ui.Panel({
+  style: {
+    position: 'bottom-left',
+    padding: '6px 6px'
+  }
+});
+
+// continous RR legend
+var legends = figf.makeVisParamsRampLegend(legends, visT1, 'Continuous R&R', 'Low', 'High');
+
+// categorical RR legend (i.e., type 2 colors)
+
+// Create legend title
+var legendTitleT2 = ui.Label({
+  value: 'Categorical R&R',
+  style: styleLegendTitle
+});
+ 
+// Add the title to the panel
+legends.add(ui.Label(emptyLine)).add(legendTitleT2);
+// Add color and and names
+for (var i = 0; i < rrT2Palette.length; i++) {
+  legends.add(figf.makeRow(rrT2Palette[i], rrT2Names[i]));
+  }  
+ 
+
+// delta R&R
+legends.add(ui.Label(emptyLine));
+var legends = figf.makeVisParamsRampLegend(legends, visT3, 'Delta R&R', 'Decrease', 'Increase');
+// exports.legendT3 = legendT3;
+
+exports.legendsRr = legends;
 
 // testing -------------------------------------
 /*//print(legends)
