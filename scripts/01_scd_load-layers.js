@@ -140,7 +140,7 @@ var histLayersD = {
   'Q5': ui.Map.Layer(histSEI.select('Q5'), figP.visSEI, 'Q5' + yrs)
 };
 
-exports.histLayersD = histLayersD;
+
 // Change in SEI ---------------------------------------------------------------------------
 // absolute change in SEI relative to historical
 
@@ -230,7 +230,11 @@ var loadFutFunsD = {
   'numAgree': loadNumAgree
 };
 
+// exports ---------------------------------------------------------------
 exports.loadFutFunsD = loadFutFunsD;
+exports.histLayersD = histLayersD;
+exports.scenD = scenD;
+exports.varsD = varsD;
 
 // testing
 
