@@ -70,10 +70,10 @@ Object.keys(scenD2).forEach(function(key) { // iteration over the bands in each 
 var varsD = {
   'Change in SEI Class': 'c9',
   'Change in SEI': 'SEI',
-  'Change in Q1 (Sagebrush; %)': 'Q1',
-  'Change in Q2 (Perennials; %)': 'Q2',
-  'Change in Q3 (Annuals; %)': 'Q3',
-  'Drivers of SEI Change (R = sage, G = perennials, B = annuals)': 'rgb',
+  '% Change in Q1 (Sagebrush)': 'Q1',
+  '% Change in Q2 (Perennials; %)': 'Q2',
+  '% Change in Q3 (Annuals; %)': 'Q3',
+  'Drivers of SEI Change': 'rgb',
   'Agreement among GCMs': 'gcmAgree'
 };
 
@@ -237,21 +237,17 @@ var loadFutFunsD = {
 
 exports.loadFutFunsD = loadFutFunsD;
 
-
-
-
 // testing
 
+/*
 var r = Object.keys(runD)[1];
 var s = Object.keys(scenD)[1];
-
-/*
 Map.layers().add(loadNumAgree(r, s))
 Map.layers().add(loadRgb(r, s))
 Map.layers().add(loadDeltaSEI(r, s))
 Map.layers().add(loadDeltaQ1(r, s));
-*/
 Map.layers().add(loadC9(r, s));
 Object.keys(histLayersD).forEach(function(key) {
   Map.layers().add(histLayersD[key])
 });
+*/
