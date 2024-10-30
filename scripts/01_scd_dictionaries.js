@@ -81,71 +81,57 @@ var dict = ee.Dictionary({}); // master dictionary
 
 // add numGCM good to dictionary -----------------------------------------------------
 
-// first digit is current class (1 = core, 2 grow, 3 other), digits 2 and 3 are
-// the number of GCMs that agree
-// 113 means 13 GCMS agree will stay core (class 1)
-// note some 215s existed in some earlier layers (i.e. grow, 15 GCMs agree on stability/improvement
-// which isn't possible, this has to do with how the pyramid is being
-// defined in GEE and disappears when you 'zoom'
-// the 'from' vector created in the SEI/scripts/09_maps.R script 
-
-var gcmAgreeFrom = [115, 114, 113, 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 
-  102, 101, 100, 215, 214, 213, 212, 211, 210, 209, 208, 207, 206, 205, 204, 203, 
-  202, 201, 200, 300];
-  
-var gcmAgreeTo = [1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 5, 5, 5, 5, 6, 6, 
-  6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 9];
-  
+// agreement on change in SEI class (i.e. type of map shown in fig 2 of Holdrege et al. 2024)
 var loadGcmAgree =  function(nameRun, nameScen) {
   var image = ee.Image(pathProducts + v + '_numGcmGood_' + resolution + '_' + runD[nameRun] + '_mode')
-    .select('numGcmGood_' + scenD[nameScen])
-    //.selfMask(); // 0s should be considered NA
-  //var image = image0.remap(gcmAgreeFrom, gcmAgreeTo);
+    .select('numGcmGood_' + scenD[nameScen]);
+
   var imageName = 'gcmAgree_' + nameRun + '_' + scenD[nameScen];
-  return image
-  //return ui.Map.Layer(image, figP.visNumGcm, imageName);
+  return ui.Map.Layer(image, figP.visNumGcm, imageName);
 };
-
-var loadGcmAgree2 =  function(nameRun, nameScen) {
-  var image0 = ee.Image(pathProducts + v + '_numGcmGood_' + resolution + '_' + runD[nameRun])
-      .select('numGcmGood_' + scenD[nameScen])
-    //.selfMask(); // 0s should be considered NA
-  var image = image0.remap(gcmAgreeFrom, gcmAgreeTo);
-  var imageName = 'gcmAgree_' + nameRun + '_' + scenD[nameScen];
-  return image
-  //return ui.Map.Layer(image, figP.visNumGcm, imageName);
-};
-
-
-// one image per scenario 
-
-/*gcmrunNames.forEach(function(nameRun) { // iterating over the images for the different runs
-  var image = ee.Image(pathProducts + v + '_numGcmGood_' + resolution + '_' + runD[nameRun]);
-  scenNames.forEach(function(nameScen) { // iteration over the bands in each image (climate scenarios)
-    var newKey = 'gcmAgree_' + nameRun + '_' + scenD[nameScen];
-    var dict = dict.set(newKey, image.select('numGcmGood_' + scenD[nameScen]));
-  });
-  
-  
-});*/
 
 // add RGB layer to dictionary ----------------------------------------------------------
 
-// contributions by each Q compontent to changes --------------------------------------
+// contributions by each Q compontent to changes 
 
 var qBands = ['Q1raw', 'Q2raw', 'Q3raw'];
 
-// creating RGB maps
-// R = sage, G = perennials, B = annuals
 
+// R = sage, G = perennials, B = annuals
 var visRgb = {
   bands: qBands,
   min: 0,
   max: 1
 };
 
-print(lyr.main({root: 'fire1_eind1_c4grass1_co20_2311' + '_'}).get('qPropMed2'));
+var loadRgb = function(nameRun, nameScen){
+    var root =  runD[nameRun] + '_';
+    var scen = scenD[nameScen];
+    var RCP = scen.match('RCP[0-9]{2}')[0];
+    var epoch = scen.match('[0-9]{4}-[0-9]{4}$')[0];
+    
+    var d = lyr.main({
+      root: root,
+      epoch: epoch,
+      RCP: RCP
+    });
+  
+    var diffRedImg2 = ee.Image(d.get('diffRed2Img'));
+    var image = ee.Image(d.get('qPropMed2'))
+    // areas with < 0.01 delta sei are shown as grey
+      .where(diffRedImg2.select('Q5s_median').abs().lt(0.01), 211/255);
+    var imageName = 'rgb_' + nameRun + '_' + scenD[nameScen];
+    return ui.Map.Layer(image, visRgb, imageName);
+};
 
+// load historical layers ------------------------------------------------------------------
+
+var histSEI = ee.Image(pathPub + 'SEI-Q_v11_2017-2020')
+  .rename('SEI, Q1, Q2, Q3, Q4, Q5');
+  
+var histSEI
+
+print(ee.Image(pathPub + 'SEI_Default_RCP45_2031-2060').bandNames())
 
 // make this inside server side map functions? probably still won't work because of the call
 // to ee.Image() inside lyr.main()?
@@ -174,10 +160,11 @@ print(lyr.main({root: 'fire1_eind1_c4grass1_co20_2311' + '_'}).get('qPropMed2'))
 
 
 // testing
-print(loadGcmAgree('Default', 'RCP4.5 (2071-2100)'))
-Map.addLayer(loadGcmAgree('Default', 'RCP4.5 (2071-2100)'), figP.visNumGcm, 'agree')
-Map.addLayer(loadGcmAgree2('Default', 'RCP4.5 (2071-2100)'), figP.visNumGcm, 'mean pyramid')
-//var map = ui.Map();
-//ui.root.add(map); // order that you add panl vs map affects if panel is right or left
-//map.add(loadGcmAgree('Default', 'RCP4.5 (2031-2060)'))
-//print(loadGcmAgree('Default', 'RCP4.5 (2031-2060)'))
+
+var r = Object.keys(runD)[0]
+var s = Object.keys(scenD)[0]
+/*
+Map.layers().add(loadGcmAgree(r, s))
+Map.layers().add(loadRgb(r, s))
+*/
+
