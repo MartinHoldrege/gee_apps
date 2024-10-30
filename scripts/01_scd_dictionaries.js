@@ -72,7 +72,7 @@ var varsD = {
   'Change in SEI': 'SEI',
   'Change in Q1 (Sagebrush; %)': 'Q1',
   'Change in Q2 (Perennials; %)': 'Q2',
-  'Change in Q1 (Annuals; %)': 'Q3',
+  'Change in Q3 (Annuals; %)': 'Q3',
   'Drivers of SEI Change (R = sage, G = perennials, B = annuals)': 'rgb',
   'Agreement among GCMs': 'gcmAgree'
 };
@@ -86,7 +86,7 @@ var loadGcmAgree =  function(nameRun, nameScen) {
   var image = ee.Image(pathProducts + v + '_numGcmGood_' + resolution + '_' + runD[nameRun] + '_mode')
     .select('numGcmGood_' + scenD[nameScen]);
 
-  var imageName = 'gcmAgree_' + nameRun + '_' + scenD[nameScen];
+  var imageName = 'gcmAgree_' + nameRun + '_' + scenD2[nameScen];
   return ui.Map.Layer(image, figP.visNumGcm, imageName);
 };
 
@@ -120,51 +120,57 @@ var loadRgb = function(nameRun, nameScen){
     var image = ee.Image(d.get('qPropMed2'))
     // areas with < 0.01 delta sei are shown as grey
       .where(diffRedImg2.select('Q5s_median').abs().lt(0.01), 211/255);
-    var imageName = 'rgb_' + nameRun + '_' + scenD[nameScen];
+    var imageName = 'rgb_' + nameRun + '_' + scenD2[nameScen];
     return ui.Map.Layer(image, visRgb, imageName);
 };
 
 // load historical layers ------------------------------------------------------------------
 
 var histSEI = ee.Image(pathPub + 'SEI-Q_v11_2017-2020')
-  .rename('SEI, Q1, Q2, Q3, Q4, Q5');
+  .rename('Q5s', 'Q1', 'Q2', 'Q3', 'Q4', 'Q5'); // Q5s is the continuous SEI
+
+var histQ5sc3 = SEI.seiToC3(histSEI.select('Q5s')); // historical 3 class SEI
+var histSEI = histSEI.addBands(histQ5sc3);
+
+// Change in SEI ---------------------------------------------------------------------------
+
+var loadDeltaSEI = function(nameRun, nameScen) {
+  var pathImage = pathPub + 'SEI_' + nameRun + '_' + scenD2[nameScen];
+  var futSEI = ee.Image(pathImage)
+    .rename(['SEI_low', 'SEI_high', 'SEI_median'])
+    .select('SEI_median');
   
-var histSEI
+  var deltaSEI = futSEI.subtract(histSEI.select('Q5s'));
+  var imageName = 'deltaSEI_' + nameRun + '_' + scenD2[nameScen];
+  return ui.Map.Layer(deltaSEI.sldStyle(figP.sldDiff1), {}, imageName);
+};
 
-print(ee.Image(pathPub + 'SEI_Default_RCP45_2031-2060').bandNames())
+// proportional change in Qs --------------------------------------------------------
 
-// make this inside server side map functions? probably still won't work because of the call
-// to ee.Image() inside lyr.main()?
-/*runNames.forEach(function(nameRun) { // iterating over the images for the different runs
-  scenNames.forEach(function(nameScen) {
-    var root =  runD[nameRun] + '_';
-    var scen = scenD[nameScen];
-    var RCP = scen.match('RCP[0-9]{2}')[0];
-    var epoch = scen.match('[0-9]{4}-[0-9]{4}$')[0];
-    
-    var d = lyr.main({
-      root: root,
-      epoch: epoch,
-      RCP: RCP
-    });
-  
-    var diffRedImg2 = ee.Image(d.get('diffRed2Img'));
-    var forRgb = ee.Image(d.get('qPropMed2'))
-    // areas with < 0.01 delta sei are shown as grey
-      .where(diffRedImg2.select('Q5s_median').abs().lt(0.01), 211/255);
-    var newKey = 'rgb_' + nameRun + '_' + scenD[nameScen];
-    dict = dict.set(newKey, forRgb);
-  });
-});*/
-
+// Q argument should be a string 'Q1' 'Q2' or 'Q3'
+var loadDeltaQ = function(nameRun, nameScen, Q) {
+  var bandNames = ['Q1_low', 'Q2_low', 'Q3_low', 'Q1_high', 'Q2_high', 'Q3_high', 'Q1_median', 'Q2_median', 'Q3_median'];
+  var pathImage = pathPub + 'Q_' + nameRun + '_' + scenD2[nameScen];
+  var futQ = ee.Image(pathImage)
+    .rename(bandNames)
+    .select(Q + '_median');
+  var histQ = histSEI.select(Q);
+  var deltaQ = futQ.subtract(histQ).divide(histQ) // proportion change
+    .multiply(100); // converted to percent change
+  var imageName = 'percentChange' + Q + '_' + nameRun + '_' + scenD2[nameScen];
+  return ui.Map.Layer(deltaQ.sldStyle(figP.sldDeltaQ), {}, imageName);  
+};
 
 
 // testing
 
-var r = Object.keys(runD)[0]
-var s = Object.keys(scenD)[0]
+var r = Object.keys(runD)[0];
+var s = Object.keys(scenD)[1];
+
 /*
 Map.layers().add(loadGcmAgree(r, s))
 Map.layers().add(loadRgb(r, s))
+Map.layers().add(loadDeltaSEI(r, s))
+Map.layers().add(loadDeltaQ(r, s, 'Q2'));
 */
 
