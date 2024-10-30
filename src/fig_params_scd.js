@@ -41,7 +41,7 @@ var labelsNumGcm = ["Stable CSA (robust agreement)",
 
 // cols delta SEI
 var colsDelta = ['#67001F', '#B2182B', '#D6604D', '#F4A582', '#FDDBC7', 
-  'grey', '#D1E5F0', '#92C5DE', '#4393C3', '#2166AC', '#053061'];
+  '#808080', '#D1E5F0', '#92C5DE', '#4393C3', '#2166AC', '#053061'];
 var breaksDeltaSEI = [-1, -0.2, -0.1, -0.05, -0.02, -0.01, 0.01, 0.02, 0.05, 0.1, 0.2, 1];
 
 
