@@ -45,8 +45,11 @@ var colsDelta = ['#67001F', '#B2182B', '#D6604D', '#F4A582', '#FDDBC7',
   grey, '#D1E5F0', '#92C5DE', '#4393C3', '#2166AC', '#053061'];
 var breaksDeltaSEI = [-1, -0.2, -0.1, -0.05, -0.02, -0.01, 0.01, 0.02, 0.05, 0.1, 0.2, 1];
 
-
 exports.sldDiff1 = figF.createSldColorBlocks(breaksDeltaSEI, colsDelta);
+
+// cols for % change in Q
+var breaksDeltaQ =[-100, -50, -25, -15, -10, -5, 5, 10, 15, 25, 50, 100];
+exports.sldDeltaQ = figF.createSldColorBlocks(breaksDeltaQ, colsDelta);
 
 // // set position of panel
 // var legend = ui.Panel({
