@@ -77,6 +77,13 @@ var c9Names =  [
 
 exports.visC9 = {min: 1, max: 9, palette: c9Palette}
 
+
+exports.visSEI = {min:0, max: 1, palette: ['#ece7f2', '#023858']}; // light to dark blue
+
+var c3Palette = ["#142b65", "#99d4e7", "#eee1ba"]
+exports.visc3 = {opacity: 1, min:1, max:3, palette: c3Palette};
+
+
 // // set position of panel
 // var legend = ui.Panel({
 //   style: {
