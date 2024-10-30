@@ -8,7 +8,7 @@
 
 // dependencies --------------------------------------------------------------------------
 
-var figf = require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
+var figF = require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
 
 // color palettes, see https://github.com/gee-community/ee-palettes
 var palettes = require('users/gena/packages:palettes');
@@ -37,6 +37,15 @@ var labelsNumGcm = ["Stable CSA (robust agreement)",
                     "Loss of GOA (non-robust agreement)", 
                     "Loss of GOA (robust agreement)", 
                     "Other rangeland area"];
+// styled layer descriptor for delta SEI
+
+// cols delta SEI
+var colsDelta = ['#67001F', '#B2182B', '#D6604D', '#F4A582', '#FDDBC7', 
+  'grey', '#D1E5F0', '#92C5DE', '#4393C3', '#2166AC', '#053061'];
+var breaksDeltaSEI = [-1, -0.2, -0.1, -0.05, -0.02, -0.01, 0.01, 0.02, 0.05, 0.1, 0.2, 1];
+
+
+exports.sldDiff1 = figF.createSldColorBlocks(breaksDeltaSEI, colsDelta);
 
 // // set position of panel
 // var legend = ui.Panel({
