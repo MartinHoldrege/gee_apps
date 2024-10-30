@@ -75,33 +75,15 @@ var c9Names =  [
   'Stable ORA'
 ];
 
-exports.visC9 = {min: 1, max: 9, palette: c9Palette}
+exports.visC9 = {min: 1, max: 9, palette: c9Palette};
 
 
 exports.visSEI = {min:0, max: 1, palette: ['#ece7f2', '#023858']}; // light to dark blue
 
-var c3Palette = ["#142b65", "#99d4e7", "#eee1ba"]
+var c3Palette = ["#142b65", "#99d4e7", "#eee1ba"];
 exports.visc3 = {opacity: 1, min:1, max:3, palette: c3Palette};
 
 
-// // set position of panel
-// var legend = ui.Panel({
-//   style: {
-//     position: 'bottom-left',
-//     padding: '8px 15px'
-//   }
-// });
- 
-// // Create legend title
-// var legendTitle = ui.Label({
-//   value: 'Agreement among GCMs',
-//   style: {
-//     fontWeight: 'bold',
-//     fontSize: '12px',
-//     margin: '0 0 4px 0',
-//     padding: '0'
-//     }
-// });
 
 // mapping visualizing elements -----------------------------------------------------------
 
