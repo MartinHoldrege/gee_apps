@@ -13,9 +13,10 @@ var figF = require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
 // color palettes, see https://github.com/gee-community/ee-palettes
 var palettes = require('users/gena/packages:palettes');
 
-// colors  ----------------------------------------------------------------------------
+// colors and visualiztion parameters----------------------------------------------------------
 var grey = '#bebebe';
 
+// number of GCMs agreeing
 var colsNumGcm = ['#053061',
                  '#92c5de',
                  '#e31a1c',
@@ -28,7 +29,6 @@ var colsNumGcm = ['#053061',
 
 exports.visNumGcm = {min: 1, max: 9, palette: colsNumGcm};
 
-//legends
 var labelsNumGcm = ["Stable CSA (robust agreement)", 
                     "Stable CSA (non-robust agreement)", 
                     "Loss of CSA (non-robust agreement)", 
@@ -50,6 +50,32 @@ exports.sldDiff1 = figF.createSldColorBlocks(breaksDeltaSEI, colsDelta);
 // cols for % change in Q
 var breaksDeltaQ =[-100, -50, -25, -15, -10, -5, 5, 10, 15, 25, 50, 100];
 exports.sldDeltaQ = figF.createSldColorBlocks(breaksDeltaQ, colsDelta);
+
+// cols for c9 
+
+var c9Palette =  ['#142b65', // stable core (black)
+              '#b30000', //'#d7301f', # core becomes grow # reds from 9-class OrRd
+             '#67001f',  // core becomes impacted
+             '#757170', // grow becomes core
+             '#99d4e7', // stable grow
+             '#fc8d59',// grow becomes impacted
+             '#000000', // impacted becomes core
+             '#D9D9D9', // impacted becomes grow
+             '#eee1ba'] // stable impacted
+             
+var c9Names =  [
+  'Stable CSA',
+  'CSA becomes GOA',
+  'CSA becomes ORA',
+  'GOA becomes CSA',
+  'Stable GOA',
+  'GOA becomes ORA',
+  'ORA becomes CSA',
+  'ORA becomes GOA',
+  'Stable ORA'
+];
+
+exports.visC9 = {min: 1, max: 9, palette: c9Palette}
 
 // // set position of panel
 // var legend = ui.Panel({
