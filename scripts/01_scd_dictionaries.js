@@ -18,7 +18,7 @@
 
 // dependencies --------------------------------------------------------------------
 
-var f = require('users/MartinHoldrege/gee_apps:src/general_functions.js')
+var f = require('users/MartinHoldrege/gee_apps:src/general_functions.js');
 var SEI = require("users/MartinHoldrege/SEI:src/SEIModule.js");
 var figP = require("users/MartinHoldrege/gee_apps:src/fig_params_scd.js");
 
@@ -77,12 +77,11 @@ var varsD = {
   'Agreement among GCMs': 'gcmAgree'
 };
 
-var dict = ee.Dictionary({}); // master dictionary
 
 // add numGCM good to dictionary -----------------------------------------------------
 
 // agreement on change in SEI class (i.e. type of map shown in fig 2 of Holdrege et al. 2024)
-var loadGcmAgree =  function(nameRun, nameScen) {
+var loadNumAgree =  function(nameRun, nameScen) {
   var image = ee.Image(pathProducts + v + '_numGcmGood_' + resolution + '_' + runD[nameRun] + '_mode')
     .select('numGcmGood_' + scenD[nameScen]);
 
@@ -126,51 +125,133 @@ var loadRgb = function(nameRun, nameScen){
 
 // load historical layers ------------------------------------------------------------------
 
+// note when the rasters were ingested into gee they lost they're band names
+// this is the order of the names in the original tifs (checked in R)
+
 var histSEI = ee.Image(pathPub + 'SEI-Q_v11_2017-2020')
   .rename('Q5s', 'Q1', 'Q2', 'Q3', 'Q4', 'Q5'); // Q5s is the continuous SEI
 
 var histQ5sc3 = SEI.seiToC3(histSEI.select('Q5s')); // historical 3 class SEI
 var histSEI = histSEI.addBands(histQ5sc3);
 
-// Change in SEI ---------------------------------------------------------------------------
+var yrs = '_2017-2020'
+var histLayersD = {
+  'SEI': ui.Map.Layer(histSEI.select('Q5s'), figP.visSEI, 'SEI' + yrs),
+  'c3': ui.Map.Layer(histSEI.select('Q5sc3'), figP.visc3, 'c3' + yrs),
+  'Q1': ui.Map.Layer(histSEI.select('Q1'), figP.visSEI, 'Q1' + yrs),
+  'Q2': ui.Map.Layer(histSEI.select('Q2'), figP.visSEI, 'Q2' + yrs),
+  'Q3': ui.Map.Layer(histSEI.select('Q3'), figP.visSEI, 'Q3' + yrs),
+  'Q4': ui.Map.Layer(histSEI.select('Q4'), figP.visSEI, 'Q4' + yrs),
+  'Q5': ui.Map.Layer(histSEI.select('Q5'), figP.visSEI, 'Q5' + yrs)
+};
 
-var loadDeltaSEI = function(nameRun, nameScen) {
+exports.histLayersD = histLayersD;
+// Change in SEI ---------------------------------------------------------------------------
+// absolute change in SEI relative to historical
+
+var getFutSEI = function(nameRun, nameScen) {
   var pathImage = pathPub + 'SEI_' + nameRun + '_' + scenD2[nameScen];
   var futSEI = ee.Image(pathImage)
     .rename(['SEI_low', 'SEI_high', 'SEI_median'])
     .select('SEI_median');
+    
+  return futSEI;
+};
+
+var loadDeltaSEI = function(nameRun, nameScen) {
   
+  var futSEI = getFutSEI(nameRun, nameScen);
   var deltaSEI = futSEI.subtract(histSEI.select('Q5s'));
   var imageName = 'deltaSEI_' + nameRun + '_' + scenD2[nameScen];
+  
   return ui.Map.Layer(deltaSEI.sldStyle(figP.sldDiff1), {}, imageName);
 };
 
-// proportional change in Qs --------------------------------------------------------
+// percent change in Qs --------------------------------------------------------
 
 // Q argument should be a string 'Q1' 'Q2' or 'Q3'
-var loadDeltaQ = function(nameRun, nameScen, Q) {
-  var bandNames = ['Q1_low', 'Q2_low', 'Q3_low', 'Q1_high', 'Q2_high', 'Q3_high', 'Q1_median', 'Q2_median', 'Q3_median'];
-  var pathImage = pathPub + 'Q_' + nameRun + '_' + scenD2[nameScen];
-  var futQ = ee.Image(pathImage)
-    .rename(bandNames)
-    .select(Q + '_median');
-  var histQ = histSEI.select(Q);
-  var deltaQ = futQ.subtract(histQ).divide(histQ) // proportion change
-    .multiply(100); // converted to percent change
-  var imageName = 'percentChange' + Q + '_' + nameRun + '_' + scenD2[nameScen];
-  return ui.Map.Layer(deltaQ.sldStyle(figP.sldDeltaQ), {}, imageName);  
+
+// returns a load function for a particular Q
+var loadDeltaQFactory = function(Q) {
+  var bandNames = ['Q1_low', 'Q2_low', 'Q3_low', 'Q1_high', 
+    'Q2_high', 'Q3_high', 'Q1_median', 'Q2_median', 'Q3_median'];
+ 
+  var f = function(nameRun, nameScen) {
+    var pathImage = pathPub + 'Q_' + nameRun + '_' + scenD2[nameScen];
+    var futQ = ee.Image(pathImage)
+      .rename(bandNames)
+      .select(Q + '_median');
+    var histQ = histSEI.select(Q);
+    var deltaQ = futQ.subtract(histQ).divide(histQ) // proportion change
+      .multiply(100); // converted to percent change
+    var imageName = 'percentChange' + Q + '_' + nameRun + '_' + scenD2[nameScen];
+    return ui.Map.Layer(deltaQ.sldStyle(figP.sldDeltaQ), {}, imageName);  
+  };
+  return f;
 };
+
+var loadDeltaQ1 = loadDeltaQFactory('Q1');
+var loadDeltaQ2 = loadDeltaQFactory('Q2');
+var loadDeltaQ3 = loadDeltaQFactory('Q3');
+
+
+// change in SEI class -------------------------------------------------------------
+
+// the c9 images for default simulations are available as pre-created layers
+var getDefaultC9 = function(nameScen) {
+  var pathImage = pathPub + 'c9_Default' + '_' + scenD2[nameScen];
+  var image = ee.Image(pathImage)
+    .rename('c9_low', 'c9_median', 'c9_high')
+    .select('c9_median');
+  return image;
+};
+
+var loadC9 = function(nameRun, nameScen) {
+  // for now calculating on c9 on fly for Default, because the c9 asset has weird 
+  // pyramiding that causes black dots on map at high pyramid levels
+  // if (nameRun === 'Default') { 
+  if (false) {
+    var c9 = getDefaultC9(nameScen);
+  } else {
+    // calculating SEI class
+    var futC3 = SEI.seiToC3(getFutSEI(nameRun, nameScen)); // future c3
+    var c9 = SEI.calcTransitions(histSEI.select('Q5sc3'), futC3);
+  }
+  var imageName = 'c9_' + nameRun + '_' + scenD2[nameScen];
+  return ui.Map.Layer(c9, figP.visC9, imageName);
+};
+
+
+// Dictionary containing load functions ------------------------------------------------
+
+// load functions for 'future' layers
+var loadFutFunsD = {
+  'SEI': loadDeltaSEI,
+  'c9': loadC9,
+  'Q1': loadDeltaQ1,
+  'Q2': loadDeltaQ2,
+  'Q3': loadDeltaQ3,
+  'rgb': loadRgb,
+  'numAgree': loadNumAgree
+};
+
+exports.loadFutFunsD = loadFutFunsD;
+
+
 
 
 // testing
 
-var r = Object.keys(runD)[0];
+var r = Object.keys(runD)[1];
 var s = Object.keys(scenD)[1];
 
 /*
-Map.layers().add(loadGcmAgree(r, s))
+Map.layers().add(loadNumAgree(r, s))
 Map.layers().add(loadRgb(r, s))
 Map.layers().add(loadDeltaSEI(r, s))
-Map.layers().add(loadDeltaQ(r, s, 'Q2'));
+Map.layers().add(loadDeltaQ1(r, s));
 */
-
+Map.layers().add(loadC9(r, s));
+Object.keys(histLayersD).forEach(function(key) {
+  Map.layers().add(histLayersD[key])
+});
