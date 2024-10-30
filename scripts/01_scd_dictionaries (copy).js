@@ -97,8 +97,18 @@ var gcmAgreeTo = [1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 5, 5, 5, 5, 6,
   6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 9];
   
 var loadGcmAgree =  function(nameRun, nameScen) {
+  var image0 = ee.Image(pathProducts + v + '_numGcmGood_' + resolution + '_' + runD[nameRun] + '_mode')
+    // .select('numGcmGood_' + scenD[nameScen])
+    //.selfMask(); // 0s should be considered NA
+  var image = image0.remap(gcmAgreeFrom, gcmAgreeTo);
+  var imageName = 'gcmAgree_' + nameRun + '_' + scenD[nameScen];
+  return image
+  //return ui.Map.Layer(image, figP.visNumGcm, imageName);
+};
+
+var loadGcmAgree2 =  function(nameRun, nameScen) {
   var image0 = ee.Image(pathProducts + v + '_numGcmGood_' + resolution + '_' + runD[nameRun])
-    .select('numGcmGood_' + scenD[nameScen])
+      .select('numGcmGood_' + scenD[nameScen])
     //.selfMask(); // 0s should be considered NA
   var image = image0.remap(gcmAgreeFrom, gcmAgreeTo);
   var imageName = 'gcmAgree_' + nameRun + '_' + scenD[nameScen];
@@ -164,8 +174,9 @@ print(lyr.main({root: 'fire1_eind1_c4grass1_co20_2311' + '_'}).get('qPropMed2'))
 
 
 // testing
-
+print(loadGcmAgree('Default', 'RCP4.5 (2071-2100)'))
 Map.addLayer(loadGcmAgree('Default', 'RCP4.5 (2071-2100)'), figP.visNumGcm, 'agree')
+Map.addLayer(loadGcmAgree2('Default', 'RCP4.5 (2071-2100)'), figP.visNumGcm, 'mean pyramid')
 //var map = ui.Map();
 //ui.root.add(map); // order that you add panl vs map affects if panel is right or left
 //map.add(loadGcmAgree('Default', 'RCP4.5 (2031-2060)'))
