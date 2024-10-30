@@ -14,9 +14,10 @@ var figF = require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
 var palettes = require('users/gena/packages:palettes');
 
 // colors  ----------------------------------------------------------------------------
+var grey = '#bebebe';
 
 var colsNumGcm = ['#053061',
-                '#92c5de',
+                 '#92c5de',
                  '#e31a1c',
                  '#800026',
                  '#252525',
@@ -41,7 +42,7 @@ var labelsNumGcm = ["Stable CSA (robust agreement)",
 
 // cols delta SEI
 var colsDelta = ['#67001F', '#B2182B', '#D6604D', '#F4A582', '#FDDBC7', 
-  '#bebebe', '#D1E5F0', '#92C5DE', '#4393C3', '#2166AC', '#053061'];
+  grey, '#D1E5F0', '#92C5DE', '#4393C3', '#2166AC', '#053061'];
 var breaksDeltaSEI = [-1, -0.2, -0.1, -0.05, -0.02, -0.01, 0.01, 0.02, 0.05, 0.1, 0.2, 1];
 
 
