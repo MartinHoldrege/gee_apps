@@ -97,10 +97,10 @@ var gcmAgreeTo = [1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 5, 5, 5, 5, 6,
   6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 9];
   
 var loadGcmAgree =  function(nameRun, nameScen) {
-  var image0 = ee.Image(pathProducts + v + '_numGcmGood_' + resolution + '_' + runD[nameRun] + '_mode')
-    // .select('numGcmGood_' + scenD[nameScen])
+  var image = ee.Image(pathProducts + v + '_numGcmGood_' + resolution + '_' + runD[nameRun] + '_mode')
+    .select('numGcmGood_' + scenD[nameScen])
     //.selfMask(); // 0s should be considered NA
-  var image = image0.remap(gcmAgreeFrom, gcmAgreeTo);
+  //var image = image0.remap(gcmAgreeFrom, gcmAgreeTo);
   var imageName = 'gcmAgree_' + nameRun + '_' + scenD[nameScen];
   return image
   //return ui.Map.Layer(image, figP.visNumGcm, imageName);
