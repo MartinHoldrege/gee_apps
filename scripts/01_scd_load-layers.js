@@ -235,7 +235,7 @@ var loadFutFunsD = {
 // climate scenario
 var loadFutLayer = function(varType, nameRun, nameScen) {
   var f = loadFutFunsD[varType];
-  f(nameRun, nameScen);
+  return f(nameRun, nameScen);
 };
 
 // exports ---------------------------------------------------------------
