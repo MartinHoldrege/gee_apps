@@ -132,7 +132,7 @@ var histSEI = histSEI.addBands(histQ5sc3);
 
 var yrs = '_2017-2020';
 var histLayersD = {
-  'none': ui.Map.Layer(ee.Image(0).selfMask(), {}, '', false),
+  'none': ui.Map.Layer(ee.Image(0).selfMask(), {}, ''),
   'SEI': ui.Map.Layer(histSEI.select('Q5s'), figP.visSEI, 'SEI' + yrs),
   'c3': ui.Map.Layer(histSEI.select('Q5sc3'), figP.visc3, 'c3' + yrs),
   'Q1': ui.Map.Layer(histSEI.select('Q1'), figP.visSEI, 'Q1' + yrs),
