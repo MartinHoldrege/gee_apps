@@ -130,7 +130,7 @@ var histSEI = ee.Image(pathPub + 'SEI-Q_v11_2017-2020')
 var histQ5sc3 = SEI.seiToC3(histSEI.select('Q5s')); // historical 3 class SEI
 var histSEI = histSEI.addBands(histQ5sc3);
 
-var yrs = '_2017-2020'
+var yrs = '_2017-2020';
 var histLayersD = {
   'SEI': ui.Map.Layer(histSEI.select('Q5s'), figP.visSEI, 'SEI' + yrs),
   'c3': ui.Map.Layer(histSEI.select('Q5sc3'), figP.visc3, 'c3' + yrs),
@@ -139,6 +139,17 @@ var histLayersD = {
   'Q3': ui.Map.Layer(histSEI.select('Q3'), figP.visSEI, 'Q3' + yrs),
   'Q4': ui.Map.Layer(histSEI.select('Q4'), figP.visSEI, 'Q4' + yrs),
   'Q5': ui.Map.Layer(histSEI.select('Q5'), figP.visSEI, 'Q5' + yrs)
+};
+
+// names to be used in dropdown menu of layers in histLayersD
+var histNamesD = {
+  'SEI class': c3,
+  'SEI (continuous)': 'SEI',
+  "Q1 ('quality' score of sagebrush)": 'Q1',
+  "Q2 ('quality' score of perennials)": 'Q2',
+  "Q3 ('quality' score of annuals)": 'Q3',
+  "Q4 ('quality' score of human modification)": 'Q4',
+  "Q4 ('quality' score of conifers)": 'Q5'
 };
 
 
