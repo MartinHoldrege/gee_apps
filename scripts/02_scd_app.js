@@ -9,10 +9,12 @@
  * 
  * Author: Martin Holdrege
  * 
- * 
+ * TO DO: make it so that when any of the future selectors are triggered,
+ * then the historical layer goes to none?
 * 
  * *******************************************************
 */ 
+
 
 
 // User-defined variables -----------------------------------------------------
