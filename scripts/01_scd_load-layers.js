@@ -144,7 +144,7 @@ var histLayersD = {
 
 // names to be used in dropdown menu of layers in histLayersD
 var histNamesD = {
-  "Don't show a historical layer": 'none',
+  "None selected": 'none',
   'SEI class': c3,
   'SEI (continuous)': 'SEI',
   "Q1 ('quality' score of sagebrush)": 'Q1',
