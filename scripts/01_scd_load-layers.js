@@ -63,16 +63,6 @@ Object.keys(scenD2).forEach(function(key) { // iteration over the bands in each 
     scenD2[key] = scenD[key].replace('2030', '2031').replace('2070', '2071');
   });
 
-var varsD = {
-  'Change in SEI Class': 'c9',
-  'Change in SEI': 'SEI',
-  '% Change in Q1 (Sagebrush)': 'Q1',
-  '% Change in Q2 (Perennials; %)': 'Q2',
-  '% Change in Q3 (Annuals; %)': 'Q3',
-  'Drivers of SEI Change': 'rgb',
-  'Agreement among GCMs': 'gcmAgree'
-};
-
 
 // add numGCM good to dictionary -----------------------------------------------------
 
@@ -167,6 +157,12 @@ var getFutSEI = function(nameRun, nameScen) {
   return futSEI;
 };
 
+var loadSEIClass = function(nameRun, nameScen) {
+  var image = SEI.seiToC3(getFutSEI(nameRun, nameScen));
+  var imageName = 'c3_' + nameRun + '_' + scenD2[nameScen];
+  return ui.Map.Layer(image, figP.visc3, imageName);
+};
+
 var loadDeltaSEI = function(nameRun, nameScen) {
   
   var futSEI = getFutSEI(nameRun, nameScen);
@@ -235,6 +231,7 @@ var loadC9 = function(nameRun, nameScen) {
 
 // load functions for 'future' layers
 var loadFutFunsD = {
+  'c3': loadSEIClass,
   'SEI': loadDeltaSEI,
   'c9': loadC9,
   'Q1': loadDeltaQ1,
