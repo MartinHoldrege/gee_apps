@@ -252,9 +252,9 @@ var loadFutLayer = function(varType, nameRun, nameScen) {
 // exports ---------------------------------------------------------------
 exports.loadFutLayer = loadFutLayer;
 exports.histLayersD = histLayersD;
+exports.histNamesD = histNamesD;
 exports.scenD = scenD;
 exports.histSEI = histSEI; 
-// exports.varsD = varsD;
 
 // testing
 
