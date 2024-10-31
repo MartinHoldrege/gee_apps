@@ -41,8 +41,9 @@ var runDisplayD = {
 
 // variable names to display in the dropdown
 var varDisplayD = {
-  'Change in SEI': 'SEI', 
+  'SEI class': 'c3',
   'Change in SEI class': 'c9',
+  'Change in SEI': 'SEI', 
   "% change in Q1 ('quality' score of sagebrush)": 'Q1',
   "% change in Q2 ('quality' score of perennials)": 'Q2',
   "% change in Q3 ('quality' score of annuals)": 'Q3',
@@ -209,7 +210,7 @@ rightMap.setControlVisibility(true);
 var leftFutSelector = addFutSelectors(leftMap, 'Left', updateLeftMap, 'top-left');
 var rightFutSelector = addFutSelectors(rightMap, 'Right', updateRightMap, 'top-right');
 
-var histSelector = addHistSelector(leftMap, 'bottom-left')
+// var histSelector = addHistSelector(leftMap, 'bottom-left')
 // create the split panel -----------------------------------------------
 
 // Create a SplitPanel to hold the adjacent, linked maps.
