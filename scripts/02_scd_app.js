@@ -71,12 +71,45 @@ var selectD = {
 
 // sytles -----------------------------------------------------------
 
-var styleDrop = {fontSize: '11px', margin: '1px'}
-var styleDropTitle = {fontSize: '11px', padding: '3px 1px 1px 1px', margin: '1px'}
-var styleTitle =  {fontSize: '12px', padding: '0px', fontWeight: 'bold', margin: '1px'};
+var styleDrop = {fontSize: '11px', margin: '1px'};
+var styleDropTitle = {fontSize: '11px', padding: '3px 1px 1px 1px', margin: '1px'};
+var styleTitle =  {fontSize: '14px', padding: '0px', fontWeight: 'bold', margin: '1px'};
 
 // functions --------------------------------------------------------------
 
+// historical layers selectors
+var updateHistMap = function(mapToChange) {
+  var key = histNamesD[selectD.histLayer];
+  var lyr = load.histLayersD[key];
+  mapToChange.layers().set(1, lyr);
+};
+
+function createHistSelector(mapToChange) {
+    var labelTitle = ui.Label('Layers for 2017-2020', styleTitle);
+    var labelHist = ui.Label('Select Variable:', styleDropTitle);
+
+    // slecect between historical SEI layers
+    var selectHist = ui.Select({
+      items: Object.keys(histNamesD),
+      value: selectD.histLayer, // the default value
+      onChange: function(x) {
+        selectD.histLayer = x;  // Update the variable selection
+        // Update the map with the new selection
+        updateHistMap(mapToChange);
+      },
+      style: styleDrop
+    });
+    
+    var controlPanel =
+        ui.Panel({
+            widgets: [labelTitle, labelHist, selectHist],
+            style: {
+                padding: '15px 2px 2px 2px' // adding space above
+            }
+        });
+
+    return controlPanel;
+}
 // functions for future layers
 
 // loads the map for the left panel, based on the contents of the
@@ -99,8 +132,8 @@ var updateRightMap = function(mapToChange) {
 
 // mapToChange is the ui.Map element to add to
 // side is 'Left' or 'Right', updateFun is one of the update functions defined above
-var addFutSelectors = function (mapToChange, side, updateFun, position) {
-    var labelTitle = ui.Label('Projections', styleTitle);
+var addSelectors = function (mapToChange, side, updateFun, position) {
+    var labelTitle = ui.Label('Layers that are Projections', styleTitle);
     var labelVar = ui.Label('Select Variable:', styleDropTitle);
     var labelScen = ui.Label('Select Climate Scenario:', styleDropTitle);
     var labelRun = ui.Label('Select Modeling Assumption:', styleDropTitle);
@@ -154,45 +187,13 @@ var addFutSelectors = function (mapToChange, side, updateFun, position) {
                 margin: '2px'
             }
         });
+        
+    var histPanel = createHistSelector(mapToChange); // returns control panel
 
-    mapToChange.add(controlPanel);
+    mapToChange.add(controlPanel.add(histPanel));
 };
 
-// functions for historical layers
 
-// continue debugging here!
-var updateHistMap = function(mapToChange) {
-  var key = histNamesD[selectD.histLayer];
-  var lyr = load.histLayersD[key];
-  mapToChange.layers().set(1, lyr);
-};
-
-function addHistSelector(mapToChange, position) {
-    var labelTitle = ui.Label('Layers for 2017-2020', styleTitle);
-    var labelHist = ui.Label('Select Variable:', styleDropTitle);
-
-    // slecect between historical SEI layers
-    var selectHist = ui.Select({
-      items: Object.keys(histNamesD),
-      value: selectD.histLayer, // the default value
-      onChange: function(x) {
-        var histLayer = x;  // Update the variable selection
-        // Update the map with the new selection
-        updateHistMap(mapToChange);
-      },
-      style: styleDrop
-    });
-    
-    var controlPanel =
-        ui.Panel({
-            widgets: [labelTitle, labelHist, selectHist],
-            style: {
-                position: position
-            }
-        });
-
-    mapToChange.add(controlPanel);
-}
 
 // setup the two maps ----------------------------------------------------
 
@@ -207,10 +208,10 @@ rightMap.setControlVisibility(true);
 
 
 // add selectors to the maps
-var leftFutSelector = addFutSelectors(leftMap, 'Left', updateLeftMap, 'top-left');
-var rightFutSelector = addFutSelectors(rightMap, 'Right', updateRightMap, 'top-right');
+addSelectors(leftMap, 'Left', updateLeftMap, 'top-left');
+addSelectors(rightMap, 'Right', updateRightMap, 'top-right');
 
-// var histSelector = addHistSelector(leftMap, 'bottom-left')
+// addHistSelector(leftMap, 'bottom-left')
 // create the split panel -----------------------------------------------
 
 // Create a SplitPanel to hold the adjacent, linked maps.
