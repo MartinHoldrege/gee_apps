@@ -141,7 +141,7 @@ var histNamesD = {
   "Q2 ('quality' score of perennials)": 'Q2',
   "Q3 ('quality' score of annuals)": 'Q3',
   "Q4 ('quality' score of human modification)": 'Q4',
-  "Q4 ('quality' score of conifers)": 'Q5'
+  "Q5 ('quality' score of conifers)": 'Q5'
 };
 
 
