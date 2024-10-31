@@ -47,6 +47,7 @@ var runD = {
   'NoFire' : 'fire0_eind1_c4grass1_co20'
 };
 
+
 // scenarios
 var scenD = {
   'RCP4.5 (2031-2060)': 'RCP45_2030-2060',
@@ -230,11 +231,19 @@ var loadFutFunsD = {
   'numAgree': loadNumAgree
 };
 
+// loads the layers for the given vartype, name of the run and name of the 
+// climate scenario
+var loadFutLayer = function(varType, nameRun, nameScen) {
+  var f = loadFutFunsD[varType];
+  f(nameRun, nameScen);
+};
+
 // exports ---------------------------------------------------------------
-exports.loadFutFunsD = loadFutFunsD;
+exports.loadFutLayer = loadFutLayer;
 exports.histLayersD = histLayersD;
 exports.scenD = scenD;
-exports.varsD = varsD;
+
+// exports.varsD = varsD;
 
 // testing
 
