@@ -166,8 +166,8 @@ exports.statesLayer = ui.Map.Layer(figPScd.statesOutline, {color: 'black', lineW
 
 // Checkbox for toggling the visibility of the background and states outline
 exports.createBackgroundCheckbox = function(args) {
-    var backGroundLayer = args.backGroundLayer;
-    var statesLayer = args.statesLayer;
+    var backGroundLayer = args.background;
+    var statesLayer = args.states;
     var style = args['style']
     if (style === undefined || style === null){
       var style = {fontSize: '11px', width: '150px'};
