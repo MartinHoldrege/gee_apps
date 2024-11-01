@@ -109,7 +109,7 @@ var selectHistFun = function(mapToChange, updateFun, selectVar, side) {
 
 function createHistSelector(mapToChange, updateFun, selectVar, side) {
     var labelTitle = ui.Label('Layers for 2017-2020', styleTitle);
-    var labelHist = ui.Label('Select Variable:', styleDropTitle);
+    var labelHist = ui.Label('Select Variable (plotted on top):', styleDropTitle);
 
     // slecect between historical SEI layers
     var selectHist = selectHistFun(mapToChange, updateFun, selectVar, side);
