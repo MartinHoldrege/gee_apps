@@ -32,7 +32,7 @@ var load = require("users/MartinHoldrege/gee_apps:scripts/01_scd_load-layers.js"
 
 // setup dictionaries ---------------------------------------------------
 
-print(load.loadFutLaye'', ''))
+print(load.loadFutLayer('none', '', ''))
 // keys are names to display in the dropdown
 var runDisplayD = {
   'Default': 'Default',
@@ -99,7 +99,7 @@ var selectHistFun = function(mapToChange, updateFun, selectVar, side) {
         selectD.histLayer = x;  // Update the variable selection
 
          // update the future variable selector to 'none'
-        resetVarLayer(mapToChange, updateFun, selectVar, side); 
+        // resetVarLayer(mapToChange, updateFun, selectVar, side); // this is a tricky line of code that causes cyclical dependencies
         // Update the historical map with the new selection
         updateHistMap(mapToChange);
       },
@@ -198,12 +198,13 @@ var addSelectors = function (mapToChange, side, updateFun, position) {
     // makes a selection.
     
     // create partial selectVar so don't have cyclical dependendency
-    var selectVar = createSelectVar(mapToChange, updateFun, null, side); 
+    // this chunk of code sucks
+    var selectVar;
     
     var histD = createHistSelector(mapToChange, updateFun, selectVar, side);
     var histPanel = histD.controlPanel; // returns control panel
     var selectHist = histD.selectHist;
-    
+    var selectVar = createSelectVar(mapToChange, updateFun, selectHist, side); 
     // Selector for variable type, now have selectHist defined
     selectVar.onChange(function(x) {
         selectD['var' + side] = x;  // Update the variable selection
