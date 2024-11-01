@@ -226,11 +226,16 @@ var loadC9 = function(nameRun, nameScen) {
   return ui.Map.Layer(c9, figP.visC9, imageName);
 };
 
+// a blank layer
+var loadNone = function(nameRun, nameScen) {
+  return ui.Map.Layer(ee.Image(0).selfMask(), {}, 'blank layer');
+};
 
 // Dictionary containing load functions ------------------------------------------------
 
 // load functions for 'future' layers
 var loadFutFunsD = {
+  'none': loadNone,
   'c3': loadSEIClass,
   'SEI': loadDeltaSEI,
   'c9': loadC9,
@@ -240,7 +245,7 @@ var loadFutFunsD = {
   'rgb': loadRgb,
   'numAgree': loadNumAgree
 };
-
+print(loadFutFunsD.none)
 // loads the layers for the given vartype, name of the run and name of the 
 // climate scenario
 var loadFutLayer = function(varType, nameRun, nameScen) {
