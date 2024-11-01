@@ -60,6 +60,7 @@ var histNamesD = load.histNamesD
 // using a dictionary that can be updated in child
 // environments (so don't have scoping issues)
 // this is where the default's are setup (for left and right panels)
+var defaultHistLayer = Object.keys(histNamesD)[0]
 var selectD = {
     varLeft: Object.keys(varDisplayD)[1], // variable
     varRight: Object.keys(varDisplayD)[1],
@@ -67,7 +68,7 @@ var selectD = {
     scenRight: Object.keys(scenD)[3], 
     runLeft: Object.keys(runDisplayD)[0], // modelling assumption
     runRight: Object.keys(runDisplayD)[0],
-    histLayer: Object.keys(histNamesD)[0], // historical layer to show
+    histLayer: defaultHistLayer, // historical layer to show
     showBackground:false
 };
 
@@ -120,6 +121,11 @@ var updateLeftMap = function(mapToChange) {
   var nameRun = runDisplayD[selectD.runLeft];
   var varType = varDisplayD[selectD.varLeft];
   var nameScen = selectD.scenLeft;
+  
+  // make historical layer see through (so isn't covered)
+  selectD.histLayer = defaultHistLayer;
+  updateHistMap(mapToChange); 
+  
   var lyr = load.loadFutLayer(varType, nameRun, nameScen);
   mapToChange.layers().set(0, lyr);
 };
@@ -128,6 +134,11 @@ var updateRightMap = function(mapToChange) {
   var nameRun = runDisplayD[selectD.runRight];
   var varType = varDisplayD[selectD.varRight];
   var nameScen = selectD.scenRight;
+  
+    // make historical layer see through (so isn't covered)
+  selectD.histLayer = defaultHistLayer;
+  updateHistMap(mapToChange); 
+  
   var lyr = load.loadFutLayer(varType, nameRun, nameScen);
   mapToChange.layers().set(0, lyr);
 };
