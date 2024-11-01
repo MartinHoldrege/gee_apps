@@ -140,3 +140,13 @@ exports.makeVisParamsRampLegend = function(existing_panel, visParams, title, lab
     .add(thumb);
   return new_panel;
 };
+
+// working with layers ---------------------------------------------------------
+
+// remove a map layer based on it's index
+exports.removeLayer = function(mapToChange, index) {
+  var lay = mapToChange.layers().get(index);
+  if(lay){
+    mapToChange.remove(lay);
+  }
+};
