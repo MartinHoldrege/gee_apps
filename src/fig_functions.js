@@ -154,10 +154,38 @@ exports.removeLayer = function(mapToChange, index) {
 
 // background layers ------------------------------------------------------------------
 
+// layers
 exports.createBackgroundLayer = function(color) {
   var background = ee.Image(0).visualize({palette: [color]});  
   ui.Map.Layer(background, {}, 'Background', false, 1.0);
 };
 
 exports.statesLayer = ui.Map.Layer(figPScd.statesOutline, {color: 'black', lineWidth: 2}, 'State Outlines', false, 1.0);
+
+
+
+// Checkbox for toggling the visibility of the background and states outline
+exports.createBackgroundCheckbox = function(args) {
+    var backGroundLayer = args.backGroundLayer;
+    var statesLayer = args.statesLayer;
+    var style = args['style']
+    if (style === undefined || style === null){
+      var style = {fontSize: '11px', width: '150px'};
+    }
+  
+    // widgets
+    var updateBackgroundVisibility = function(show) {
+        backgroundLayer.setShown(show);  // Toggle visibility of the background layer
+        statesLayer.setShown(show);      // Toggle visibility of the states outline layer
+    };
+    return ui.Checkbox({
+        label: 'Apply plain background and state outlines',
+        value: false,  // Initially unchecked
+        onChange: function(checked) {
+            updateBackgroundVisibility(checked);  // Toggle visibility based on checkbox state
+        },
+        style: style
+    });
+};
+
 
