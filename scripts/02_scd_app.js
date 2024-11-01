@@ -25,15 +25,14 @@
 // Load module with functions 
 // The functions, lists, etc are used by calling SEI.nameOfObjectOrFunction
 var SEI = require("users/MartinHoldrege/SEI:src/SEIModule.js");
-var figP = require("users/MartinHoldrege/SEI:src/fig_params.js");
-var figF= require("users/MartinHoldrege/SEI:src/fig_functions.js");
+var figF= require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
 var f = require("users/MartinHoldrege/gee_apps:src/general_functions.js");
 var load = require("users/MartinHoldrege/gee_apps:scripts/01_scd_load-layers.js");
 
 
 // setup dictionaries ---------------------------------------------------
 
-
+print(load.loadFutLayer('none', '', ''))
 // keys are names to display in the dropdown
 var runDisplayD = {
   'Default': 'Default',
@@ -44,6 +43,7 @@ var runDisplayD = {
 
 // variable names to display in the dropdown
 var varDisplayD = {
+  'None selected': 'none',
   'SEI class': 'c3',
   'Change in SEI class': 'c9',
   'Change in SEI': 'SEI', 
@@ -62,6 +62,8 @@ var histNamesD = load.histNamesD
 // environments (so don't have scoping issues)
 // this is where the default's are setup (for left and right panels)
 var defaultHistLayer = Object.keys(histNamesD)[0]
+var noneVar = Object.keys(varDisplayD)[0]; 
+print('none', noneVar)
 var selectD = {
     varLeft: Object.keys(varDisplayD)[1], // variable
     varRight: Object.keys(varDisplayD)[1],
@@ -85,28 +87,32 @@ var styleTitle =  {fontSize: '14px', padding: '0px', fontWeight: 'bold', margin:
 var updateHistMap = function(mapToChange) {
   var key = histNamesD[selectD.histLayer];
   var lyr = load.histLayersD[key];
+  figF.removeLayer(mapToChange, 1)
   mapToChange.layers().set(1, lyr);
 };
 
-var selectHistFun = function(mapToChange ) {
+var selectHistFun = function(mapToChange, updateFun, selectVar, side) {
   return ui.Select({
       items: Object.keys(histNamesD),
       value: selectD.histLayer, // the default value
       onChange: function(x) {
         selectD.histLayer = x;  // Update the variable selection
-        // Update the map with the new selection
+
+         // update the future variable selector to 'none'
+        // resetVarLayer(mapToChange, updateFun, selectVar, side); // this is a tricky line of code that causes cyclical dependencies
+        // Update the historical map with the new selection
         updateHistMap(mapToChange);
       },
       style: styleDrop
     });
 };
 
-function createHistSelector(mapToChange) {
+function createHistSelector(mapToChange, updateFun, selectVar, side) {
     var labelTitle = ui.Label('Layers for 2017-2020', styleTitle);
-    var labelHist = ui.Label('Select Variable:', styleDropTitle);
+    var labelHist = ui.Label('Select Variable (plotted on top):', styleDropTitle);
 
     // slecect between historical SEI layers
-    var selectHist = selectHistFun(mapToChange);
+    var selectHist = selectHistFun(mapToChange, updateFun, selectVar, side);
     
     var controlPanel =
         ui.Panel({
@@ -121,14 +127,40 @@ function createHistSelector(mapToChange) {
 
 
 // Function to reset the historical layer to "None selected"
-var resetHistLayer = function(mapToChange, selectHist) {
-  // add the 'none' layer if it has changed
-  if (selectD.histLayer !== defaultHistLayer) {
+var resetHistLayer = function(mapToChange, selectHist, side) {
+  // add the 'none' layer if it has changed from the none layer
+  // and something other than the none layer was selected for the
+  // future variable
+  if (selectD.histLayer !== defaultHistLayer && selectD['var' + side] !== noneVar) {
     selectD.histLayer = defaultHistLayer;
     figF.removeLayer(mapToChange, 1); // removing the existing layer
     selectHist.setValue(defaultHistLayer, true); // Update dropdown display
     updateHistMap(mapToChange); // Update the map to remove the historical layer
   }
+};
+
+var resetVarLayer = function(mapToChange, updateFun, selectVar, side) {
+  if (selectD['var' + side] !== noneVar) {
+    selectD['var' + side] = noneVar;
+    figF.removeLayer(mapToChange, 0); // removing the existing layer
+    selectVar.setValue(noneVar, true); // Update dropdown display
+    updateFun(mapToChange); // Update the map to remove the historical layer
+  }
+};
+
+
+// Selector for variable type
+var createSelectVar = function(mapToChange, updateFun, selectHist, side) {
+  return ui.Select({
+    items: Object.keys(varDisplayD),
+    value: selectD['var' + side], // the default value
+    onChange: function(x) {
+      selectD['var' + side] = x;  // Update the variable selection
+      resetHistLayer(mapToChange, selectHist, side); // Reset historical layer
+      updateFun(mapToChange);
+    },
+    style: styleDrop
+  });
 };
 
 // functions for future layers
@@ -165,22 +197,21 @@ var addSelectors = function (mapToChange, side, updateFun, position) {
     // between images, and set the map to update when a user 
     // makes a selection.
     
-    var histD = createHistSelector(mapToChange);
+    // create partial selectVar so don't have cyclical dependendency
+    // this chunk of code sucks
+    var selectVar;
+    
+    var histD = createHistSelector(mapToChange, updateFun, selectVar, side);
     var histPanel = histD.controlPanel; // returns control panel
     var selectHist = histD.selectHist;
-    
-    // Selector for variable type
-    var selectVar = ui.Select({
-      items: Object.keys(varDisplayD),
-      value: selectD['var' + side], // the default value
-      onChange: function(x) {
+    var selectVar = createSelectVar(mapToChange, updateFun, selectHist, side); 
+    // Selector for variable type, now have selectHist defined
+    selectVar.onChange(function(x) {
         selectD['var' + side] = x;  // Update the variable selection
         // Update the map with the new selection
         resetHistLayer(mapToChange, selectHist); // Reset historical layer
         updateFun(mapToChange);
-      },
-      style: styleDrop
-    });
+      });
     
     // climate scenario
     var selectScen = ui.Select({
