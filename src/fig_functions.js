@@ -4,9 +4,10 @@ Description: functions for visualizations
 
 */
 
+// dependencies
+var figPScd = require("users/MartinHoldrege/SEI:src/fig_params.js");
 
 // create styled layer discriptor ----------------------------------------------
-
 
 
 // input quantity (number), and color (hex code)
@@ -150,3 +151,13 @@ exports.removeLayer = function(mapToChange, index) {
     mapToChange.remove(lay);
   }
 };
+
+// background layers ------------------------------------------------------------------
+
+exports.createBackgroundLayer = function(color) {
+  var background = ee.Image(0).visualize({palette: [color]});  
+  ui.Map.Layer(background, {}, 'Background', false, 1.0);
+};
+
+exports.statesLayer = ui.Map.Layer(figPScd.statesOutline, {color: 'black', lineWidth: 2}, 'State Outlines', false, 1.0);
+
