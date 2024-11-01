@@ -26,6 +26,7 @@
 // The functions, lists, etc are used by calling SEI.nameOfObjectOrFunction
 var SEI = require("users/MartinHoldrege/SEI:src/SEIModule.js");
 var figP = require("users/MartinHoldrege/SEI:src/fig_params.js");
+var figF= require("users/MartinHoldrege/SEI:src/fig_functions.js");
 var f = require("users/MartinHoldrege/gee_apps:src/general_functions.js");
 var load = require("users/MartinHoldrege/gee_apps:scripts/01_scd_load-layers.js");
 
@@ -87,12 +88,8 @@ var updateHistMap = function(mapToChange) {
   mapToChange.layers().set(1, lyr);
 };
 
-function createHistSelector(mapToChange) {
-    var labelTitle = ui.Label('Layers for 2017-2020', styleTitle);
-    var labelHist = ui.Label('Select Variable:', styleDropTitle);
-
-    // slecect between historical SEI layers
-    var selectHist = ui.Select({
+var selectHistFun = function(mapToChange ) {
+  return ui.Select({
       items: Object.keys(histNamesD),
       value: selectD.histLayer, // the default value
       onChange: function(x) {
@@ -102,6 +99,14 @@ function createHistSelector(mapToChange) {
       },
       style: styleDrop
     });
+};
+
+function createHistSelector(mapToChange) {
+    var labelTitle = ui.Label('Layers for 2017-2020', styleTitle);
+    var labelHist = ui.Label('Select Variable:', styleDropTitle);
+
+    // slecect between historical SEI layers
+    var selectHist = selectHistFun(mapToChange);
     
     var controlPanel =
         ui.Panel({
@@ -111,8 +116,21 @@ function createHistSelector(mapToChange) {
             }
         });
 
-    return controlPanel;
+    return {selectHist: selectHist, controlPanel: controlPanel};
 }
+
+
+// Function to reset the historical layer to "None selected"
+var resetHistLayer = function(mapToChange, selectHist) {
+  // add the 'none' layer if it has changed
+  if (selectD.histLayer !== defaultHistLayer) {
+    selectD.histLayer = defaultHistLayer;
+    figF.removeLayer(mapToChange, 1); // removing the existing layer
+    selectHist.setValue(defaultHistLayer, true); // Update dropdown display
+    updateHistMap(mapToChange); // Update the map to remove the historical layer
+  }
+};
+
 // functions for future layers
 
 // loads the map for the left panel, based on the contents of the
@@ -122,10 +140,6 @@ var updateLeftMap = function(mapToChange) {
   var varType = varDisplayD[selectD.varLeft];
   var nameScen = selectD.scenLeft;
   
-  // make historical layer see through (so isn't covered)
-  selectD.histLayer = defaultHistLayer;
-  updateHistMap(mapToChange); 
-  
   var lyr = load.loadFutLayer(varType, nameRun, nameScen);
   mapToChange.layers().set(0, lyr);
 };
@@ -134,10 +148,6 @@ var updateRightMap = function(mapToChange) {
   var nameRun = runDisplayD[selectD.runRight];
   var varType = varDisplayD[selectD.varRight];
   var nameScen = selectD.scenRight;
-  
-    // make historical layer see through (so isn't covered)
-  selectD.histLayer = defaultHistLayer;
-  updateHistMap(mapToChange); 
   
   var lyr = load.loadFutLayer(varType, nameRun, nameScen);
   mapToChange.layers().set(0, lyr);
@@ -155,6 +165,10 @@ var addSelectors = function (mapToChange, side, updateFun, position) {
     // between images, and set the map to update when a user 
     // makes a selection.
     
+    var histD = createHistSelector(mapToChange);
+    var histPanel = histD.controlPanel; // returns control panel
+    var selectHist = histD.selectHist;
+    
     // Selector for variable type
     var selectVar = ui.Select({
       items: Object.keys(varDisplayD),
@@ -162,6 +176,7 @@ var addSelectors = function (mapToChange, side, updateFun, position) {
       onChange: function(x) {
         selectD['var' + side] = x;  // Update the variable selection
         // Update the map with the new selection
+        resetHistLayer(mapToChange, selectHist); // Reset historical layer
         updateFun(mapToChange);
       },
       style: styleDrop
@@ -201,7 +216,7 @@ var addSelectors = function (mapToChange, side, updateFun, position) {
             }
         });
         
-    var histPanel = createHistSelector(mapToChange); // returns control panel
+    
 
     mapToChange.add(controlPanel.add(histPanel));
 };
