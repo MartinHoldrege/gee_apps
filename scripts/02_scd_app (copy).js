@@ -32,7 +32,7 @@ var load = require("users/MartinHoldrege/gee_apps:scripts/01_scd_load-layers.js"
 
 // setup dictionaries ---------------------------------------------------
 
-
+print(load.loadFutFuns.none('', ''))
 // keys are names to display in the dropdown
 var runDisplayD = {
   'Default': 'Default',
