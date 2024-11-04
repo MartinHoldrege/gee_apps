@@ -168,4 +168,7 @@ var description = ui.Panel([
   }),
 ]);
 
-ui.root.insert(0,panel.add(description));
+exports.panel = panel.add(description);
+
+// testing
+//ui.root.insert(0,panel.add(description));
