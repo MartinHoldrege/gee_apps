@@ -35,7 +35,7 @@ var SEI = require("users/MartinHoldrege/SEI:src/SEIModule.js");
 var figF= require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
 var f = require("users/MartinHoldrege/gee_apps:src/general_functions.js");
 var load = require("users/MartinHoldrege/gee_apps:scripts/01_scd_load-layers.js");
-
+var figP= require("users/MartinHoldrege/gee_apps:src/fig_params_scd.js");
 
 // setup dictionaries ---------------------------------------------------
 
@@ -52,16 +52,16 @@ var varDisplayD = {
   'None selected': 'none',
   'SEI class': 'c3',
   'Change in SEI class': 'c9',
+  'Agreement among GCMs': 'numAgree',
+  'Drivers of change in SEI': 'rgb',
   'Change in SEI': 'SEI', 
   "% change in Q1 ('quality' score of sagebrush)": 'Q1',
   "% change in Q2 ('quality' score of perennials)": 'Q2',
-  "% change in Q3 ('quality' score of annuals)": 'Q3',
-  'Drivers of change in SEI': 'rgb',
-  'Agreement among GCMs': 'numAgree'
+  "% change in Q3 ('quality' score of annuals)": 'Q3'
 };
 
 var scenD = load.scenD; // dictionary of climate scenarios
-var histNamesD = load.histNamesD
+var histNamesD = load.histNamesD;
 
 // Variables to store current selections
 // using a dictionary that can be updated in child
@@ -69,7 +69,7 @@ var histNamesD = load.histNamesD
 // this is where the default's are setup (for left and right panels)
 var defaultHistLayer = Object.keys(histNamesD)[0]
 var noneVar = Object.keys(varDisplayD)[0]; 
-print('none', noneVar)
+
 var selectD = {
     varLeft: Object.keys(varDisplayD)[1], // variable
     varRight: Object.keys(varDisplayD)[1],
@@ -277,6 +277,7 @@ addSelectors(leftMap, 'Left', updateLeftMap, 'top-left');
 addSelectors(rightMap, 'Right', updateRightMap, 'top-right');
 
 // addHistSelector(leftMap, 'bottom-left')
+
 // create the split panel -----------------------------------------------
 
 // Create a SplitPanel to hold the adjacent, linked maps.
@@ -298,3 +299,66 @@ leftMap.centerObject(load.histSEI, 6); // centering on one of the images
 // this makes the maps appear when the page loads
 updateLeftMap(leftMap);
 updateRightMap(rightMap);
+
+// add legends --------------------------------------------------------
+
+
+var legendsPanel = ui.Panel();
+// put checkbox for backgroun here when that's created
+
+var legendsTitle = ui.Panel({widgets: [
+  ui.Label('Legends:', {fontSize: '14px', 
+    fontWeight: 'bold', padding: '0px', margin: '10px 4px 0px 4px'})]});
+legendsPanel.add(legendsTitle);
+legendsPanel.add(figP.legends);
+ui.root.insert(0,legendsPanel);
+
+// base map
+/*
+var iconChange = [
+  {
+    // Change map saturation.
+    stylers: [{gamma: 0.2}]
+  },
+  {
+    // Change label properties.
+    elementType: 'labels',
+    stylers: [{visibility: 'off', color: '#000055'}]
+  },
+  {
+    // Change road properties.
+    featureType: 'road',
+    elementType: 'geometry',
+    stylers: [{visibility: 'off', color: '#000055'}]
+  },
+  {
+    // Change road labels.
+    featureType: 'road',
+    elementType: 'labels',
+    stylers: [{visibility: 'off'}]
+  },
+  {
+    // Change icon properties.
+    elementType: 'labels.icon',
+    stylers: [{visibility: 'off'}]
+  },
+  {
+    // Change POI options.
+    featureType: 'poi',
+    elementType: 'all',
+    stylers: [{visibility: 'off'}]
+  },
+  {
+    featureType: 'administrative',
+    elementType: 'geometry.fill',
+    stylers: [{visibility: 'off'}]
+  },
+  {
+    featureType: 'administrative',
+    elementType: 'geometry.stroke',
+    stylers: [{visibility: 'off'}]
+  }
+];
+
+rightMap.setOptions(
+    'roadNetwork', {iconChange: iconChange});*/
