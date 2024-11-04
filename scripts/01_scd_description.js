@@ -46,49 +46,60 @@ var panel = ui.Panel({
 // text for the main panel
 
 // first paragraph
-var par1 = 'This app visualizes current ' +
-' cheatgrass invasion and ecological resilience (R&R) indicators in the sagebrush region' +
-' using algorithms based on ecologically relevant and climate-sensitive predictors of' +
-' climate and ecological drought. Overall, these results suggest widespread future' +
-' declines in R&R which highlight a growing challenge for natural resource managers' +
-' in the region. The spatially explicit datasets provide information that could be used' +
-' for long-term risk assessments, prioritizations, and climate adaptation efforts.';
+var par1 = 'This app visualizes current and projected future sagebrush ecological integrity (SEI).' + 
+' Projections of SEI are based on combining remotely sensed products (used for estimating current SEI)' + 
+' and results from a simulation model (STEPWAT2). The simulation model allowed us to estimate how' + 
+' climate change, wildfire, and invasive annuals interact to alter the potential abundance of key' + 
+' plant functional types that influence sagebrush ecological integrity: sagebrush, perennial grasses,' + 
+' and annual grasses. These results provide a long-term perspective on the vulnerability of sagebrush' + 
+' ecosystems to climate change and may inform geographic prioritization of conservation and restoration investments.';
 
 // 2nd paragraph
 var par2a =    ui.Label({
-    value: 'Data shown are available from ScienceBase',
+    value: 'Data underlying these visualizations are available from ScienceBase',
     style: styleTextNoTB, // no bottom margin
   });
 
 var par2b =    ui.Label({
-    value: '(https://doi.org/10.5066/P928Y2GF).',
-    targetUrl: 'https://doi.org/10.5066/P928Y2GF',
+    value: '(https://doi.org/10.5066/P13RXYZJ).',
+    targetUrl: 'https://doi.org/10.5066/P13RXYZJ',
     style: styleUrl
   });
 
 var par3a = ui.Label({
     value: 'Further details about the research that developed these projections' + 
-    ' are available in Schlaepfer et al. (in press) Declining ecological' + 
-    ' resilience and invasion resistance under climate change in the sagebrush' + 
-    ' region, United States. Ecological Applications (link TBD).',
+    ' are available in Holdrege et al. (2024)',
     style: f.updateDict(styleText, 'margin', marginNoB), // no bottom margin
   });
 
-var par3b = ui.Label({
-    value: 'The R&R algorithms are described in Chambers et al. 2023' ,
-    style: f.updateDict(styleText, 'margin', marginNoB), // no bottom margin
-  });
-  
-var chambersLink = ui.Label({
-    value: '(https://doi.org/10.3389/fevo.2022.1009268).',
-    targetUrl: 'https://doi.org/10.3389/fevo.2022.1009268',
+var remLink = ui.Label({
+    value: '(https://doi.org/10.1016/j.rama.2024.08.003).',
+    targetUrl: 'https://doi.org/10.1016/j.rama.2024.08.003',
     style: f.updateDict(styleUrl, 'margin', marginNoT)
   });
+  
+var par4a = ui.Label({
+    value: 'More information about the broader Sagebrush Conservation Design effor can be found at: ',
+    style: f.updateDict(styleText, 'margin', marginNoB), // no bottom margin
+  });
+
+var sageLink = ui.Label({
+    value: 'sagebrushconservation.org.',
+    targetUrl: 'https://sagebrushconservation.org/',
+    style: f.updateDict(styleUrl, 'margin', marginNoT)
+  });
+  
+
 
 // how to use
-var howTo = "Use the 'Select Variable' drop down menu to select the" + 
-" R&R variable to display on the map," + 
-" and use the 'Select Climate Scenario' dropdown menu to select the time-period and climate scenario.";
+var howTo = "Seperate layers can be selected on both sides of the slider to allow for comparison."  +
+" Use the 'Select Variable' drop-down menu to select the" + 
+"   variable type to display on the map," + 
+"  use the 'Select Climate Scenario' drop-down menu to select the time-period and climate scenario." +
+"  Use the 'Select modeling assumption' drop-down to select one of four modeling assumptions made in the"  +
+" simulations (this is for users interested in understanding the impacts of some of our decisions," + 
+' see Holdrege et al. (2024) for more details. The lower drop-down menu lets you select layers showing' +
+' SEI, and related inputs for historical (2017-2020) conditions (see Doherty et al. 2022).';
 
 // abbrevations --------------------------
 var abbrevExplain = ui.Label({
@@ -98,12 +109,15 @@ var abbrevExplain = ui.Label({
 
 // bullets describing the abbreviation
 var bulletsText = [
-  'Ecological resilience (resilience) or invasion resistance (resistance) can be displayed' +
-  ' as categorical (4 categories) or continuous variables.',
-  "'Change' layers show the difference between projected future resistance or resilience and a" +
-  " historical reference." +
-  "These change layers are a continuous variable.",
-  'Climate scenarios include ambient climate (ambient) or future projected climate based on two representative concentration pathways (RCP4.5, RCP8.5).'
+  'Sagebrush ecological integrity (SEI), a continuous variable (range 0-1),' + 
+  ' is broken into three classes: Core Sagebrush Areas (CSA, high SEI),' + 
+  ' Growth Opportunity Areas (GOA, intermediate SEI),' + 
+  ' and Other Rangeland Areas (ORA, low SEI).' ,
+  "In the 'Agreement among GCMs' layer 'Robust agreement' among global climate models (GCMs) means >90% of" + 
+  " results from different climate models agreed on the change in SEI" + 
+  " class, while 'non-robust' agreement means that <90% of the results agreed.",
+  " Q values are the 'quality' scores (range 0-1) that are used in the calculation of SEI.",
+  'Climate scenarios include future projected climate based on two representative concentration pathways (RCP4.5, RCP8.5).'
   ];
   
 
@@ -129,7 +143,7 @@ var description = ui.Panel([
     style: styleText
   }),
   par2a, par2b,
-  par3a, par3b, chambersLink,
+  par3a, remLink, par4a, sageLink,
   ui.Label({
     value:'How to Use',
     style: styleHeader,
