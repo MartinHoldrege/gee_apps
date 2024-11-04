@@ -40,7 +40,7 @@ var title = ui.Label('Sagebrush Ecological Integrity Projections', {fontSize: '1
 // Create a panel to hold text
 var panel = ui.Panel({
   widgets:[title],//Adds header and text
-  style:{width: '300px',position:'middle-left'}});
+  style:{width: '250px',position:'middle-left'}});
 
 
 // text for the main panel
