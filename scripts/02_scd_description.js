@@ -1,4 +1,7 @@
+/*
+  Purpose: provide the description text for the SCD app
 
+*/
 // dependencies -----------------------------------------------------------------------------
 
 var f = require("users/MartinHoldrege/gee_apps:src/general_functions.js");
@@ -43,7 +46,7 @@ var panel = ui.Panel({
 // text for the main panel
 
 // first paragraph
-var par1 = 'This app visualizes where climate change alters the distribution of resistance to' +
+var par1 = 'This app visualizes current ' +
 ' cheatgrass invasion and ecological resilience (R&R) indicators in the sagebrush region' +
 ' using algorithms based on ecologically relevant and climate-sensitive predictors of' +
 ' climate and ecological drought. Overall, these results suggest widespread future' +
