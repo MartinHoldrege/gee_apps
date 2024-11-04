@@ -45,7 +45,8 @@ var colsDelta = ['#67001F', '#B2182B', '#D6604D', '#F4A582', '#FDDBC7',
   grey, '#D1E5F0', '#92C5DE', '#4393C3', '#2166AC', '#053061'];
 var breaksDeltaSEI = [-1, -0.2, -0.1, -0.05, -0.02, -0.01, 0.01, 0.02, 0.05, 0.1, 0.2, 1];
 
-exports.sldDiff1 = figF.createSldColorBlocks(breaksDeltaSEI, colsDelta);
+var sldDiff1 = figF.createSldColorBlocks(breaksDeltaSEI, colsDelta);
+exports.sldDiff1 = sldDiff1;
 
 // cols for % change in Q
 var breaksDeltaQ =[-100, -50, -25, -15, -10, -5, 5, 10, 15, 25, 50, 100];
@@ -81,17 +82,71 @@ exports.visC9 = {min: 1, max: 9, palette: c9Palette};
 exports.visSEI = {min:0, max: 1, palette: ['#ece7f2', '#023858']}; // light to dark blue
 
 var c3Palette = ["#142b65", "#99d4e7", "#eee1ba"];
+var c3Names = ['Core Sagebrush Area (CSA)', 'Growth Opportunity Area (GOA)', 'Other Rangeland Area (ORA)'];
 exports.visc3 = {opacity: 1, min:1, max:3, palette: c3Palette};
 
+// legends ---------------------------------------------------------------------
+
+// styles for legend elements
+var styleLegendTitle = {
+    fontWeight: 'bold',
+    fontSize: '11px',
+    margin: '10px 0px 4px 0px',
+    padding: '0'
+    };
 
 
-// mapping visualizing elements -----------------------------------------------------------
+// set position of panel
+var legends = ui.Panel({
+  style: {
+    position: 'bottom-left',
+    padding: '4px'
+  }
+});
+
+// SEI class legend
+legends.add(
+  ui.Label({
+    value: 'SEI Class',
+    style: styleLegendTitle
+  })
+);
+
+for (var i = 0; i < c3Names.length; i++) {
+  legends.add(figF.makeRow(c3Palette[i], c3Names[i]));
+}  
+
+// SEI class transition (c9)
+legends.add(
+  ui.Label({
+    value: 'Change in SEI class',
+    style: styleLegendTitle
+  })
+);
+
+for (var i = 0; i < c9Names.length; i++) {
+  legends.add(figF.makeRow(c9Palette[i], c9Names[i]));
+}  
+
+// Agreement among GCMs'
+legends.add(
+  ui.Label({
+    value: 'Agreement among GCMs',
+    style: styleLegendTitle
+  })
+);
+
+for (var i = 0; i < colsNumGcm.length; i++) {
+  legends.add(figF.makeRow(colsNumGcm[i], labelsNumGcm[i]));
+}  
+
+// Change in SEI
+//makeSldRampLegendexisting_panel, sld, min, max, title
+
+
+// % Change in Q
 
 
 
 // testing -------------------------------------
-/*//print(legends)
-var map = ui.Map();
-ui.root.clear(); // for testing
-ui.root.add(map);
-map.add(legends)*/
+Map.add(legends)
