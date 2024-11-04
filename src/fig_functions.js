@@ -87,6 +87,13 @@ var styleLabel = {
       margin: '0 0 0 0',
       padding: '0'
   };
+  
+var styleTitle = {
+    fontWeight: 'bold',
+    fontSize: '11px',
+    margin: '10px 0px 4px 0px',
+    padding: '0'
+    };
 
 /**
  * Creating color bar legend for maps that are displayed with a regular dictionary of visualization parameters
@@ -135,12 +142,7 @@ exports.makeVisParamsRampLegend = function(existing_panel, visParams, title, lab
   // adding a title
     .add(ui.Label({
       value: title,
-      style: {
-        fontWeight: 'bold',
-        fontSize: '11px',
-        margin: '0px 0px 4px 0px',
-        padding: '0'
-    }
+      style: styleTitle
   }))
     .add(panel2)
     .add(thumb);
@@ -186,13 +188,7 @@ exports.makeSldRampLegend = function(existing_panel, sld, min, max, title) {
   // adding a title
     .add(ui.Label({
       value: title,
-      style: {
-    fontWeight: 'bold',
-    fontSize: '11px',
-    margin: '10px 0px 4px 0px',
-    padding: '0'
-    }
-  }))
+      style: styleTitle}))
     .add(panel2)
     .add(thumb);
   return new_panel;
