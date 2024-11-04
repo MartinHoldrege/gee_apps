@@ -50,8 +50,8 @@ exports.sldDiff1 = sldDiff1;
 
 // cols for % change in Q
 var breaksDeltaQ =[-100, -50, -25, -15, -10, -5, 5, 10, 15, 25, 50, 100];
-exports.sldDeltaQ = figF.createSldColorBlocks(breaksDeltaQ, colsDelta);
-
+var sldDeltaQ = figF.createSldColorBlocks(breaksDeltaQ, colsDelta);
+exports.sldDeltaQ = sldDeltaQ;
 // cols for c9 
 
 var c9Palette =  ['#142b65', // stable core (black)
@@ -79,11 +79,17 @@ var c9Names =  [
 exports.visC9 = {min: 1, max: 9, palette: c9Palette};
 
 
-exports.visSEI = {min:0, max: 1, palette: ['#ece7f2', '#023858']}; // light to dark blue
+var visSEI = {min:0, max: 1, palette: ['#ece7f2', '#023858']}; // light to dark blue
+exports.visSEI = visSEI;
 
 var c3Palette = ["#142b65", "#99d4e7", "#eee1ba"];
 var c3Names = ['Core Sagebrush Area (CSA)', 'Growth Opportunity Area (GOA)', 'Other Rangeland Area (ORA)'];
 exports.visc3 = {opacity: 1, min:1, max:3, palette: c3Palette};
+
+// colors for Drivers of Change
+var colsDrivers = ['#FF0000', '#00FF00', '#0000FF'];
+var namesDrivers = ['Sagebrush', 'Perennials', 'Annuals'];
+
 
 // legends ---------------------------------------------------------------------
 
@@ -140,11 +146,30 @@ for (var i = 0; i < colsNumGcm.length; i++) {
   legends.add(figF.makeRow(colsNumGcm[i], labelsNumGcm[i]));
 }  
 
-// Change in SEI
-//makeSldRampLegendexisting_panel, sld, min, max, title
+// Drivers of Change
+legends.add(
+  ui.Label({
+    value: 'Primary driver of SEI change',
+    style: styleLegendTitle
+  })
+);
 
+for (var i = 0; i < colsDrivers.length; i++) {
+  legends.add(figF.makeRow(colsDrivers[i], namesDrivers[i]));
+}  
+
+// continuos SEI
+
+var legends = figF.makeVisParamsRampLegend(legends, visSEI, 'SEI or Q');
+
+// Change in SEI
+var legends = figF.makeSldRampLegend(legends, sldDiff1, -0.3, 0.3, 'Change in SEI');
 
 // % Change in Q
+var legends = figF.makeSldRampLegend(legends, sldDeltaQ, -70, 70, '% Change in Q');
+
+
+
 
 
 
