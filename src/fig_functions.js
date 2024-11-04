@@ -142,6 +142,55 @@ exports.makeVisParamsRampLegend = function(existing_panel, visParams, title, lab
   return new_panel;
 };
 
+/**
+ * Creating color bar legend for layers that show colors with <RasterSymbolizer>
+ * @param {ui.panel} existing_panel to add new panel additions to (this panel specificies the location)
+ * @param {sld} sld xml string
+ * @param {number} minimum value in the sld 
+ * @param {number} max value in the sld 
+ * @param {string} legend title
+ * @return {ui} ui object that 
+ */
+exports.makeSldRampLegend = function(existing_panel, sld, min, max, title) {
+  var lon = ee.Image.pixelLonLat().select('longitude');
+  var gradient = lon.multiply((max - min)/100.0).add(min);
+  var legendImage = gradient.sldStyle(sld);
+  var thumb = ui.Thumbnail({
+    image: legendImage,
+    params: {bbox:'0,0,100,8', dimensions:'128x10'},
+    style: {
+      position: 'bottom-center',
+      padding: '0px 0px 0px 0px'
+    } 
+  });
+
+  var panel2 = ui.Panel({
+    widgets: [
+      ui.Label(min),
+      ui.Label({style: {stretch: 'horizontal'}}),
+      ui.Label(max) 
+      ],
+    layout: ui.Panel.Layout.flow('horizontal'),
+    style: {stretch: 'horizontal', maxWidth: '270px', padding: '0px 0px 0px 0px'}
+    
+  });
+  var new_panel = existing_panel
+  // adding a title
+    .add(ui.Label({
+      value: title,
+      style: {
+        fontWeight: 'bold',
+        fontSize: '11px',
+        margin: '0 0 4px 0',
+        padding: '0',
+        textAlign: 'center'
+        }
+  }))
+    .add(panel2)
+    .add(thumb);
+  return new_panel;
+};
+
 // working with layers ---------------------------------------------------------
 
 // remove a map layer based on it's index
@@ -163,7 +212,6 @@ exports.createBackgroundLayer = function(color) {
 var statesOutline = ui.Map.Layer(figPScd.statesOutline, {color: 'black', lineWidth: 2}, 'State Outlines', false, 1.0);
 exports.statesOutline = statesOutline;
 // Checkbox for toggling the visibility of the background and states outline
-
 exports.createBackgroundCheckbox = function(args) {
     var backgroundLayer = args.background;
     var statesLayer = args.states;
