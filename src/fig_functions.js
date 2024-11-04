@@ -80,6 +80,14 @@ exports.makeRow = function(color, name) {
       });
 };
 
+// style elements for the next two functions
+
+var styleLabel = {
+      fontSize: '10px',
+      margin: '0 0 0 0',
+      padding: '0'
+  };
+
 /**
  * Creating color bar legend for maps that are displayed with a regular dictionary of visualization parameters
  * @param {ui.panel} existing_panel to add new panel additions to (this panel specificies the location)
@@ -108,14 +116,11 @@ exports.makeVisParamsRampLegend = function(existing_panel, visParams, title, lab
     params: {bbox:'0,0,100,8', dimensions:'128x10'},
     style: {
       position: 'bottom-center',
-      padding: '0px 0px 0px 0px'
+      padding: '0px 0px 0px 0px',
+      margin: '0px 4px 0px 4px'
     } 
   });
-  var styleLabel = {
-        fontSize: '10px',
-        margin: '0 0 0 0',
-        padding: '0'
-    };
+
   var panel2 = ui.Panel({
     widgets: [
       ui.Label({value: label1, style: styleLabel}),
@@ -123,9 +128,9 @@ exports.makeVisParamsRampLegend = function(existing_panel, visParams, title, lab
       ui.Label({value: label2, style: styleLabel}) 
       ],
     layout: ui.Panel.Layout.flow('horizontal'),
-    style: {stretch: 'horizontal', maxWidth: '270px', padding: '0px 0px 0px 0px'}
-    
+    style: {stretch: 'horizontal', maxWidth: '140px', padding: '0px 0px 0px 0px'}
   });
+  
   var new_panel = existing_panel
   // adding a title
     .add(ui.Label({
@@ -160,31 +165,33 @@ exports.makeSldRampLegend = function(existing_panel, sld, min, max, title) {
     params: {bbox:'0,0,100,8', dimensions:'128x10'},
     style: {
       position: 'bottom-center',
-      padding: '0px 0px 0px 0px'
+      padding: '0px 0px 0px 0px',
+      margin: '0px 4px 0px 4px'
     } 
   });
-
+  var label1 = min;
+  var label2 = max;
+  
   var panel2 = ui.Panel({
     widgets: [
-      ui.Label(min),
+      ui.Label({value: label1, style: styleLabel}),
       ui.Label({style: {stretch: 'horizontal'}}),
-      ui.Label(max) 
+      ui.Label({value: label2, style: styleLabel}) 
       ],
     layout: ui.Panel.Layout.flow('horizontal'),
-    style: {stretch: 'horizontal', maxWidth: '270px', padding: '0px 0px 0px 0px'}
-    
+    style: {stretch: 'horizontal', maxWidth: '140px', padding: '0px 0px 0px 0px'}
   });
+  
   var new_panel = existing_panel
   // adding a title
     .add(ui.Label({
       value: title,
       style: {
-        fontWeight: 'bold',
-        fontSize: '11px',
-        margin: '0 0 4px 0',
-        padding: '0',
-        textAlign: 'center'
-        }
+    fontWeight: 'bold',
+    fontSize: '11px',
+    margin: '10px 0px 4px 0px',
+    padding: '0'
+    }
   }))
     .add(panel2)
     .add(thumb);
