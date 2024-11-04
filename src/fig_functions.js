@@ -69,7 +69,8 @@ exports.makeRow = function(color, name) {
         value: name,
         style: {
           margin: '0 0 1px 1px',
-          fontSize: '11px'
+          fontSize: '11px',
+          width: '150px',
         }
       });
  
