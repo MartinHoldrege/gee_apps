@@ -34,8 +34,9 @@
 var SEI = require("users/MartinHoldrege/SEI:src/SEIModule.js");
 var figF= require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
 var f = require("users/MartinHoldrege/gee_apps:src/general_functions.js");
-var load = require("users/MartinHoldrege/gee_apps:scripts/01_scd_load-layers.js");
 var figP= require("users/MartinHoldrege/gee_apps:src/fig_params_scd.js");
+var load = require("users/MartinHoldrege/gee_apps:scripts/01_scd_load-layers.js");
+var descript = require("users/MartinHoldrege/gee_apps:scripts/01_scd_description.js");
 
 // setup dictionaries ---------------------------------------------------
 
@@ -280,6 +281,7 @@ addSelectors(rightMap, 'Right', updateRightMap, 'top-right');
 
 // create the split panel -----------------------------------------------
 
+
 // Create a SplitPanel to hold the adjacent, linked maps.
 var splitPanel = ui.SplitPanel({
     firstPanel: leftMap,
@@ -300,6 +302,10 @@ leftMap.centerObject(load.histSEI, 6); // centering on one of the images
 updateLeftMap(leftMap);
 updateRightMap(rightMap);
 
+// add description (left) panel
+
+ui.root.insert(0,descript.panel);
+
 // add legends --------------------------------------------------------
 
 
@@ -311,54 +317,5 @@ var legendsTitle = ui.Panel({widgets: [
     fontWeight: 'bold', padding: '0px', margin: '10px 4px 0px 4px'})]});
 legendsPanel.add(legendsTitle);
 legendsPanel.add(figP.legends);
-ui.root.insert(0,legendsPanel);
+ui.root.insert(1,legendsPanel);
 
-// base map
-/*
-var iconChange = [
-  {
-    // Change map saturation.
-    stylers: [{gamma: 0.2}]
-  },
-  {
-    // Change label properties.
-    elementType: 'labels',
-    stylers: [{visibility: 'off', color: '#000055'}]
-  },
-  {
-    // Change road properties.
-    featureType: 'road',
-    elementType: 'geometry',
-    stylers: [{visibility: 'off', color: '#000055'}]
-  },
-  {
-    // Change road labels.
-    featureType: 'road',
-    elementType: 'labels',
-    stylers: [{visibility: 'off'}]
-  },
-  {
-    // Change icon properties.
-    elementType: 'labels.icon',
-    stylers: [{visibility: 'off'}]
-  },
-  {
-    // Change POI options.
-    featureType: 'poi',
-    elementType: 'all',
-    stylers: [{visibility: 'off'}]
-  },
-  {
-    featureType: 'administrative',
-    elementType: 'geometry.fill',
-    stylers: [{visibility: 'off'}]
-  },
-  {
-    featureType: 'administrative',
-    elementType: 'geometry.stroke',
-    stylers: [{visibility: 'off'}]
-  }
-];
-
-rightMap.setOptions(
-    'roadNetwork', {iconChange: iconChange});*/
