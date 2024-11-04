@@ -168,10 +168,7 @@ var legends = figF.makeSldRampLegend(legends, sldDiff1, -0.3, 0.3, 'Change in SE
 // % Change in Q
 var legends = figF.makeSldRampLegend(legends, sldDeltaQ, -70, 70, '% Change in Q');
 
-
-
-
-
+exports.legends = legends;
 
 // testing -------------------------------------
-Map.add(legends)
+// Map.add(legends)
