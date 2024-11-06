@@ -121,7 +121,8 @@ var bulletsText = [
   " Note that intermediate colors are also possible, and mean that there were multiple drivers" + 
   " (e.g., purple means that both sagebrush and annuals caused the projected change).",
   " Q values are the 'quality' scores (range 0-1) that are used in the calculation of SEI.",
-  'Climate scenarios include future projected climate based on two representative concentration pathways (RCP4.5, RCP8.5).'
+  'Climate scenarios include future projected climate based on two representative concentration' + 
+  ' pathways (RCP4.5, RCP8.5) and two time-periods (2031-2060, 2071-2100).'
   ];
   
 
