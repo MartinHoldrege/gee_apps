@@ -116,7 +116,7 @@ var bulletsText = [
   "In the 'Agreement among GCMs' layer 'Robust agreement' among global climate models (GCMs) means >90% of" + 
   " results from different climate models agreed on the change in SEI" + 
   " class, while 'non-robust' agreement means that <90% of the results agreed.",
-  "The 'Drivers of Change SEI' layer shows whether changes in the abundance of sagebrush (red), perennials" + 
+  "The 'Drivers of Change in SEI' layer shows whether changes in the abundance of sagebrush (red), perennials" + 
   " (green) or annuals (blue) were responsible for the projected change in SEI in a given pixel." + 
   " Note that intermediate colors are also possible, and mean that there were multiple drivers" + 
   " (e.g., purple means that both sagebrush and annuals caused the projected change).",
