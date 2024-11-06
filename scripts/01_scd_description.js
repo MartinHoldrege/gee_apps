@@ -79,7 +79,7 @@ var remLink = ui.Label({
   });
   
 var par4a = ui.Label({
-    value: 'More information about the broader Sagebrush Conservation Design effor can be found at: ',
+    value: 'More information about the broader Sagebrush Conservation Design effort can be found at: ',
     style: f.updateDict(styleText, 'margin', marginNoB), // no bottom margin
   });
 
@@ -92,13 +92,13 @@ var sageLink = ui.Label({
 
 
 // how to use
-var howTo = "Seperate layers can be selected on both sides of the slider to allow for comparison."  +
+var howTo = "Separate layers can be selected on both sides of the slider to allow for comparison."  +
 " Use the 'Select Variable' drop-down menu to select the" + 
 "   variable type to display on the map," + 
 "  use the 'Select Climate Scenario' drop-down menu to select the time-period and climate scenario." +
-"  Use the 'Select modeling assumption' drop-down to select one of four modeling assumptions made in the"  +
+"  Use the 'Select Modeling Assumption' drop-down to select one of four modeling assumptions made in the"  +
 " simulations (this is for users interested in understanding the impacts of some of our decisions," + 
-' see Holdrege et al. (2024) for more details. The lower drop-down menu lets you select layers showing' +
+' see Holdrege et al. (2024) for more details). The lower drop-down menu lets you select layers showing' +
 ' SEI, and related inputs for historical (2017-2020) conditions (see Doherty et al. 2022).';
 
 // abbrevations --------------------------
@@ -116,6 +116,10 @@ var bulletsText = [
   "In the 'Agreement among GCMs' layer 'Robust agreement' among global climate models (GCMs) means >90% of" + 
   " results from different climate models agreed on the change in SEI" + 
   " class, while 'non-robust' agreement means that <90% of the results agreed.",
+  "The 'Drivers of Change SEI' layer shows whether changes in the abundance of sagebrush (red), perennials" + 
+  " (green) or annuals (blue) were responsible for the projected change in SEI in a given pixel." + 
+  " Note that intermediate colors are also possible, and mean that there were multiple drivers" + 
+  " (e.g., purple means that both sagebrush and annuals caused the projected change).",
   " Q values are the 'quality' scores (range 0-1) that are used in the calculation of SEI.",
   'Climate scenarios include future projected climate based on two representative concentration pathways (RCP4.5, RCP8.5).'
   ];
