@@ -122,14 +122,14 @@ var histSEI = histSEI.addBands(histQ5sc3);
 
 var yrs = '_2017-2020';
 var histLayersD = {
-  'none': ui.Map.Layer(ee.Image(0).selfMask(), {}, ''),
-  'SEI': ui.Map.Layer(histSEI.select('Q5s'), figP.visSEI, 'SEI' + yrs),
-  'c3': ui.Map.Layer(histSEI.select('Q5sc3'), figP.visc3, 'c3' + yrs),
-  'Q1': ui.Map.Layer(histSEI.select('Q1'), figP.visSEI, 'Q1' + yrs),
-  'Q2': ui.Map.Layer(histSEI.select('Q2'), figP.visSEI, 'Q2' + yrs),
-  'Q3': ui.Map.Layer(histSEI.select('Q3'), figP.visSEI, 'Q3' + yrs),
-  'Q4': ui.Map.Layer(histSEI.select('Q4'), figP.visSEI, 'Q4' + yrs),
-  'Q5': ui.Map.Layer(histSEI.select('Q5'), figP.visSEI, 'Q5' + yrs)
+  'none': function() {return ui.Map.Layer(ee.Image(0).selfMask(), {}, '')},
+  'SEI': function() {return ui.Map.Layer(histSEI.select('Q5s'), figP.visSEI, 'SEI' + yrs)},
+  'c3': function() {return ui.Map.Layer(histSEI.select('Q5sc3'), figP.visc3, 'c3' + yrs)},
+  'Q1': function() {return ui.Map.Layer(histSEI.select('Q1'), figP.visSEI, 'Q1' + yrs)},
+  'Q2': function() {return ui.Map.Layer(histSEI.select('Q2'), figP.visSEI, 'Q2' + yrs)},
+  'Q3': function() {return ui.Map.Layer(histSEI.select('Q3'), figP.visSEI, 'Q3' + yrs)},
+  'Q4': function() {return ui.Map.Layer(histSEI.select('Q4'), figP.visSEI, 'Q4' + yrs)},
+  'Q5': function() {return ui.Map.Layer(histSEI.select('Q5'), figP.visSEI, 'Q5' + yrs)}
 };
 
 // names to be used in dropdown menu of layers in histLayersD
