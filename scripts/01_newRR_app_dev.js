@@ -22,9 +22,6 @@ var visT1 = figP.visT1; // type 1
 var visT2 = figP.visT2; // type 2
 var visT3 = figP.visT3; // type 3
 
-// default layer the app shows
-var defaultVarType = 'Resilience (categorical)';
-var defaultScenario = 'Ambient (1980-2020)';
 
 var testRun = false; // fewer images displayed for test run
 // read in layers ---------------------------------------------------------------------------
@@ -54,12 +51,8 @@ if (testRun) {
 
 ui.root.clear();
 //var panel = ui.Panel({style: {width: '250px'}});
-var map = ui.Map();
 //ui.root.add(panel).add(map); // order that you add panl vs map affects if panel is right or left
-ui.root.insert(1, map); 
 
-map.style().set('cursor', 'crosshair');
-map.centerObject(mask, 6);
 
 // styles ---------------------------------------------------------
 
@@ -136,8 +129,10 @@ var visParamsD = {
 // using a dictionary that can be updated in child
 // environments (so don't have scoping issues)
 var selections = {
-    varType: defaultVarType,
-    scenario: defaultScenario,
+    varTypeLeft: 'Resilience (categorical)',
+    scenarioLeft: 'Ambient (1980-2020)',
+    varTypeRight: 'Resilience (categorical)',
+    scenarioRight: 'RCP4.5 (2064-2099)',
     applyMask: true,
     showBackground:false
 };
@@ -174,18 +169,20 @@ var getImage = function(varTypeName, scenarioName, applyMask) {
 };
 
 // This function changes the map to show the selected image.
-var updateMap = function(mapToChange) {
-  mapToChange.layers().set(1, getImage(selections.varType, selections.scenario, selections.applyMask));
+var updateMap = function(mapToChange, side) {
+  var scenario = selections['scenario' + side];
+  var varType = selections['varType' + side];
+  mapToChange.layers().set(0, getImage(varType, scenario, selections.applyMask));
 };
 
 // create checkbox for applying the mask
-var createMaskCheckbox = function(mapToChange) {
+var createMaskCheckbox = function(mapToChange, side) {
   var out = ui.Checkbox({
     label: 'Mask areas that are not sagebrush rangelands or open woodlands',
     value: true,  // Initially checked
     onChange: function(checked) {
         selections.applyMask = checked;
-        updateMap(mapToChange);  // Update the map when the checkbox is toggled
+        updateMap(mapToChange, side);  // Update the map when the checkbox is toggled
     },
     style: styleCheckbox
   });
@@ -214,7 +211,7 @@ var createBackgroundCheckbox = function() {
 
   // Configure a selection dropdown to allow the user to choose
   // between variable types and climate scenarios, and set the map to update.
-function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
+function addLayerSelectors(mapToChange, side, position) {
     var labelVar = ui.Label('Select Variable:');
     var labelScenario = ui.Label('Select Climate Scenario:');
 
@@ -226,22 +223,22 @@ function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
     var selectVar = ui.Select({
       items: Object.keys(varTypesD),
       onChange: function(newVarSelection) {
-        selections.varType = newVarSelection;  // Update the variable selection
+        selections['varType' + side] = newVarSelection;  // Update the variable selection
 
         // Update the available scenarios based on the selected variable
-        var availableScenarios = availableScenariosD[selections.varType] || Object.keys(scenarioD);
+        var availableScenarios = availableScenariosD[selections['varType' + side]] || Object.keys(scenarioD);
 
         // variable drop down
         
         // Reset to the first available scenario or the default one if available (this is an ifelse statement)
-        var defaultScenarioForVar = f.listIncludes(availableScenarios, selections.scenario)
-          ? selections.scenario // if true
+        var defaultScenarioForVar = f.listIncludes(availableScenarios, selections['scenario' + side])
+          ? selections['scenario' + side] // if true
           : availableScenarios[0]; // if false
         // selectScenario.setValue(defaultScenarioForVar, true);
-        selections.scenario = defaultScenarioForVar;
+        selections['scenario' + side] = defaultScenarioForVar;
         selectScenario.setValue(defaultScenarioForVar, true);  // Explicitly set the selected value in the dropdown
         // Update the map with the new selection
-        updateMap(mapToChange);
+        updateMap(mapToChange, side);
       }
     });
     
@@ -249,13 +246,13 @@ function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
     var selectScenario = ui.Select({
         items: Object.keys(scenarioD),
         onChange: function(newScenarioSelection) {
-            selections.scenario = newScenarioSelection;  // Update the scenario selection
-            updateMap(mapToChange);  // Update the map with the current variable and scenario
+            selections['scenario' + side] = newScenarioSelection;  // Update the scenario selection
+            updateMap(mapToChange, side);  // Update the map with the current variable and scenario
         }
     });
     
-    selectVar.setValue(defaultVarType, true);
-    selectScenario.setValue(defaultScenario, true);
+    selectVar.setValue(selections['varType' + side], true);
+    selectScenario.setValue(selections['scenario' + side], true);
     
     var controlPanel =
         ui.Panel({
@@ -266,8 +263,19 @@ function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
                 position: 'top-left'
             }
         });
-
-    return controlPanel 
+    
+    var controlPanel =
+      ui.Panel({
+          widgets: [labelVar, selectVar, labelScenario, selectScenario],
+          style: {
+              position: 
+              position,
+              padding: '2px',
+              margin: '2px'
+          }
+    });
+        
+    mapToChange.add(controlPanel);
 }
 
 // end functions --------------------------------------------------------------------
@@ -276,20 +284,52 @@ function addLayerSelectors(mapToChange, defaultVarType, defaultScenario) {
   Add selectors and layers
 */
 
+// setup the two maps ----------------------------------------------------
+
+// Create the left map, and have it display the first layer.
+var leftMap = ui.Map();
+leftMap.setControlVisibility(true);
+// map.centerObject(SEI.cur.select('Q5sc3'), 6); // update as needed
+
+// Create the right map, and have it display the last layer.
+var rightMap = ui.Map();
+rightMap.setControlVisibility(true);
+
+leftMap.centerObject(mask, 6);
+
+// add selectors to the maps
+addLayerSelectors(leftMap, 'Left', 'top-left');
+addLayerSelectors(rightMap, 'Right', 'top-right');
+
+
+// create the split panel -----------------------------------------------
+
+// Create a SplitPanel to hold the adjacent, linked maps.
+var splitPanel = ui.SplitPanel({
+    firstPanel: leftMap,
+    secondPanel: rightMap,
+    wipe: true,
+    style: {
+        stretch: 'both'
+    }
+});
+
+// Set the SplitPanel as the only thing in the UI root.
+ui.root.widgets().reset([splitPanel]);
+var linker = ui.Map.Linker([leftMap, rightMap]);
+
 // add the main layer and selectors
 
-// combined (below) with legends
-var selectorPanel = addLayerSelectors(map, defaultVarType, defaultScenario); // create the panel with selectors
 
 // Add the background layer
-var background = ee.Image(0).visualize({palette: ['lightgray']});  // Plain gray background
+/*var background = ee.Image(0).visualize({palette: ['lightgray']});  // Plain gray background
 var backgroundLayer = ui.Map.Layer(background, {}, 'Background', false, 1.0);
 map.layers().set(0, backgroundLayer); // 0 index (on bottom, so appears behind other layers)
 
 // Add the states outline layer 
 var statesLayer = ui.Map.Layer(figPScd.statesOutline, {color: 'black', lineWidth: 2}, 'State Outlines', false, 1.0);
 map.layers().set(2, statesLayer); // 2 index, so on top of ther layers
-
+*/
 
 ///////////////////////////////////////////////////////////////
 //      Set up panels and for Description            //
@@ -366,7 +406,7 @@ var bulletsText = [
   'Ecological resilience (resilience) or invasion resistance (resistance) can be displayed' +
   ' as categorical (4 categories) or continuous variables.',
   "'Change' layers show the difference between projected future resistance or resilience and a" +
-  " historical reference (i.e., 1980-2020 ambient conditions)." +
+  " historical reference." +
   "These change layers are a continuous variable.",
   'Climate scenarios include ambient climate (ambient) or future projected climate based on two representative concentration pathways (RCP4.5, RCP8.5).'
   ];
@@ -426,6 +466,8 @@ panel.add(description);
 ui.root.insert(0,panel);
 
 // add legends  -------------------------------
-ui.root.insert(1, selectorPanel.add(figP.legendsRr))
-// map.add(selectorPanel.add(figP.legendsRr));
+
+var secondPanel = ui.Panel();
+ui.root.insert(1, secondPanel.add(figP.legendsRr));
+
 
