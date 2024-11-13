@@ -205,6 +205,13 @@ exports.removeLayer = function(mapToChange, index) {
   }
 };
 
+exports.changeLayerVisibility = function(mapToChange, index, show) {
+  var lay = mapToChange.layers().get(index);
+  if(lay){
+    lay.setShown(show);
+  }
+};
+
 // background layers ------------------------------------------------------------------
 
 // layers
