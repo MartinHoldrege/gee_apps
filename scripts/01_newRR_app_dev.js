@@ -195,23 +195,6 @@ var createMaskCheckbox = function(leftMap, rightMap) {
 };
 
 
-// Checkbox for toggling the visibility of the background and states outline
-var createBackgroundCheckbox = function(mapToChange1, mapToChange2) {
-    return ui.Checkbox({
-        label: 'Add plain background and state outlines',
-        value: false,  // Initially unchecked
-        onChange: function(checked) {
-          // making plain background and states visible or not
-          // in both the left and right maps
-          figF.changeLayerVisibility(mapToChange1, indexBackground, checked)
-          figF.changeLayerVisibility(mapToChange2, indexBackground, checked)
-          figF.changeLayerVisibility(mapToChange1, indexStates, checked)
-          figF.changeLayerVisibility(mapToChange2, indexStates, checked)
-        },
-        style: styleCheckbox
-    });
-};
-
   // Configure a selection dropdown to allow the user to choose
   // between variable types and climate scenarios, and set the map to update.
 function addLayerSelectors(mapToChange, side, position) {
@@ -258,21 +241,10 @@ function addLayerSelectors(mapToChange, side, position) {
     selectScenario.setValue(selections['scenario' + side], true);
     
     var controlPanel =
-        ui.Panel({
-            widgets: [labelVar, selectVar, labelScenario, selectScenario, 
-                      createMaskCheckbox(mapToChange),
-                      createBackgroundCheckbox()],
-            style: {
-                position: 'top-left'
-            }
-        });
-    
-    var controlPanel =
       ui.Panel({
           widgets: [labelVar, selectVar, labelScenario, selectScenario],
           style: {
-              position: 
-              position,
+              position: position,
               padding: '2px',
               margin: '2px'
           }
@@ -306,7 +278,13 @@ addLayerSelectors(rightMap, 'Right', 'top-right');
 
 // checkboxes (added to panel below)
 var maskCheckbox = createMaskCheckbox(leftMap, rightMap); 
-var backgroundCheckbox = createBackgroundCheckbox(leftMap, rightMap);
+var backgroundCheckbox = figF.createBackgroundCheckbox2Maps({
+  mapToChange1: leftMap,
+  mapToChange2: rightMap,
+  index1: indexBackground,
+  index2: indexStates,
+  style: styleCheckbox
+});
 
 // create the split panel -----------------------------------------------
 
@@ -329,19 +307,10 @@ ui.root.widgets().reset([splitPanel]);
 var linker = ui.Map.Linker([leftMap, rightMap]);
 
 // add the main layer and selectors
-
-
-// Add the background layer
-var createBackground = function() {
-  var background = ee.Image(0).visualize({palette: ['lightgray']}); 
-  return ui.Map.Layer(background, {}, 'Background', false, 1.0);
-};
-
 leftMap.layers().set(indexBackground, figF.createBackgroundLayer('lightgray')); 
 rightMap.layers().set(indexBackground, figF.createBackgroundLayer('lightgray')); 
 
 // Add the states outline layer 
-
 leftMap.layers().set(indexStates, figF.createStatesLayer()); // 2 index, so on top of ther layers
 rightMap.layers().set(indexStates, figF.createStatesLayer()); // 2 index, so on top of ther layers
 
