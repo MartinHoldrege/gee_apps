@@ -180,13 +180,14 @@ var updateMap = function(mapToChange, side) {
 };
 
 // create checkbox for applying the mask
-var createMaskCheckbox = function(mapToChange, side) {
+var createMaskCheckbox = function(leftMap, rightMap) {
   var out = ui.Checkbox({
     label: 'Mask areas that are not sagebrush rangelands or open woodlands',
     value: true,  // Initially checked
     onChange: function(checked) {
         selections.applyMask = checked;
-        updateMap(mapToChange, side);  // Update the map when the checkbox is toggled
+        updateMap(leftMap, 'Left');  // Update the map when the checkbox is toggled
+        updateMap(rightMap, 'Right');
     },
     style: styleCheckbox
   });
@@ -197,7 +198,7 @@ var createMaskCheckbox = function(mapToChange, side) {
 // Checkbox for toggling the visibility of the background and states outline
 var createBackgroundCheckbox = function(mapToChange1, mapToChange2) {
     return ui.Checkbox({
-        label: 'Apply plain background and state outlines',
+        label: 'Add plain background and state outlines',
         value: false,  // Initially unchecked
         onChange: function(checked) {
           // making plain background and states visible or not
@@ -303,6 +304,9 @@ leftMap.centerObject(mask, 6);
 addLayerSelectors(leftMap, 'Left', 'top-left');
 addLayerSelectors(rightMap, 'Right', 'top-right');
 
+// checkboxes (added to panel below)
+var maskCheckbox = createMaskCheckbox(leftMap, rightMap); 
+var backgroundCheckbox = createBackgroundCheckbox(leftMap, rightMap);
 
 // create the split panel -----------------------------------------------
 
@@ -340,6 +344,7 @@ rightMap.layers().set(indexBackground, figF.createBackgroundLayer('lightgray'));
 
 leftMap.layers().set(indexStates, figF.createStatesLayer()); // 2 index, so on top of ther layers
 rightMap.layers().set(indexStates, figF.createStatesLayer()); // 2 index, so on top of ther layers
+
 
 ///////////////////////////////////////////////////////////////
 //      Set up panels and for Description            //
@@ -477,7 +482,7 @@ ui.root.insert(0,panel);
 
 // add legends  -------------------------------
 
-var secondPanel = ui.Panel();
+var secondPanel = ui.Panel({widgets: [maskCheckbox, backgroundCheckbox]});
 ui.root.insert(1, secondPanel.add(figP.legendsRr));
 
 
