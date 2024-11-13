@@ -17,6 +17,9 @@ var figPScd = require("users/MartinHoldrege/SEI:src/fig_params.js");
 // params ---------------------------------------------------------------------------------
 
 var path = 'projects/ee-martinholdrege/assets/misc/newRR3/'; // where images are read in from
+var indexBackground = 0;
+var indexRr = 1; 
+var indexStates = 2;
 
 // visualization params
 var visT1 = figP.visT1; // type 1
@@ -173,7 +176,7 @@ var getImage = function(varTypeName, scenarioName, applyMask) {
 var updateMap = function(mapToChange, side) {
   var scenario = selections['scenario' + side];
   var varType = selections['varType' + side];
-  mapToChange.layers().set(0, getImage(varType, scenario, selections.applyMask));
+  mapToChange.layers().set(indexRr, getImage(varType, scenario, selections.applyMask));
 };
 
 // create checkbox for applying the mask
@@ -330,13 +333,13 @@ var createBackground = function() {
   return ui.Map.Layer(background, {}, 'Background', false, 1.0);
 };
 
-// leftMap.layers().set(0, figF.createBackgroundLayer('lightgray')); // 0 index (on bottom, so appears behind other layers)
-
+leftMap.layers().set(indexBackground, figF.createBackgroundLayer('lightgray')); 
+rightMap.layers().set(indexBackground, figF.createBackgroundLayer('lightgray')); 
 
 // Add the states outline layer 
 
-leftMap.layers().set(1, figF.createStatesLayer()); // 2 index, so on top of ther layers
-rightMap.layers().set(1, figF.createStatesLayer()); // 2 index, so on top of ther layers
+leftMap.layers().set(indexStates, figF.createStatesLayer()); // 2 index, so on top of ther layers
+rightMap.layers().set(indexStates, figF.createStatesLayer()); // 2 index, so on top of ther layers
 
 ///////////////////////////////////////////////////////////////
 //      Set up panels and for Description            //
