@@ -205,13 +205,13 @@ exports.removeLayer = function(mapToChange, index) {
   }
 };
 
-exports.changeLayerVisibility = function(mapToChange, index, show) {
+var changeLayerVisibility = function(mapToChange, index, show) {
   var lay = mapToChange.layers().get(index);
   if(lay){
     lay.setShown(show);
   }
 };
-
+exports.changeLayerVisibility = changeLayerVisibility;
 // background layers ------------------------------------------------------------------
 
 // layers
@@ -225,24 +225,27 @@ exports.createStatesLayer = function() {
 };
 
 // Checkbox for toggling the visibility of the background and states outline
-exports.createBackgroundCheckbox = function(args) {
-    var backgroundLayer = args.background;
-    var statesLayer = args.states;
+// Checkbox for toggling the visibility of the background and states outline
+// args is a dictionary with mapToChange1, mapToChange2, index1, index2
+// required arguments (style is optionals)
+// mapToChange represent the left and right maps in app with slider
+// and the index represents the index position of background and foreground
+// layers to turn of and on
+exports.createBackgroundCheckbox2Maps = function(args) {
     var style = args['style']
     if (style === undefined || style === null){
-      var style = {fontSize: '11px', width: '150px'};
+      var style = {fontSize: '12px', width: '150px'};
     }
-  
-    // widgets
-    var updateBackgroundVisibility = function(show) {
-        backgroundLayer.setShown(show);  // Toggle visibility of the background layer
-        statesLayer.setShown(show);      // Toggle visibility of the states outline layer
-    };
     return ui.Checkbox({
-        label: 'Apply plain background and state outlines',
+        label: 'Add plain background and state outlines',
         value: false,  // Initially unchecked
         onChange: function(checked) {
-            updateBackgroundVisibility(checked);  // Toggle visibility based on checkbox state
+          // making plain background and states visible or not
+          // in both the left and right maps
+          changeLayerVisibility(args.mapToChange1, index1, checked)
+          changeLayerVisibility(args.mapToChange2, index1, checked)
+          changeLayerVisibility(args.mapToChange1, index2, checked)
+          changeLayerVisibility(args.mapToChange2, index2, checked)
         },
         style: style
     });
