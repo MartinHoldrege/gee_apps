@@ -242,10 +242,10 @@ exports.createBackgroundCheckbox2Maps = function(args) {
         onChange: function(checked) {
           // making plain background and states visible or not
           // in both the left and right maps
-          changeLayerVisibility(args.mapToChange1, index1, checked)
-          changeLayerVisibility(args.mapToChange2, index1, checked)
-          changeLayerVisibility(args.mapToChange1, index2, checked)
-          changeLayerVisibility(args.mapToChange2, index2, checked)
+          changeLayerVisibility(args.mapToChange1, args.index1, checked)
+          changeLayerVisibility(args.mapToChange2, args.index1, checked)
+          changeLayerVisibility(args.mapToChange1, args.index2, checked)
+          changeLayerVisibility(args.mapToChange2, args.index2, checked)
         },
         style: style
     });
