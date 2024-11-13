@@ -11,6 +11,7 @@ Started: October 14, 2024
 
 var figP = require("users/MartinHoldrege/gee_apps:src/fig_params.js");
 var f = require("users/MartinHoldrege/gee_apps:src/general_functions.js");
+var figF = require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
 var figPScd = require("users/MartinHoldrege/SEI:src/fig_params.js");
 
 // params ---------------------------------------------------------------------------------
@@ -189,21 +190,19 @@ var createMaskCheckbox = function(mapToChange, side) {
   return out;
 };
 
-// create states outlines and blank background
-// Function to update the background and state outlines based on checkbox status
-// Function to toggle the visibility of the background and states outline
-var updateBackgroundVisibility = function(show) {
-    backgroundLayer.setShown(show);  // Toggle visibility of the background layer
-    statesLayer.setShown(show);      // Toggle visibility of the states outline layer
-};
 
 // Checkbox for toggling the visibility of the background and states outline
-var createBackgroundCheckbox = function() {
+var createBackgroundCheckbox = function(mapToChange1, mapToChange2) {
     return ui.Checkbox({
         label: 'Apply plain background and state outlines',
         value: false,  // Initially unchecked
         onChange: function(checked) {
-            updateBackgroundVisibility(checked);  // Toggle visibility based on checkbox state
+          // making plain background and states visible or not
+          // in both the left and right maps
+          figF.changeLayerVisibility(mapToChange1, indexBackground, checked)
+          figF.changeLayerVisibility(mapToChange2, indexBackground, checked)
+          figF.changeLayerVisibility(mapToChange1, indexStates, checked)
+          figF.changeLayerVisibility(mapToChange2, indexStates, checked)
         },
         style: styleCheckbox
     });
@@ -306,7 +305,10 @@ addLayerSelectors(rightMap, 'Right', 'top-right');
 
 // Create a SplitPanel to hold the adjacent, linked maps.
 var splitPanel = ui.SplitPanel({
-    firstPanel: leftMap,
+    firstPanel: ui.Panel({
+      widgets: [leftMap],
+      style: {width: '35%', height: '100%'}  // changing the width percent so slider is more centered
+    }),
     secondPanel: rightMap,
     wipe: true,
     style: {
@@ -314,6 +316,7 @@ var splitPanel = ui.SplitPanel({
     }
 });
 
+// Adjust the size of the first (left) panel
 // Set the SplitPanel as the only thing in the UI root.
 ui.root.widgets().reset([splitPanel]);
 var linker = ui.Map.Linker([leftMap, rightMap]);
@@ -322,14 +325,18 @@ var linker = ui.Map.Linker([leftMap, rightMap]);
 
 
 // Add the background layer
-/*var background = ee.Image(0).visualize({palette: ['lightgray']});  // Plain gray background
-var backgroundLayer = ui.Map.Layer(background, {}, 'Background', false, 1.0);
-map.layers().set(0, backgroundLayer); // 0 index (on bottom, so appears behind other layers)
+var createBackground = function() {
+  var background = ee.Image(0).visualize({palette: ['lightgray']}); 
+  return ui.Map.Layer(background, {}, 'Background', false, 1.0);
+};
+
+// leftMap.layers().set(0, figF.createBackgroundLayer('lightgray')); // 0 index (on bottom, so appears behind other layers)
+
 
 // Add the states outline layer 
-var statesLayer = ui.Map.Layer(figPScd.statesOutline, {color: 'black', lineWidth: 2}, 'State Outlines', false, 1.0);
-map.layers().set(2, statesLayer); // 2 index, so on top of ther layers
-*/
+
+leftMap.layers().set(1, figF.createStatesLayer()); // 2 index, so on top of ther layers
+rightMap.layers().set(1, figF.createStatesLayer()); // 2 index, so on top of ther layers
 
 ///////////////////////////////////////////////////////////////
 //      Set up panels and for Description            //
