@@ -26,6 +26,10 @@
 
 // User-defined variables -----------------------------------------------------
  
+var indexBackground = 0;
+var indexFut = 1; 
+var indexHist = 2;
+var indexStates = 3;
 
 // dependencies -----------------------------------------------------------
 
@@ -72,13 +76,14 @@ var defaultHistLayer = Object.keys(histNamesD)[0]
 var noneVar = Object.keys(varDisplayD)[0]; 
 
 var selectD = {
-    varLeft: Object.keys(varDisplayD)[1], // variable
+    varLeft: Object.keys(varDisplayD)[0], // variable
     varRight: Object.keys(varDisplayD)[1],
     scenLeft: Object.keys(scenD)[1], // RCP, time-period
-    scenRight: Object.keys(scenD)[3], 
+    scenRight: Object.keys(scenD)[1], 
     runLeft: Object.keys(runDisplayD)[0], // modelling assumption
     runRight: Object.keys(runDisplayD)[0],
-    histLayer: defaultHistLayer, // historical layer to show
+    histLayerLeft:  Object.keys(histNamesD)[1],
+    histLayerRight: defaultHistLayer, // historical layer to show
     showBackground:false
 };
 
@@ -91,24 +96,24 @@ var styleTitle =  {fontSize: '14px', padding: '0px', fontWeight: 'bold', margin:
 // functions --------------------------------------------------------------
 
 // historical layers selectors
-var updateHistMap = function(mapToChange) {
-  var key = histNamesD[selectD.histLayer];
-  var lyr = load.histLayersD[key];
-  figF.removeLayer(mapToChange, 1)
-  mapToChange.layers().set(1, lyr);
+var updateHistMap = function(mapToChange, side) {
+  var key = histNamesD[selectD['histLayer' + side]];
+  var f = load.histLayersD[key]; // function that returns the layers
+  figF.removeLayer(mapToChange, indexHist)
+  mapToChange.layers().set(indexHist, f());
 };
 
 var selectHistFun = function(mapToChange, updateFun, selectVar, side) {
   return ui.Select({
       items: Object.keys(histNamesD),
-      value: selectD.histLayer, // the default value
+      value: selectD['histLayer' + side], // the default value
       onChange: function(x) {
-        selectD.histLayer = x;  // Update the variable selection
+        selectD['histLayer' + side] = x;  // Update the variable selection
 
          // update the future variable selector to 'none'
         // resetVarLayer(mapToChange, updateFun, selectVar, side); // this is a tricky line of code that causes cyclical dependencies
         // Update the historical map with the new selection
-        updateHistMap(mapToChange);
+        updateHistMap(mapToChange, side);
       },
       style: styleDrop
     });
@@ -138,11 +143,11 @@ var resetHistLayer = function(mapToChange, selectHist, side) {
   // add the 'none' layer if it has changed from the none layer
   // and something other than the none layer was selected for the
   // future variable
-  if (selectD.histLayer !== defaultHistLayer && selectD['var' + side] !== noneVar) {
-    selectD.histLayer = defaultHistLayer;
+  if (selectD['histLayer' + side] !== defaultHistLayer && selectD['var' + side] !== noneVar) {
+    selectD['histLayer' + side] = defaultHistLayer;
     figF.removeLayer(mapToChange, 1); // removing the existing layer
     selectHist.setValue(defaultHistLayer, true); // Update dropdown display
-    updateHistMap(mapToChange); // Update the map to remove the historical layer
+    updateHistMap(mapToChange, side); // Update the map to remove the historical layer
   }
 };
 
@@ -180,7 +185,7 @@ var updateLeftMap = function(mapToChange) {
   var nameScen = selectD.scenLeft;
   
   var lyr = load.loadFutLayer(varType, nameRun, nameScen);
-  mapToChange.layers().set(0, lyr);
+  mapToChange.layers().set(indexFut, lyr);
 };
 
 var updateRightMap = function(mapToChange) {
@@ -189,7 +194,7 @@ var updateRightMap = function(mapToChange) {
   var nameScen = selectD.scenRight;
   
   var lyr = load.loadFutLayer(varType, nameRun, nameScen);
-  mapToChange.layers().set(0, lyr);
+  mapToChange.layers().set(indexFut, lyr);
 };
 
 // mapToChange is the ui.Map element to add to
@@ -297,20 +302,46 @@ ui.root.widgets().reset([splitPanel]);
 var linker = ui.Map.Linker([leftMap, rightMap]);
 leftMap.centerObject(load.histSEI, 6); // centering on one of the images
 
+// add the main layer and selectors
 
+// first layer
+leftMap.layers().set(indexBackground, figF.createBackgroundLayer('white')); 
+rightMap.layers().set(indexBackground, figF.createBackgroundLayer('white')); 
+
+// second layer
 // this makes the maps appear when the page loads
 updateLeftMap(leftMap);
 updateRightMap(rightMap);
 
-// add description (left) panel
+// 3rd layer
+// historical layer
+updateHistMap(leftMap, 'Left');
+updateHistMap(rightMap, 'Right');
 
 ui.root.insert(0,descript.panel);
 
+// background/states outline functionality ----------------------------
+
+
+// 4th layer: Add the states outline layer 
+leftMap.layers().set(indexStates, figF.createStatesLayer()); // 2 index, so on top of ther layers
+rightMap.layers().set(indexStates, figF.createStatesLayer()); // 2 index, so on top of ther layers
+
+// create checboxes --------------------------------------------------
+
+var backgroundCheckbox = figF.createBackgroundCheckbox2Maps({
+  mapToChange1: leftMap,
+  mapToChange2: rightMap,
+  index1: indexBackground,
+  index2: indexStates
+});
+
 // add legends --------------------------------------------------------
+// and checkboxes
 
-
-var legendsPanel = ui.Panel();
+var legendsPanel = ui.Panel({widgets: [backgroundCheckbox]});
 // put checkbox for backgroun here when that's created
+
 
 var legendsTitle = ui.Panel({widgets: [
   ui.Label('Legends:', {fontSize: '14px', 
