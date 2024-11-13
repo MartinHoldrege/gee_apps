@@ -213,8 +213,10 @@ exports.createBackgroundLayer = function(color) {
   return ui.Map.Layer(background, {}, 'Background', false, 1.0);
 };
 
-var statesOutline = ui.Map.Layer(figPScd.statesOutline, {color: 'black', lineWidth: 2}, 'State Outlines', false, 1.0);
-exports.statesOutline = statesOutline;
+exports.createStatesLayer = function() {
+  return ui.Map.Layer(figPScd.statesOutline, {color: 'black', lineWidth: 2}, 'State Outlines', false, 1.0);
+};
+
 // Checkbox for toggling the visibility of the background and states outline
 exports.createBackgroundCheckbox = function(args) {
     var backgroundLayer = args.background;
