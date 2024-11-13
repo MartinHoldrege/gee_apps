@@ -406,7 +406,8 @@ var chambersLink = ui.Label({
   });
 
 // how to use
-var howTo = "Use the 'Select Variable' drop down menu to select the" + 
+var howTo = "Different layers can be selected on either side of the slider to allow for comparison." + 
+"Use the 'Select Variable' drop down menu to select the" + 
 " R&R variable to display on the map," + 
 " and use the 'Select Climate Scenario' dropdown menu to select the time-period and climate scenario.";
 
