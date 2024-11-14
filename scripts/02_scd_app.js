@@ -324,8 +324,8 @@ ui.root.insert(0,descript.panel);
 
 
 // 4th layer: Add the states outline layer 
-leftMap.layers().set(indexStates, figF.createStatesLayer()); // 2 index, so on top of ther layers
-rightMap.layers().set(indexStates, figF.createStatesLayer()); // 2 index, so on top of ther layers
+leftMap.layers().set(indexStates, figF.createStatesLayer()); //  on top of ther layers
+rightMap.layers().set(indexStates, figF.createStatesLayer()); //  on top of ther layers
 
 // create checboxes --------------------------------------------------
 
