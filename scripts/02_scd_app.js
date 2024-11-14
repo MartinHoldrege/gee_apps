@@ -282,7 +282,6 @@ rightMap.setControlVisibility(true);
 addSelectors(leftMap, 'Left', updateLeftMap, 'top-left');
 addSelectors(rightMap, 'Right', updateRightMap, 'top-right');
 
-// addHistSelector(leftMap, 'bottom-left')
 
 // create the split panel -----------------------------------------------
 
@@ -305,14 +304,14 @@ ui.root.widgets().reset([splitPanel]);
 var linker = ui.Map.Linker([leftMap, rightMap]);
 leftMap.centerObject(load.histSEI, 6); // centering on one of the images
 
-// add the main layer and selectors
+// add the layers and the selectors
+// this makes the maps appear when the page loads
 
 // first layer
 leftMap.layers().set(indexBackground, figF.createBackgroundLayer('white')); 
 rightMap.layers().set(indexBackground, figF.createBackgroundLayer('white')); 
 
 // second layer
-// this makes the maps appear when the page loads
 updateLeftMap(leftMap);
 updateRightMap(rightMap);
 
