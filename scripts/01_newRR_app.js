@@ -95,8 +95,8 @@ var imagesD = imageNamesL.reduce(function(acc, key) {
 var varTypesD = {
   'Resilience (categorical)': ['Resil-cats', ''],
   'Resilience (continuous)': ['Resil-cont', ''],
-  'Resistance (categorical)': ['Resil-cats', ''],
-  'Resistance (continuous)': ['Resil-cont', ''],
+  'Resistance (categorical)': ['Resist-cats', ''],
+  'Resistance (continuous)': ['Resist-cont', ''],
   'Change in Resilience (continuous)': ['Resil-cont', '-delta'],
   'Change in Resistance (continuous)': ['Resist-cont', '-delta']
 };
