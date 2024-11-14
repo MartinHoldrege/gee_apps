@@ -197,6 +197,19 @@ exports.makeSldRampLegend = function(existing_panel, sld, min, max, title) {
 
 // working with layers ---------------------------------------------------------
 
+function isLayerPresentAtIndex(map, index) {
+  // Check if the index is within the bounds of the layers array
+  if (index < map.layers().length()) {
+    // If the index is valid, check if the layer at that index is not null
+    return map.layers().get(index) !== null;
+  } else {
+    // Index is out of bounds, meaning no layer is present at this index
+    return false;
+  }
+}
+
+exports.isLayerPresentAtIndex = isLayerPresentAtIndex;
+
 // remove a map layer based on it's index
 exports.removeLayer = function(mapToChange, index) {
   var lay = mapToChange.layers().get(index);
