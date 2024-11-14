@@ -225,6 +225,23 @@ var changeLayerVisibility = function(mapToChange, index, show) {
   }
 };
 exports.changeLayerVisibility = changeLayerVisibility;
+
+// add a layer back to a given index, at set it's visibility
+// on if needed, this can be necessary if layers at set 
+// indexes get removed if a lower layer gets removed and re-added
+exports.addLayerBack = function(mapToChange, layer, index, show) {
+  var present = isLayerPresentAtIndex(mapToChange, layer);
+  
+  // add layer back if it isn't present
+  if(!present) {
+    mapToChange.layers().set(index, layer);
+  }
+  // make visible if needed
+  if(show) {
+    changeLayerVisibility(mapToChange, index, show);
+  }
+};
+
 // background layers ------------------------------------------------------------------
 
 // layers
