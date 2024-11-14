@@ -289,7 +289,10 @@ addSelectors(rightMap, 'Right', updateRightMap, 'top-right');
 
 // Create a SplitPanel to hold the adjacent, linked maps.
 var splitPanel = ui.SplitPanel({
-    firstPanel: leftMap,
+    firstPanel: ui.Panel({
+      widgets: [leftMap],
+      style: {width: '37%', height: '100%'}  // changing the width percent so slider is more centered
+    }),
     secondPanel: rightMap,
     wipe: true,
     style: {
