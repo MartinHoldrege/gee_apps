@@ -122,7 +122,7 @@ var histSEI = histSEI.addBands(histQ5sc3);
 
 var yrs = '_2017-2020';
 var histLayersD = {
-  'none': function() {return ui.Map.Layer(ee.Image(0).selfMask(), {}, 'No historical layer shown')},
+  'none': function() {return ui.Map.Layer(ee.Image(0).selfMask(), {}, 'No historical layer shown', false)},
   'SEI': function() {return ui.Map.Layer(histSEI.select('Q5s'), figP.visSEI, 'SEI' + yrs)},
   'c3': function() {return ui.Map.Layer(histSEI.select('Q5sc3'), figP.visc3, 'c3' + yrs)},
   'Q1': function() {return ui.Map.Layer(histSEI.select('Q1'), figP.visSEI, 'Q1' + yrs)},
