@@ -261,6 +261,7 @@ exports.createStatesLayer = function() {
 // mapToChange represent the left and right maps in app with slider
 // and the index represents the index position of background and foreground
 // layers to turn of and on
+// a dict (dictionary containing 'showBackground' item can also be provided)
 exports.createBackgroundCheckbox2Maps = function(args) {
     var style = args['style']
     if (style === undefined || style === null){
@@ -270,8 +271,14 @@ exports.createBackgroundCheckbox2Maps = function(args) {
         label: 'Add plain background and state outlines',
         value: false,  // Initially unchecked
         onChange: function(checked) {
+          // if a dictionary containing a showBackground item is provided
+          // update that item to checked
+          if (!(args.dict.showBackground === undefined || args.dict.showBackground === null)) {
+            args.dict.showBackground = checked;
+          }
           // making plain background and states visible or not
           // in both the left and right maps
+
           changeLayerVisibility(args.mapToChange1, args.index1, checked)
           changeLayerVisibility(args.mapToChange2, args.index1, checked)
           changeLayerVisibility(args.mapToChange1, args.index2, checked)
