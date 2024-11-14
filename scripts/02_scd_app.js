@@ -95,12 +95,21 @@ var styleTitle =  {fontSize: '14px', padding: '0px', fontWeight: 'bold', margin:
 
 // functions --------------------------------------------------------------
 
+// add statesoutline
+// purpose--the states outline gets removed when lower map levels are removed
+// and re-added, so this adds the layer again
+
+var addStatesBack = function(mapToChange) {
+  figF.addLayerBack(mapToChange, figF.createStatesLayer(), indexStates, selectD.showBackground);
+};
+
 // historical layers selectors
 var updateHistMap = function(mapToChange, side) {
   var key = histNamesD[selectD['histLayer' + side]];
   var f = load.histLayersD[key]; // function that returns the layers
-  figF.removeLayer(mapToChange, indexHist)
+  figF.removeLayer(mapToChange, indexHist);
   mapToChange.layers().set(indexHist, f());
+  addStatesBack(mapToChange);
 };
 
 var selectHistFun = function(mapToChange, updateFun, selectVar, side) {
@@ -145,16 +154,17 @@ var resetHistLayer = function(mapToChange, selectHist, side) {
   // future variable
   if (selectD['histLayer' + side] !== defaultHistLayer && selectD['var' + side] !== noneVar) {
     selectD['histLayer' + side] = defaultHistLayer;
-    figF.removeLayer(mapToChange, 1); // removing the existing layer
+    figF.removeLayer(mapToChange, indexHist); // removing the existing layer
     selectHist.setValue(defaultHistLayer, true); // Update dropdown display
     updateHistMap(mapToChange, side); // Update the map to remove the historical layer
+    addStatesBack(mapToChange);
   }
 };
 
 var resetVarLayer = function(mapToChange, updateFun, selectVar, side) {
   if (selectD['var' + side] !== noneVar) {
     selectD['var' + side] = noneVar;
-    figF.removeLayer(mapToChange, 0); // removing the existing layer
+    figF.removeLayer(mapToChange, indexFut); // removing the existing layer
     selectVar.setValue(noneVar, true); // Update dropdown display
     updateFun(mapToChange); // Update the map to remove the historical layer
   }
@@ -335,7 +345,8 @@ var backgroundCheckbox = figF.createBackgroundCheckbox2Maps({
   mapToChange1: leftMap,
   mapToChange2: rightMap,
   index1: indexBackground,
-  index2: indexStates
+  index2: indexStates,
+  dict: selectD
 });
 
 // add legends --------------------------------------------------------
