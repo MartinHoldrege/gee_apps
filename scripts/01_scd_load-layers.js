@@ -228,7 +228,7 @@ var loadC9 = function(nameRun, nameScen) {
 
 // a blank layer
 var loadNone = function(nameRun, nameScen) {
-  return ui.Map.Layer(ee.Image(0).selfMask(), {}, 'blank layer');
+  return ui.Map.Layer(ee.Image(0).selfMask(), {}, 'blank layer', false);
 };
 
 // Dictionary containing load functions ------------------------------------------------
