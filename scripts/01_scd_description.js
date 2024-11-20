@@ -124,7 +124,7 @@ var bulletsText = [
   'Climate scenarios include future projected climate based on two representative concentration' + 
   ' pathways (RCP4.5, RCP8.5) and two time-periods (2031-2060, 2071-2100).' + 
   ' All layers that present results for climate projections (with the exception of the Agreement among GCMs layer)' +
-  ' show the pixel-wise median across 13 GCMs).'
+  ' show the pixel-wise median across 13 GCMs.'
   ];
   
 
