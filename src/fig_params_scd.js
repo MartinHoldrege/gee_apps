@@ -11,7 +11,7 @@
 var figF = require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
 
 // color palettes, see https://github.com/gee-community/ee-palettes
-var palettes = require('users/gena/packages:palettes');
+// var palettes = require('users/gena/packages:palettes');
 
 // colors and visualiztion parameters----------------------------------------------------------
 var grey = '#bebebe';
