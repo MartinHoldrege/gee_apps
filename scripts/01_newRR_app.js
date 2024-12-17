@@ -9,7 +9,7 @@ Started: October 14, 2024
 
 // dependencies -----------------------------------------------------------------------------
 
-var figP = require("users/MartinHoldrege/gee_apps:src/fig_params.js");
+var figP = require("users/MartinHoldrege/gee_apps:src/fig_params_newRR.js");
 var f = require("users/MartinHoldrege/gee_apps:src/general_functions.js");
 var figF = require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
 var figPScd = require("users/MartinHoldrege/SEI:src/fig_params.js");
