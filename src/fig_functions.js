@@ -289,3 +289,40 @@ exports.createBackgroundCheckbox2Maps = function(args) {
 };
 
 
+// Function to apply a mask to a given layer index
+var applyMaskToLayer = function(map, layerIndex, mask) {
+  // Get the current layer at the specified index
+  var currentLayer = map.layers().get(layerIndex);
+  
+  // Check if the layer exists and is of type Image
+
+    var eeImage = currentLayer.getEeObject(); // Get the ee.Image
+
+    // Apply the mask
+    var maskedImage = eeImage.updateMask(mask);
+    
+    // Replace the existing layer with the masked image
+    map.layers().set(layerIndex, ui.Map.Layer(maskedImage, {}, currentLayer.getName()));
+
+};
+
+var img = ee.Image('COPERNICUS/S2_SR/20210109T185751_20210109T185931_T10SEG');
+var trueColorViz = {
+  bands: ['B4', 'B3', 'B2'],
+  min: 0,
+  max: 2700,
+  gamma: 1.3
+};
+ui.root.clear();
+//var panel = ui.Panel({style: {width: '250px'}});
+var map = ui.Map();
+//ui.root.add(panel).add(map); // order that you add panl vs map affects if panel is right or left
+ui.root.add(map); 
+map.setCenter(-122.36, 37.47, 10);
+map.addLayer(img, trueColorViz, 'Sentinel-2 image');
+
+// Create a Boolean land mask from the SWIR1 band; water is value 0, land is 1.
+var landMask = img.select('B11').gt(100);
+//applyMaskToLayer(map, 0, landMask)
+map.addLayer(landMask, {palette: ['blue', 'lightgreen']}, 'Land mask');
+map.addLayer(img.updateMask(landMask), trueColorViz, 'Sentinel-2 image');
