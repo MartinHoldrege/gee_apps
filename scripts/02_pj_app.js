@@ -47,13 +47,17 @@ var loadCurSuit =  function(sppName) {
 
 
 var loadDeltaSuit = function(sppName, ScenName) {
-  var image = image.select('delta_suit'); // temporary
+  var image = image.select('change_suit'); // temporary
   var imageName = sppD[sppName] + '_' + scenD[scenName] + '_delta-suitability';
   return ui.Map.Layer(image, figP.visDeltaSuit, imageName);
 };
 
 
-
+var loadDeltaRobust = function(sppName, ScenName) {
+  var image = image.select('change_robust'); // temporary
+  var imageName = sppD[sppName] + '_' + scenD[scenName] + '_robust';
+  return ui.Map.Layer(image, figP.visDeltaRobust, imageName);
+};
 
 
 
