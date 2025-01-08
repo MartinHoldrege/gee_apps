@@ -28,25 +28,20 @@ var visDeltaSuit = {min: -1, max: 1, palette: warmcool};
 exports.visDeltaSuit = visDeltaSuit;
 
 // robust change
+var colsDeltaRobust = ['#888888', '#88CCEE', "#CC6677",'#661100', "#44AA99", 
+  "#332288", "#117733", '#6699CC', '#DDCC77'];
 
-
-var colsDeltaRobust = ['#332288', '#6699CC', '#88CCEE', '#661100', '#CC6677', 
-'#117733', '#44AA99', '#DDCC77', '#888888'];
-['#888888', '#88CCEE', "#CC6677",'#661100', "#44AA99", "#332288"]
-
-var labelsDeltaRobust = ['Increase always above threshold', 'Nonrobust above threshold', 'Decrease above threshold', 
-'Decrease to below threshold', 'Decrease across threshold', 'Increase to above threshold', 
-'Increase across threshold', 'Nonrobust across threshold', 'Below threshold'];
-
-"Below threshold", 
-"Above threshold, decreasing", 
-"Robust decrease to threshold",
-"Robust decrease to below threshold",
-"Robust increase to threshold",
-"Above threshold, increasing",
-
-
-
+var labelsDeltaRobust = [
+  "Below threshold", 
+  "Above threshold, decreasing", 
+  "Robust decrease to threshold",
+  "Robust decrease to below threshold",
+  "Robust increase to threshold",
+  "Above threshold, increasing",
+  "Robust increase to above threshold",
+  "Above threshold, nonrobust change",
+  "Nonrobust at threshold"
+];
 
 exports.visDeltaRobust = {min: 0, max: 8, palette: colsDeltaRobust};
 
