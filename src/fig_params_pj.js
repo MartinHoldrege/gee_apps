@@ -38,5 +38,6 @@ var labelsDeltaRobust = ['Increase always above threshold', 'Nonrobust above thr
 'Decrease to below threshold', 'Decrease across threshold', 'Increase to above threshold', 
 'Increase across threshold', 'Nonrobust across threshold', 'Below threshold'];
 
+exports.visDeltaRobust = {min: 0, max: 8, palette: colsDeltaRobust};
 
  
