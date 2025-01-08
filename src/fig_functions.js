@@ -306,7 +306,8 @@ var applyMaskToLayer = function(map, layerIndex, mask) {
 
 };
 
-var img = ee.Image('COPERNICUS/S2_SR/20210109T185751_20210109T185931_T10SEG');
+// testing
+/*var img = ee.Image('COPERNICUS/S2_SR/20210109T185751_20210109T185931_T10SEG');
 var trueColorViz = {
   bands: ['B4', 'B3', 'B2'],
   min: 0,
@@ -326,3 +327,5 @@ var landMask = img.select('B11').gt(100);
 //applyMaskToLayer(map, 0, landMask)
 map.addLayer(landMask, {palette: ['blue', 'lightgreen']}, 'Land mask');
 map.addLayer(img.updateMask(landMask), trueColorViz, 'Sentinel-2 image');
+*/
+// end testing
