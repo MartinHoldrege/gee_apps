@@ -1,5 +1,11 @@
 
 
+// dependencies ----------------------------------------------------------------------------
+
+var figP = require("users/MartinHoldrege/gee_apps:src/fig_params_pj.js")
+
+
+// parameters ------------------------------------------------------------------------------
 // load data (to put in own scripts)
 var path = 'projects/ee-martinholdrege/assets/misc/pj_niche/'; // where images are read in from
 
