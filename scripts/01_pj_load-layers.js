@@ -100,6 +100,7 @@ exports.spD = spD;
 exports.varTypeD = varTypeD;
 exports.scenD = scenD;
 exports.loadTransp = loadTransp;
+exports.exampleImage = image; // this is for centering the map. 
 
 // testing
 /*
