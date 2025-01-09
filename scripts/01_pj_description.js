@@ -1,5 +1,5 @@
 /*
-  Purpose: provide the description text for the PJ
+  Purpose: provide the description text for the PJ app
 
 */
 // dependencies -----------------------------------------------------------------------------
@@ -46,7 +46,7 @@ var panel = ui.Panel({
 // text for the main panel
 
 // first paragraph
-var par1 = 'first Paragraph';
+var par1 = 'first Paragraph, include abstract type text here';
 
 // 2nd paragraph
 var par2a =    ui.Label({
@@ -142,5 +142,5 @@ var description = ui.Panel([
 exports.panel = panel.add(description);
 
 // testing
-//ui.root.insert(0,panel.add(description));
+ui.root.insert(0,panel);
 
