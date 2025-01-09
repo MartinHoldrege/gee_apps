@@ -21,8 +21,9 @@ var visCurSuit = {min: 0, max: 1, palette: viridis};
 exports.visCurSuit = visCurSuit;
 
 // delta suitability
-var warmcool = palettes.misc.warmcool[7];
-warmcool[3] = '#FFFFFF'; // replacing the middle color with white
+// var warmcool = palettes.misc.warmcool[7];
+// warmcool[3] = '#FFFFFF'; // replacing the middle color with white
+var warmcool = ['#8B1A1A', '#FFFFFF', '#191970'];
 var visDeltaSuit = {min: -1, max: 1, palette: warmcool};
 
 exports.visDeltaSuit = visDeltaSuit;
