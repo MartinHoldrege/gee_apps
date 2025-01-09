@@ -99,6 +99,7 @@ exports.loadLayer = loadLayer;
 exports.spD = spD;
 exports.varTypeD = varTypeD;
 exports.scenD = scenD;
+exports.loadTransp = loadTransp;
 
 // testing
 /*
