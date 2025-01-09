@@ -52,7 +52,7 @@ exports.createSldColorBlocks = function(breaks, colors) {
 
 
 // Creates and styles 1 row of the legend.
-exports.makeRow = function(color, name) {
+var makeRow = function(color, name) {
  
       // Create the label that is actually the colored box.
       var colorBox = ui.Label({
@@ -80,6 +80,39 @@ exports.makeRow = function(color, name) {
         layout: ui.Panel.Layout.Flow('horizontal')
       });
 };
+
+exports.makeRow = makeRow;
+
+
+exports.makeRowLegend = function(legends, colorList, nameList, title, styleTitle) {
+  
+  if (styleTitle === undefined || styleTitle === null){
+    var styleTitle = {
+      fontWeight: 'bold',
+      fontSize: '11px',
+      margin: '10px 0px 4px 0px',
+      padding: '0'
+    };
+  }
+  // Drivers of Change
+  legends.add(
+    ui.Label({
+      value: title,
+      style: styleTitle
+    })
+  );
+  
+  if (colorList.length !== nameList.length) {
+    throw new Error('colors and names need to be of same length');
+  }
+  
+  for (var i = 0; i < colorList.length; i++) {
+    legends.add(figF.makeRow(colorList[i], nameList[i]));
+  } 
+  
+  return legends;
+};
+
 
 // style elements for the next two functions
 
