@@ -96,8 +96,10 @@ var legends = figF.makeRowLegend(
   styleLegendTitle
   );
 
+exports.legends = legends; 
+
 // testing
-Map.add(legends);
+// Map.add(legends);
 
 
 
