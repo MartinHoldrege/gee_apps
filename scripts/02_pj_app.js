@@ -17,18 +17,18 @@
  
 var indexBackground = 0;
 var indexMain = 1; // main map layer
-// var indexTrans = 2; //transparency over the top
-var indexStates = 2; // change to 3 when transparency added
+var indexTransp = 2; //transparency over the top
+var indexStates = 3; // change to 3 when transparency added
 
 // dependencies -----------------------------------------------------------
 
 // Load module with functions 
 // The functions, lists, etc are used by calling SEI.nameOfObjectOrFunction
 var figF= require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
-var f = require("users/MartinHoldrege/gee_apps:src/general_functions.js");
+// var f = require("users/MartinHoldrege/gee_apps:src/general_functions.js");
 var figP= require("users/MartinHoldrege/gee_apps:src/fig_params_pj.js");
 var load = require("users/MartinHoldrege/gee_apps:scripts/01_pj_load-layers.js");
-// var descript = require("users/MartinHoldrege/gee_apps:scripts/01_pj_description.js");
+var descript = require("users/MartinHoldrege/gee_apps:scripts/01_pj_description.js");
 
 // setup dictionaries ---------------------------------------------------
 
@@ -47,10 +47,10 @@ var selectD = {
     showBackground:false
 };
 
-// sytles -----------------------------------------------------------
+// styles -----------------------------------------------------------------
 
 var styleDrop = {fontSize: '11px', margin: '1px'};
-var styleDropTitle = {fontSize: '11px', padding: '3px 1px 1px 1px', margin: '1px'};
+var styleDropTitle = {fontSize: '12px', padding: '3px 1px 1px 1px', margin: '1px'};
 var styleTitle =  {fontSize: '14px', padding: '0px', fontWeight: 'bold', margin: '1px'};
 
 // functions --------------------------------------------------------------
@@ -83,12 +83,16 @@ var createSelectSp = function(mapToChange, updateFun, side) {
 // selectD dictionary
 var updateLeftMap = function(mapToChange) {
   var lyr = load.loadLayer(selectD.varLeft, selectD.spLeft, selectD.spLeft);
+  var transp = load.loadTransp(selectD.spLeft);
   mapToChange.layers().set(indexMain, lyr);
+  mapToChange.layers().set(indexTransp, transp);
 };
 
 var updateRightMap = function(mapToChange) {
   var lyr = load.loadLayer(selectD.varRight, selectD.spRight, selectD.spRight);
+  var transp = load.loadTransp(selectD.spRight);
   mapToChange.layers().set(indexMain, lyr);
+  mapToChange.layers().set(indexTransp, transp);
 };
 
 // mapToChange is the ui.Map element to add to
@@ -97,7 +101,9 @@ var addSelectors = function (mapToChange, side, updateFun, position) {
 
     var labelSp = ui.Label('Select Species:', styleDropTitle);
     var labelVar = ui.Label('Select Variable:', styleDropTitle);
-    var labelScen = ui.Label("Select Climate Scenario (doesn't apply to current):", styleDropTitle);
+    var labelScen = ui.Label("Select Climate Scenario:", styleDropTitle);
+    var labelScen2 = ui.Label("(doesn't apply to current suitability)", 
+      {fontSize: '11px', padding: '1px 1px 1px 1px', margin: '1px'});
 
     // Configure a selection dropdown to allow the user to choose
     // between images, and set the map to update when a user 
@@ -139,7 +145,7 @@ var addSelectors = function (mapToChange, side, updateFun, position) {
     
     var controlPanel =
         ui.Panel({
-            widgets: [labelSp, selectSp, labelVar, selectSp, labelScen, selectScen],
+            widgets: [labelSp, selectSp, labelVar, selectVar, labelScen, labelScen2, selectScen],
             style: {
                 position: position,
                 padding: '2px',
@@ -156,7 +162,7 @@ var addSelectors = function (mapToChange, side, updateFun, position) {
 // Create the left map, and have it display the first layer.
 var leftMap = ui.Map();
 leftMap.setControlVisibility(true);
-// map.centerObject(SEI.cur.select('Q5sc3'), 6); // update as needed
+leftMap.centerObject(load.exampleImage, 5); // update as needed
 
 // Create the right map, and have it display the last layer.
 var rightMap = ui.Map();
@@ -185,7 +191,7 @@ var splitPanel = ui.SplitPanel({
 });
 
 // Set the SplitPanel as the only thing in the UI root.
-// ui.root.widgets().reset([splitPanel]);
+ui.root.widgets().reset([splitPanel]);
 var linker = ui.Map.Linker([leftMap, rightMap]);
 // leftMap.centerObject(load.histSEI, 6); // centering on one of the images
 
@@ -201,7 +207,7 @@ updateLeftMap(leftMap);
 updateRightMap(rightMap);
 
 
-// ui.root.insert(0,descript.panel);
+ui.root.insert(0,descript.panel);
 
 // background/states outline functionality ----------------------------
 
@@ -231,8 +237,8 @@ var legendsTitle = ui.Panel({widgets: [
   ui.Label('Legends:', {fontSize: '14px', 
     fontWeight: 'bold', padding: '0px', margin: '10px 4px 0px 4px'})]});
 legendsPanel.add(legendsTitle);
-// legendsPanel.add(figP.legends);
-ui.root.insert(0,legendsPanel);
+legendsPanel.add(figP.legends);
+ui.root.insert(1,legendsPanel);
 
 
 
