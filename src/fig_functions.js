@@ -107,7 +107,7 @@ exports.makeRowLegend = function(legends, colorList, nameList, title, styleTitle
   }
   
   for (var i = 0; i < colorList.length; i++) {
-    legends.add(figF.makeRow(colorList[i], nameList[i]));
+    legends.add(makeRow(colorList[i], nameList[i]));
   } 
   
   return legends;
