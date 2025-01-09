@@ -51,7 +51,7 @@ var loadTransp = function(spName) {
     
   var cover = ee.Image(1).mask(transparency);
     
-  return ui.Map.Layer(cover, {palette: 'white'}, 'cover areas where spp not found');
+  return ui.Map.Layer(cover, {palette: 'white'}, 'add transparency to area outside current range');
 };
 
 var loadCurSuit =  function(spName, scenName) {
