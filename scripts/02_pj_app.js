@@ -40,7 +40,7 @@ var scenD = load.scenD; // climate scenario
 var selectD = {
     varLeft: Object.keys(varTypeD)[0], // variable
     varRight: Object.keys(varTypeD)[0],
-    scenLeft: Object.keys(scenD)[0], // RCP, time-period
+    scenLeft: Object.keys(scenD)[1], // RCP, time-period
     scenRight: Object.keys(scenD)[0], 
     spLeft: Object.keys(spD)[0], // modelling assumption
     spRight: Object.keys(spD)[0],
