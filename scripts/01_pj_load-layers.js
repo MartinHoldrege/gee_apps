@@ -98,7 +98,7 @@ var loadDeltaRobust = function(spName, scenName) {
 
 // load functions for 'future' layers
 var loadFunsD = {
-  'suitability': loadCurSuit,
+  'suitability': loadSuit,
   'suitability_change': loadDeltaSuit,
   'robust_category': loadDeltaRobust
 };
@@ -126,7 +126,7 @@ var spName = Object.keys(spD)[0];
 var scenName = Object.keys(scenD)[0];
 var varName = Object.keys(varTypeD)[1];
 
-Map.layers().add(loadCurSuit(spName, scenName));
+Map.layers().add(loadSuit(spName, scenName));
 Map.layers().add(loadLayer(varName, spName, scenName));
 Map.layers().add(loadDeltaRobust(spName, scenName));
 Map.layers().add(loadTransp(spName));
