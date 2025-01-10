@@ -54,7 +54,7 @@ var loadImage = function(spName) {
 
 var loadTransp = function(spName) {
   var img = loadImage(spName);
-  var mask = img.select('suitability').gte(ee.Image(-1))
+  var mask = img.select('current_suitability').gte(ee.Image(-1)) 
     .unmask(); // exclude non study area places
   var transparency = ee.Image(0)
     // these are places that should be covered by a white transparency layer
