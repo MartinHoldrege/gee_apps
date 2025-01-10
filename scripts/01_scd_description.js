@@ -122,7 +122,9 @@ var bulletsText = [
   " (e.g., purple means that both sagebrush and annuals caused the projected change).",
   " Q values are the 'quality' scores (range 0-1) that are used in the calculation of SEI.",
   'Climate scenarios include future projected climate based on two representative concentration' + 
-  ' pathways (RCP4.5, RCP8.5) and two time-periods (2031-2060, 2071-2100).'
+  ' pathways (RCP4.5, RCP8.5) and two time-periods (2031-2060, 2071-2100).' + 
+  ' All layers that present results for climate projections (with the exception of the Agreement among GCMs layer)' +
+  ' show the pixel-wise median across 13 GCMs.'
   ];
   
 

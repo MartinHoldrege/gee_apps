@@ -245,7 +245,7 @@ var loadFutFunsD = {
   'rgb': loadRgb,
   'numAgree': loadNumAgree
 };
-print(loadFutFunsD.none)
+
 // loads the layers for the given vartype, name of the run and name of the 
 // climate scenario
 var loadFutLayer = function(varType, nameRun, nameScen) {

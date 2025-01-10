@@ -9,7 +9,7 @@ Started: October 14, 2024
 
 // dependencies -----------------------------------------------------------------------------
 
-var figP = require("users/MartinHoldrege/gee_apps:src/fig_params.js");
+var figP = require("users/MartinHoldrege/gee_apps:src/fig_params_newRR.js");
 var f = require("users/MartinHoldrege/gee_apps:src/general_functions.js");
 var figF = require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
 var figPScd = require("users/MartinHoldrege/SEI:src/fig_params.js");
@@ -357,10 +357,16 @@ var par2b =    ui.Label({
 
 var par3a = ui.Label({
     value: 'Further details about the research that developed these projections' + 
-    ' are available in Schlaepfer et al. (in press) Declining ecological' + 
-    ' resilience and invasion resistance under climate change in the sagebrush' + 
-    ' region, United States. Ecological Applications (link TBD).',
+    ' are available in Schlaepfer et al. (2024) Declining ecological resilience' + 
+    ' and invasion resistance under climate change in the sagebrush region,' + 
+    ' United States. Ecological Applications',
     style: f.updateDict(styleText, 'margin', marginNoB), // no bottom margin
+  });
+  
+var schlaepferLink = ui.Label({
+    value: '(https://doi.org/10.1002/eap.3065).',
+    targetUrl: 'https://doi.org/10.1002/eap.3065',
+    style: f.updateDict(styleUrl, 'margin', marginNoTB)
   });
 
 var par3b = ui.Label({
@@ -419,7 +425,7 @@ var description = ui.Panel([
     style: styleText
   }),
   par2a, par2b,
-  par3a, par3b, chambersLink,
+  par3a, schlaepferLink, par3b, chambersLink,
   ui.Label({
     value:'How to Use',
     style: styleHeader,

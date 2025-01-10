@@ -9,14 +9,6 @@
  * 
  * Author: Martin Holdrege
  * 
- * TO DO: 
- *  add checkbox for background
- *    make layer numbers variables (background, and other layers need to be created on the fly)
- *    add the historical layer via function that re-creates the blank layer on the 
- *    fly so don't get duplicate layer issue
- *    Determine if on/off can be applied to a layer depth, so it works for right 
- *    and left layers. 
- *  
  * 
  * 
 * 
