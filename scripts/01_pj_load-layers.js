@@ -69,8 +69,16 @@ var loadTransp = function(spName) {
 };
 
 var loadSuit =  function(spName, scenName) {
+  var scen = scenD[scenName];
+  
+  if (scen === 'current') {
+    var lyrName = 'current_suitability';
+  } else {
+    var lyrName = 'suitability_' + scen;
+  }
+ 
   var image = loadImage(spName);
-  var lyrName = 'suitability_' + scenD[scenName];
+  
   var img = ee.Image(image).select(lyrName); 
   var imageName = spD[spName] + '_' + lyrName;
   return ui.Map.Layer(img, figP.visCurSuit, imageName);
