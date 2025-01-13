@@ -56,7 +56,13 @@ var loadImage = function(spName) {
   return ee.Image(imagePath);
 };
 
-var loadTransp = function(spName) {
+var loadTransp = function(varName, spName, scenName) {
+  
+  // don't want the transparency to load if there is no actual data layer
+  if(varTypeD[varName] !== 'suitability' & scenD[scenName] === 'current') {
+    return blankLayer();
+  }
+  
   var img = loadImage(spName);
   var mask = img.select('current_suitability').gte(ee.Image(-1)) 
     .unmask(); // exclude non study area places
@@ -147,14 +153,14 @@ exports.loadTransp = loadTransp;
 exports.exampleImage = image; // this is for centering the map. 
 
 // testing
-/*
+
 var spName = Object.keys(spD)[0];
-var scenName = Object.keys(scenD)[1];
+var scenName = Object.keys(scenD)[0];
 var varName = Object.keys(varTypeD)[1];
 print(spName, scenName, varName)
-Map.layers().add(loadSuit(spName, scenName));
+// Map.layers().add(loadSuit(spName, scenName));
 Map.layers().add(loadLayer(varName, spName, scenName));
-Map.layers().add(loadDeltaRobust(spName, scenName));
-Map.layers().add(loadTransp(spName));
-*/
+// Map.layers().add(loadDeltaRobust(spName, scenName));
+// Map.layers().add(loadTransp(spName));
+
 
