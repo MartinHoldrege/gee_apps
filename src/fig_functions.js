@@ -138,7 +138,7 @@ var styleTitle = {
  * @param {label2} (optional) label for right of color bar
  * @return {ui} ui object that 
  */
-exports.makeVisParamsRampLegend = function(existing_panel, visParams, title, label1, label2,
+var makeVisParamsRampLegend = function(existing_panel, visParams, title, label1, label2,
 styleLegendTitle) {
   var min = visParams.min;
   var max = visParams.max;
@@ -188,6 +188,18 @@ styleLegendTitle) {
   return new_panel;
 };
 
+exports.makeVisParamsRampLegend = makeVisParamsRampLegend;
+
+// same as makeVisParamsRampLegend, but allows arguments to be passed via dictionary
+exports.makeVisParamsRampLegend2 = function(args) {
+  return makeVisParamsRampLegend(
+    args.existing_panel, 
+    args.visParams, 
+    args.title, 
+    args.label1, 
+    args.label2,
+    args.styleLegendTitle)
+};
 /**
  * Creating color bar legend for layers that show colors with <RasterSymbolizer>
  * @param {ui.panel} existing_panel to add new panel additions to (this panel specificies the location)
