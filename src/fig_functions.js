@@ -138,7 +138,8 @@ var styleTitle = {
  * @param {label2} (optional) label for right of color bar
  * @return {ui} ui object that 
  */
-exports.makeVisParamsRampLegend = function(existing_panel, visParams, title, label1, label2) {
+exports.makeVisParamsRampLegend = function(existing_panel, visParams, title, label1, label2,
+styleLegendTitle) {
   var min = visParams.min;
   var max = visParams.max;
   
@@ -148,6 +149,10 @@ exports.makeVisParamsRampLegend = function(existing_panel, visParams, title, lab
   
   if (label2 === undefined || label2 === null){
     var label2 = max;
+  }
+  
+  if (styleLegendTitle === undefined || styleLegendTitle === null){
+    var styleLegendTitle = styleTitle;
   }
   var lon = ee.Image.pixelLonLat().select('longitude');
   var gradient = lon.multiply((max - min)/100.0).add(min);
@@ -176,7 +181,7 @@ exports.makeVisParamsRampLegend = function(existing_panel, visParams, title, lab
   // adding a title
     .add(ui.Label({
       value: title,
-      style: styleTitle
+      style: styleLegendTitle
   }))
     .add(panel2)
     .add(thumb);
