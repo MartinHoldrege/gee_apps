@@ -18,11 +18,12 @@ var figF = require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
 
 // this is essentially the color scheme used by Chambers et al. https://doi.org/10.1111/csp2.13021
 
-var colsScdRr1 = ['#559910',  '#A2CC7A', '#CFE6B8', '#3D0E98', '#967BCC', '#C8B8E5', '#93041A','#CC7A88', '#E6B9C0'];
+var colsC3Rr1 = ['#559910',  '#A2CC7A', '#CFE6B8', '#3D0E98', '#967BCC', '#C8B8E5', '#93041A','#CC7A88', '#E6B9C0'];
 
 // combination of SEI class and RR class ()
-var labelsScdRr1 = ['CSA, H+M', 'CSA, ML', 'CSA, L', 'GOA, H+M', 'GOA, ML', 'GOA, L', 'ORA, H+M', 'ORA, ML', 'ORA, L'];
+var labelsC3Rr1 = ['CSA, H+M', 'CSA, ML', 'CSA, L', 'GOA, H+M', 'GOA, ML', 'GOA, L', 'ORA, H+M', 'ORA, ML', 'ORA, L'];
 
+exports.visC3Rr1 = {min: 1, max: 9, palette: colsC3Rr1};
 
 // legends -----------------------------------------------------------------------------
 
@@ -38,8 +39,8 @@ var legends = ui.Panel({
 
 var legends = figF.makeRowLegend(
   legends, 
-  colsScdRr1, 
-  labelsScdRr1, 
+  colsC3Rr1, 
+  labelsC3Rr1, 
   'SCD, RR class'
   );
 
