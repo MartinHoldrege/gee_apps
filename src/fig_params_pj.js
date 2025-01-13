@@ -57,7 +57,7 @@ exports.visDeltaRobust = {min: 0, max: 8, palette: colsDeltaRobust};
 var styleLegendTitle = {
     fontWeight: 'bold',
     fontSize: '11px',
-    margin: '10px 0px 4px 0px',
+    margin: '20px 0px 4px 0px',
     padding: '0'
     };
 
