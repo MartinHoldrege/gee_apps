@@ -81,8 +81,12 @@ var legends = figF.makeVisParamsRampLegend2({
 
 // change in suitability
 
-var legends = figF.makeVisParamsRampLegend2(legends, visDeltaSuit, 'Change in suitability', visCurSuit.min, visCurSuit.max, styleLegendTitle);
-
+var legends = figF.makeVisParamsRampLegend2({
+  existing_panel: legends, 
+  visParams: visDeltaSuit, 
+  title: 'Change in suitability', 
+  styleLegendTitle: styleLegendTitle
+});
 // robust change (categorical)
 
 // reorder legend to match fig 4 in Noel et al. 
@@ -105,7 +109,7 @@ var legends = figF.makeRowLegend(
 exports.legends = legends; 
 
 // testing
-Map.add(legends);
+// Map.add(legends);
 
 
 
