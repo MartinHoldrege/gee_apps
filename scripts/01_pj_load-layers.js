@@ -15,15 +15,15 @@ var path = 'projects/ee-martinholdrege/assets/misc/pj_niche/'; // where images a
 
 // names of the different types of runs
 var spD = {
-  'Juniperus californica' : 'juniperus_californica',
-  'Juniperus deppeana' : 'juniperus_deppeana',
-  'Juniperus monosperma' : 'juniperus_monosperma',
-  'Juniperus occidentalis' : 'juniperus_occidentalis',
-  'Juniperus osteosperma' : 'juniperus_osteosperma',
-  'Juniperus scopulorum' : 'juniperus_scopulorum',
-  'Pinus cembroides' : 'pinus_cembroides',
-  'Pinus edulis' : 'pinus_edulis',
-  'Pinus monophylla' : 'pinus_monophylla'
+  'Juniperus californica (California juniper)' : 'juniperus_californica',
+  'Juniperus deppeana (Alligator juniper)' : 'juniperus_deppeana',
+  'Juniperus monosperma (Oneseed juniper)' : 'juniperus_monosperma',
+  'Juniperus occidentalis (Western juniper)' : 'juniperus_occidentalis',
+  'Juniperus osteosperma (Utah juniper)' : 'juniperus_osteosperma',
+  'Juniperus scopulorum (Rocky Mountain juniper)' : 'juniperus_scopulorum',
+  'Pinus cembroides (Mexican pinyon)' : 'pinus_cembroides',
+  'Pinus edulis (Colorado pinyon)' : 'pinus_edulis',
+  'Pinus monophylla (Single-leaf pinyon)' : 'pinus_monophylla'
 };
 
 // scenarios
@@ -56,9 +56,9 @@ var loadImage = function(spName) {
 };
 
 var loadTransp = function(varName, spName, scenName) {
-  
+  var varType = varTypeD[varName]
   // don't want the transparency to load if there is no actual data layer
-  if(varTypeD[varName] !== 'suitability' & scenD[scenName] === 'current') {
+  if(varType !== 'suitability' & scenD[scenName] === 'current') {
     return blankLayer();
   }
   
@@ -73,8 +73,14 @@ var loadTransp = function(varName, spName, scenName) {
     .updateMask(mask);
     
   var cover = ee.Image(1).mask(transparency);
+  
+  if(varType === 'suitability_change') {
+    var palette = '#CCCCCC'
+  } else {
+    var palette = 'white';
+  }
     
-  return ui.Map.Layer(cover, {palette: 'white'}, 'add transparency to area outside current range');
+  return ui.Map.Layer(cover, {palette: palette}, 'add transparency to area outside current range');
 };
 
 var loadSuit =  function(spName, scenName) {
