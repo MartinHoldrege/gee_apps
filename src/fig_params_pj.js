@@ -70,13 +70,18 @@ var legends = ui.Panel({
   }
 });
 
-// current suitability
-
-var legends = figF.makeVisParamsRampLegend(legends, visCurSuit, 'Suitability');
+// suitability
+// continue here
+var legends = figF.makeVisParamsRampLegend2({
+  existing_panel: legends, 
+  visParams: visCurSuit, 
+  title: 'Suitability', 
+  styleLegendTitle: styleLegendTitle
+});
 
 // change in suitability
 
-var legends = figF.makeVisParamsRampLegend(legends, visDeltaSuit, 'Change in suitability');
+var legends = figF.makeVisParamsRampLegend2(legends, visDeltaSuit, 'Change in suitability', visCurSuit.min, visCurSuit.max, styleLegendTitle);
 
 // robust change (categorical)
 
@@ -100,7 +105,7 @@ var legends = figF.makeRowLegend(
 exports.legends = legends; 
 
 // testing
-// Map.add(legends);
+Map.add(legends);
 
 
 
