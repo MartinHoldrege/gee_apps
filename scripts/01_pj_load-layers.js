@@ -9,7 +9,6 @@ var figP = require("users/MartinHoldrege/gee_apps:src/fig_params_pj.js");
 // load data (to put in own scripts)
 var path = 'projects/ee-martinholdrege/assets/misc/pj_niche/'; // where images are read in from
 
-var image = ee.Image(path + 'pinus_edulis_gee_test_layers_01072025'); // this is just temporary
 
 // helper dictionaries -----------------------------------------------------------
 // for various 'lookup' tasks
@@ -150,10 +149,10 @@ exports.spD = spD;
 exports.varTypeD = varTypeD;
 exports.scenD = scenD;
 exports.loadTransp = loadTransp;
-exports.exampleImage = image; // this is for centering the map. 
+exports.exampleImage = ee.Image(path + 'pinus_edulis_gee_test_layers_01072025'); // this is just temporary
 
 // testing
-
+/*
 var spName = Object.keys(spD)[0];
 var scenName = Object.keys(scenD)[0];
 var varName = Object.keys(varTypeD)[1];
@@ -163,4 +162,4 @@ Map.layers().add(loadLayer(varName, spName, scenName));
 // Map.layers().add(loadDeltaRobust(spName, scenName));
 // Map.layers().add(loadTransp(spName));
 
-
+*/
