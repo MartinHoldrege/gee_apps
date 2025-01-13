@@ -198,7 +198,7 @@ exports.makeVisParamsRampLegend2 = function(args) {
     args.title, 
     args.label1, 
     args.label2,
-    args.styleLegendTitle)
+    args.styleLegendTitle);
 };
 /**
  * Creating color bar legend for layers that show colors with <RasterSymbolizer>
