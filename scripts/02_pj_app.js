@@ -48,7 +48,7 @@ var selectD = {
 
 // styles -----------------------------------------------------------------
 
-var styleDrop = {fontSize: '11px', margin: '1px'};
+var styleDrop = {fontSize: '11px', margin: '1px', width: '160px', whiteSpace: 'normal'};
 var styleDropTitle = {fontSize: '12px', padding: '3px 1px 1px 1px', margin: '1px'};
 var styleTitle =  {fontSize: '14px', padding: '0px', fontWeight: 'bold', margin: '1px'};
 
