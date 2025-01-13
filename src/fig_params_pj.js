@@ -72,7 +72,7 @@ var legends = ui.Panel({
 
 // current suitability
 
-var legends = figF.makeVisParamsRampLegend(legends, visCurSuit, 'Current suitability');
+var legends = figF.makeVisParamsRampLegend(legends, visCurSuit, 'Suitability');
 
 // change in suitability
 
