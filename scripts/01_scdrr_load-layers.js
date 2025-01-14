@@ -29,7 +29,7 @@ var scenD = {
   'RCP85 (2071-2100)': 'RCP85_2071-2100'
 };
 
-var varTypeD = {
+var varTypeD = {2
   'SEI class & resilience class overlay': 'c3_resil',
   'SEI class & resistance class overlay': 'c3_resist'
 };
@@ -101,7 +101,7 @@ var loadLayer = function(varName, scenName, maskName) {
 exports.loadLayer = loadLayer
 exports.scenD = scenD;
 exports.vartTypeD = varTypeD;
-exports.masksD = masksD;
+exports.maskD = maskD;
 
 // testing  --------------------------------------------------
  
