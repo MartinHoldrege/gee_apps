@@ -117,7 +117,10 @@ var bulletsText = [
  " value crosses that threshold under future climate conditions. For example, the dark red color" + 
  " ('Robust decrease to below threshold') indicates that suitability under current conditions" + 
  " is above threshold and >90% of our models agree that suitability is projected to shift below" + 
- " the threshold in the future. For more detailed explanation, please see Noel et al. (2025)." 
+ " the threshold in the future. For more detailed explanation, please see Noel et al. (2025)." ,
+ "Future climate conditions are represented by SSP2-4.5 (moderate emissions), SSP3-7.0" + 
+ " (moderate-high emissions), and SSP5-8.5 (high emissions) scenarios for both mid-century" + 
+ "(2041-2060) and end-century (2081–2100)."
   ];
   
 
