@@ -23,10 +23,10 @@ var figP = require("users/MartinHoldrege/gee_apps:src/fig_params_scdrr.js");
 
 var scenD = {
   'Historical climate': 'historical',
-  'RCP45 (2031-2060)':'RCP45_2031-2060',
-  'RCP45 (2071-2100)': 'RCP45_2071-2100',
-  'RCP85 (2031-2060)': 'RCP85_2031-2060',
-  'RCP85 (2071-2100)': 'RCP85_2071-2100'
+  'RCP 4.5 (2031-2060)':'RCP45_2031-2060',
+  'RCP 4.5 (2071-2100)': 'RCP45_2071-2100',
+  'RCP 8.5 (2031-2060)': 'RCP85_2031-2060',
+  'RCP 8.5 (2071-2100)': 'RCP85_2071-2100'
 };
 
 var varTypeD = {
