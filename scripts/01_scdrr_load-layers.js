@@ -22,11 +22,11 @@ var figP = require("users/MartinHoldrege/gee_apps:src/fig_params_scdrr.js");
 // for various 'lookup' tasks
 
 var scenD = {
+  'Historical climate': 'historical',
   'RCP45 (2031-2060)':'RCP45_2031-2060',
-  'RCP45 (2045-2100)': 'RCP45_2071-2100',
+  'RCP45 (2071-2100)': 'RCP45_2071-2100',
   'RCP85 (2031-2060)': 'RCP85_2031-2060',
-  'RCP85 (2045-2100)': 'RCP85_2071-2100',
-  'Historical climate': 'historical'
+  'RCP85 (2071-2100)': 'RCP85_2071-2100'
 };
 
 var varTypeD = {
