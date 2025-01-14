@@ -8,3 +8,5 @@ Please contact me (martinholdrege 'at' gmail.com) if you have any questions.
 [Visualize projections of Sagebrush Ecological Integrity](https://ee-martinholdrege.projects.earthengine.app/view/futuresei)
 
 [Visualize projections of ecological Resistance and Resilience](https://ee-martinholdrege.projects.earthengine.app/view/futurerr)
+
+[Visualize projections Pinyon-Juniper species distributions](https://ee-martinholdrege.projects.earthengine.app/view/futurepj)
