@@ -102,7 +102,7 @@ exports.loadLayer = loadLayer
 exports.scenD = scenD;
 exports.varTypeD = varTypeD;
 exports.maskD = maskD;
-
+exports.c3Hist = c3;
 // testing  --------------------------------------------------
  
  if (false) {
