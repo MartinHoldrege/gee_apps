@@ -29,7 +29,7 @@ var scenD = {
   'RCP85 (2071-2100)': 'RCP85_2071-2100'
 };
 
-var varTypeD = {2
+var varTypeD = {
   'SEI class & resilience class overlay': 'c3_resil',
   'SEI class & resistance class overlay': 'c3_resist'
 };
