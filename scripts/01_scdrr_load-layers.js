@@ -37,11 +37,29 @@ var varTypeD = {
 // create masks;
 
 var c3 = load.getC3({scen: 'historical'});
+var resil = load.getRr({
+  varName: 'Resil-cats', 
+  scen: 'historical',
+  rr3Class: true
+});
+
+var resist = load.getRr({
+  varName: 'Resist-cats', 
+  scen: 'historical',
+  rr3Class: true
+});
+
 
 var maskD = {
   'Show all sagebrush rangelands': c3.gte(1).unmask(),
   'Only show current CSA': c3.eq(1).unmask(),
-  'Only show current GOA': c3.eq(2).unmask()
+  'Only show current GOA': c3.eq(2).unmask(),
+  'Only show current L resistance': resist.eq(1),
+  'Only show current LM resistance': resist.eq(2),
+  'Only show current M+H resistance': resist.eq(3),
+  'Only show current L resilience': resil.eq(1),
+  'Only show current LM resilience': resil.eq(2),
+  'Only show current M+H resilience': resil.eq(3)
 };
 
 
