@@ -46,7 +46,14 @@ var panel = ui.Panel({
 // text for the main panel
 
 // first paragraph
-var par1 = 'first Paragraph, include abstract type text here';
+var par1 = 'This app visualizes current and projected future suitability for pinyon and' + 
+' juniper tree species of the western US. Projections of suitability are constructed using' + 
+' gridded climate and soil covariates (1 km grid cell size), combined in species distribution' + 
+' models. The models allow us to estimate how environmental suitability for PJ species is' + 
+' expected to change from current to future conditions, and assess agreement on projected' + 
+' suitability change across many climate scenarios. These suitability projections provide' + 
+' a long-term perspective on the vulnerability of PJ woodlands to climate change and may' + 
+' inform conservation efforts in PJ woodlands.';
 
 // 2nd paragraph
 var par2a =    ui.Label({
@@ -55,29 +62,41 @@ var par2a =    ui.Label({
   });
 
 var par2b =    ui.Label({
-    value: '(URL).',
-    targetUrl: 'URL',
+    value: '(https://doi.org/10.5066/P13BZMAT).',
+    targetUrl: 'https://doi.org/10.5066/P13BZMAT',
     style: styleUrl
   });
 
 var par3a = ui.Label({
     value: 'Further details about the research that developed these projections' + 
-    ' are available citation',
+    ' are available in Noel et al. (2025)',
     style: f.updateDict(styleText, 'margin', marginNoB), // no bottom margin
   });
 
 var remLink = ui.Label({
-    value: '(doi here).',
-    targetUrl: 'doi here',
+    value: '(https://doi.org/10.1016/j.rama.2024.09.002).',
+    targetUrl: 'https://doi.org/10.1016/j.rama.2024.09.002',
     style: f.updateDict(styleUrl, 'margin', marginNoT)
   });
   
-
+var par4 = ui.Label({
+    value: 'For more research on climate adaptation in dryland ecosystems, visit',
+    style: f.updateDict(styleText, 'margin', marginNoTB), // no bottom margin
+  });
+  
+var detLink = ui.Label({
+    value: 'drylandecology.org.',
+    targetUrl: 'https://sites.google.com/view/dryland-ecohydrology-team/home',
+    style: f.updateDict(styleUrl, 'margin', marginNoT)
+  });
 
 
 // how to use
-var howTo = "Separate layers can be selected on both sides of the slider to allow for comparison."  +
-" Use the 'Select Species' blah blah";
+var howTo = "Separate layers can be selected on both sides of the slider to allow" + 
+" for comparison. Use the 'Select Species' drop-down menu to select the species" + 
+" to display on the map, use the 'Select Variable' drop-down menu to select the" + 
+" variable of interest, and use the 'Select Climate Scenario' drop-down menu to display" + 
+" results for a given emissions scenario and time-period combination.";
 
 // abbrevations --------------------------
 var abbrevExplain = ui.Label({
@@ -87,10 +106,29 @@ var abbrevExplain = ui.Label({
 
 // bullets describing the abbreviation
 var bulletsText = [
-  ' Further details here...' ,
-  'and more details'
+ "'Suitability' is a continuous variable (0 to 1) estimating environmental suitability" + 
+" for a given species and climate scenario, where a value of 1 indicates maximum suitability.",
+ "'Change in suitability' is a continuous variable (-1 to 1) estimating the change in" + 
+" suitability for a given species from current to future climate scenario conditions.",
+ "'Change in suitability category' is a categorical variable that assess the agreement" + 
+ " among our projections of suitability change (robust agreement is when >90% of model" + 
+ " projections agree). The 'category' is calculated by assessing whether species' suitability" + 
+ " values are above or below a model-defined suitability threshold, and whether the suitability" + 
+ " value crosses that threshold under future climate conditions. For example, the dark red color" + 
+ " ('Robust decrease to below threshold') indicates that suitability under current conditions" + 
+ " is above threshold and >90% of our models agree that suitability is projected to shift below" + 
+ " the threshold in the future. For more detailed explanation, please see Noel et al. (2025)." ,
+ "Future climate conditions are represented by SSP2-4.5 (moderate emissions), SSP3-7.0" + 
+ " (moderate-high emissions), and SSP5-8.5 (high emissions) scenarios for both mid-century" + 
+ "(2041-2060) and end-century (2081–2100)."
   ];
   
+
+var lastPar = "All variable layers are displayed with a semi-transparent layer on top, indicating" + 
+" locations of our occurrence data used to fit our models (20 km buffer around each occurrence point)." + 
+" Areas of 100% transparency indicate the species is currently present. Areas of 50% transparency are" + 
+" more than 20 km distance from an occurrence point, but still may contain PJ occurrences that are" + 
+" not contained in agency databases.";
 
 var bulletsLabel = bulletsText.map(function(x) {
   return ui.Label({
@@ -115,6 +153,7 @@ var description = ui.Panel([
   }),
   par2a, par2b,
   par3a, remLink, 
+  par4, detLink,
   ui.Label({
     value:'How to Use',
     style: styleHeader,
@@ -124,6 +163,10 @@ var description = ui.Panel([
     style: styleText
   }),
   bulletsPanel,
+  ui.Label({
+    value: lastPar, 
+    style: styleText
+  }),
   ui.Label({
     value:'Disclaimer',
     style: styleHeader,
@@ -142,5 +185,5 @@ var description = ui.Panel([
 exports.panel = panel.add(description);
 
 // testing
-ui.root.insert(0,panel);
+// ui.root.insert(0,panel);
 

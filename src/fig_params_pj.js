@@ -57,7 +57,7 @@ exports.visDeltaRobust = {min: 0, max: 8, palette: colsDeltaRobust};
 var styleLegendTitle = {
     fontWeight: 'bold',
     fontSize: '11px',
-    margin: '10px 0px 4px 0px',
+    margin: '20px 0px 4px 0px',
     padding: '0'
     };
 
@@ -70,14 +70,23 @@ var legends = ui.Panel({
   }
 });
 
-// current suitability
-
-var legends = figF.makeVisParamsRampLegend(legends, visCurSuit, 'Current suitability');
+// suitability
+// continue here
+var legends = figF.makeVisParamsRampLegend2({
+  existing_panel: legends, 
+  visParams: visCurSuit, 
+  title: 'Suitability', 
+  styleLegendTitle: styleLegendTitle
+});
 
 // change in suitability
 
-var legends = figF.makeVisParamsRampLegend(legends, visDeltaSuit, 'Change in suitability');
-
+var legends = figF.makeVisParamsRampLegend2({
+  existing_panel: legends, 
+  visParams: visDeltaSuit, 
+  title: 'Change in suitability', 
+  styleLegendTitle: styleLegendTitle
+});
 // robust change (categorical)
 
 // reorder legend to match fig 4 in Noel et al. 

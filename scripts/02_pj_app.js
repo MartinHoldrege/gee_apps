@@ -36,20 +36,19 @@ var spD = load.spD; // species
 var varTypeD = load.varTypeD; // suitability variable
 var scenD = load.scenD; // climate scenario
 
-
 var selectD = {
     varLeft: Object.keys(varTypeD)[0], // variable
     varRight: Object.keys(varTypeD)[0],
     scenLeft: Object.keys(scenD)[0], // RCP, time-period
-    scenRight: Object.keys(scenD)[0], 
-    spLeft: Object.keys(spD)[0], // modelling assumption
-    spRight: Object.keys(spD)[0],
+    scenRight: Object.keys(scenD)[4], 
+    spLeft: Object.keys(spD)[7], // modelling assumption
+    spRight: Object.keys(spD)[7],
     showBackground:false
 };
 
 // styles -----------------------------------------------------------------
 
-var styleDrop = {fontSize: '11px', margin: '1px'};
+var styleDrop = {fontSize: '11px', margin: '1px', width: '160px', whiteSpace: 'normal'};
 var styleDropTitle = {fontSize: '12px', padding: '3px 1px 1px 1px', margin: '1px'};
 var styleTitle =  {fontSize: '14px', padding: '0px', fontWeight: 'bold', margin: '1px'};
 
@@ -82,15 +81,15 @@ var createSelectSp = function(mapToChange, updateFun, side) {
 // loads the map for the left panel, based on the contents of the
 // selectD dictionary
 var updateLeftMap = function(mapToChange) {
-  var lyr = load.loadLayer(selectD.varLeft, selectD.spLeft, selectD.spLeft);
-  var transp = load.loadTransp(selectD.spLeft);
+  var lyr = load.loadLayer(selectD.varLeft, selectD.spLeft, selectD.scenLeft);
+  var transp = load.loadTransp(selectD.varLeft, selectD.spLeft, selectD.scenLeft);
   mapToChange.layers().set(indexMain, lyr);
   mapToChange.layers().set(indexTransp, transp);
 };
 
 var updateRightMap = function(mapToChange) {
-  var lyr = load.loadLayer(selectD.varRight, selectD.spRight, selectD.spRight);
-  var transp = load.loadTransp(selectD.spRight);
+  var lyr = load.loadLayer(selectD.varRight, selectD.spRight, selectD.scenRight);
+  var transp = load.loadTransp(selectD.varRight, selectD.spRight, selectD.scenRight);
   mapToChange.layers().set(indexMain, lyr);
   mapToChange.layers().set(indexTransp, transp);
 };
@@ -102,15 +101,17 @@ var addSelectors = function (mapToChange, side, updateFun, position) {
     var labelSp = ui.Label('Select Species:', styleDropTitle);
     var labelVar = ui.Label('Select Variable:', styleDropTitle);
     var labelScen = ui.Label("Select Climate Scenario:", styleDropTitle);
-    var labelScen2 = ui.Label("(doesn't apply to current suitability)", 
-      {fontSize: '11px', padding: '1px 1px 1px 1px', margin: '1px'});
+    var labelScen2 = ui.Label("('Change' variables are only available for future time-periods)", 
+      {fontSize: '11px',
+      padding: '1px 1px 1px 1px', 
+      margin: '1px',
+      whiteSpace: 'normal',  // Allow text wrapping
+      width: '160px' });
 
     // Configure a selection dropdown to allow the user to choose
     // between images, and set the map to update when a user 
     // makes a selection.
     
-    // create partial selectVar so don't have cyclical dependendency
-    // this chunk of code sucks
     var selectSp = createSelectSp(mapToChange, updateFun, side);
     
     // Selector for species
