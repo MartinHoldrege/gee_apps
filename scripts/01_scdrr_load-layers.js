@@ -100,7 +100,7 @@ var loadLayer = function(varName, scenName, maskName) {
 
 exports.loadLayer = loadLayer
 exports.scenD = scenD;
-exports.vartTypeD = varTypeD;
+exports.varTypeD = varTypeD;
 exports.maskD = maskD;
 
 // testing  --------------------------------------------------
