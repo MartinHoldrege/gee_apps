@@ -120,7 +120,7 @@ var bulletsText = [
  " the threshold in the future. For more detailed explanation, please see Noel et al. (2025)." ,
  "Future climate conditions are represented by SSP2-4.5 (moderate emissions), SSP3-7.0" + 
  " (moderate-high emissions), and SSP5-8.5 (high emissions) scenarios for both mid-century" + 
- "(2041-2060) and end-century (2081–2100)."
+ " (2041-2060) and end-century (2081–2100)."
   ];
   
 
