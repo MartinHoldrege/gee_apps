@@ -36,7 +36,8 @@ var varTypeD = {
 
 // create masks;
 
-var c3 = load.getC3('historical');
+var c3 = load.getC3({scen: 'historical'});
+
 var maskD = {
   'Show all sagebrush rangelands': c3.gte(1).unmask(),
   'Only show current CSA': c3.eq(1).unmask(),
@@ -50,6 +51,7 @@ var maskD = {
 // for a given time-period (i.e. both sei and rr are for that time-period)
 
 // function factory
+
 var loadC3RrFactory = function(rrVar) {
   
   var f = function(scenName, maskName) {
@@ -58,6 +60,7 @@ var loadC3RrFactory = function(rrVar) {
       scenRr: scen,
       scenScd: scen,
       varName: rrVar, //  Resist-cats or Resil-cats
+      reproject: false,
       rr3class: true,
       remap: true
     });
@@ -82,7 +85,7 @@ var loadC3Resil = loadC3RrFactory('Resil-cats');
 // load functions for 'future' layers
 var loadFunsD = {
   'c3_resil': loadC3Resil,
-  'c3_resist': loadC3Resit
+  'c3_resist':loadC3Resist
 };
 
 // loads the layers for the given variable, species and scenario
@@ -93,5 +96,35 @@ var loadLayer = function(varName, scenName, maskName) {
   return f(scenName, maskName);
 };
 
-// Continue here
+// exports ---------------------------------------------------------------
 
+exports.loadLayer = loadLayer
+exports.scenD = scenD;
+exports.vartTypeD = varTypeD;
+exports.masksD = masksD;
+
+// testing  --------------------------------------------------
+ 
+ if (false) {
+  var scen = 'RCP45_2031-2060';
+  var image  = over.createC3RrOverlay({
+        scenRr: scen,
+        scenScd: scen,
+        varName: 'Resil-cats', //  Resist-cats or Resil-cats
+        rr3class: true,
+        remap: true
+      });
+    
+  // print(image)
+  // next steps--don't require reprojection for the app 
+   
+   
+   
+ var varName = Object.keys(varTypeD)[0];
+ var scenName = Object.keys(scenD)[0];
+ var maskName = Object.keys(maskD)[0];
+ print(varName, scenName, maskName)
+ Map.layers().add(loadLayer(varName, scenName, maskName));
+   
+   
+ }
