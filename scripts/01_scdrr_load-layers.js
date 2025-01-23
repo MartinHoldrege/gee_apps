@@ -84,9 +84,11 @@ var loadC3RrFactory = function(rrVar) {
     var scen = scenD[scenName];
     var image = over.createC3RrOverlay({
       scenRr: scen,
+      scenScd: scen,
       varName: rrVar, //  Resist-cats or Resil-cats
-      rr3Class: false,
-      remap: true
+      rr3Class: true,
+      reproject: false,
+      rmap: true
     });
     
     var mask = maskD[maskName];
@@ -117,11 +119,12 @@ var loadClassChangeFactory = function(rrVar) {
       scen: scen,
       varName: rrVar, //  Resist-cats or Resil-cats
       rr3class: false,
+      reproject: false
     });
     
     var mask = maskD[maskName];
     
-    var imageName = 'change in SEI and ' + rrVar + 'classes, ' + scen;
+    var imageName = 'change in SEI and ' + rrVar + ' classes, ' + scen;
     return ui.Map.Layer(image.updateMask(mask), figP.visClassChange1, imageName, true);
     
   };
@@ -152,14 +155,15 @@ var loadLayer = function(varName, scenName, maskName) {
 
 // exports ---------------------------------------------------------------
 
-exports.loadLayer = loadLayer
+exports.loadLayer = loadLayer;
 exports.scenD = scenD;
 exports.varTypeD = varTypeD;
 exports.maskD = maskD;
 exports.c3Hist = c3;
+
 // testing  --------------------------------------------------
  
- if (true) {
+ if (false) {
   var scen = 'RCP45_2031-2060';
   var image  = over.createC3RrOverlay({
         scenRr: scen,
@@ -174,10 +178,10 @@ exports.c3Hist = c3;
    
    
    
- var varName = Object.keys(varTypeD)[2];
- var scenName = Object.keys(scenD)[1];
+ var varName = Object.keys(varTypeD)[0];
+ var scenName = Object.keys(scenD)[0];
  var maskName = Object.keys(maskD)[0];
- print(varName, scenName, maskName)
+ print(varName, scenName, maskName);
  Map.layers().add(loadLayer(varName, scenName, maskName));
    
    
