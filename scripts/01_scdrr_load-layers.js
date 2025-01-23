@@ -31,7 +31,9 @@ var scenD = {
 
 var varTypeD = {
   'SEI class & resilience class overlay': 'c3_resil',
-  'SEI class & resistance class overlay': 'c3_resist'
+  'SEI class & resistance class overlay': 'c3_resist',
+  'Change in SEI and resilience classes': 'classChange_resil',
+  'Change in SEI and resistance classes': 'classChange_resist'
 };
 
 // create masks;
@@ -54,6 +56,7 @@ var maskD = {
   'Show all sagebrush rangelands': c3.gte(1).unmask(),
   'Only show current CSA': c3.eq(1).unmask(),
   'Only show current GOA': c3.eq(2).unmask(),
+  'Only show current ORA': c3.eq(3).unmask(),
   'Only show current L resistance': resist.eq(1),
   'Only show current LM resistance': resist.eq(2),
   'Only show current M+H resistance': resist.eq(3),
@@ -64,6 +67,11 @@ var maskD = {
 
 
 // load functions --------------------------------------------------------
+
+
+var loadEmpty = function() {
+  return ui.Map.Layer(ee.Image(0).selfMask(), {}, 'selected layer does not exist', false)
+}
 
 // load layers that provide the 9 categories of SEI class and RR class
 // for a given time-period (i.e. both sei and rr are for that time-period)
@@ -76,16 +84,14 @@ var loadC3RrFactory = function(rrVar) {
     var scen = scenD[scenName];
     var image = over.createC3RrOverlay({
       scenRr: scen,
-      scenScd: scen,
       varName: rrVar, //  Resist-cats or Resil-cats
-      reproject: false,
-      rr3class: true,
+      rr3Class: false,
       remap: true
     });
     
     var mask = maskD[maskName];
     
-    var imageName = 'SEI class, ' + 'rrVar ' + scen;
+    var imageName = 'SEI class, ' + rrVar + ' ' + scen;
     return ui.Map.Layer(image.updateMask(mask), figP.visC3Rr1, imageName, true);
     
   };
@@ -98,12 +104,42 @@ var loadC3Resist = loadC3RrFactory('Resist-cats');
 var loadC3Resil = loadC3RrFactory('Resil-cats');
 
 
+var loadClassChangeFactory = function(rrVar) {
+  
+  var f = function(scenName, maskName) {
+    
+    var scen = scenD[scenName];
+    
+    if (scen === 'historical') {
+      return loadEmpty();
+    }
+    var image = over.classChangeAgree({
+      scen: scen,
+      varName: rrVar, //  Resist-cats or Resil-cats
+      rr3class: false,
+    });
+    
+    var mask = maskD[maskName];
+    
+    var imageName = 'change in SEI and ' + rrVar + 'classes, ' + scen;
+    return ui.Map.Layer(image.updateMask(mask), figP.visClassChange1, imageName, true);
+    
+  };
+  
+  return f;
+};
+
+var loadClassChangeResil = loadClassChangeFactory('Resil-cats');
+var loadClassChangeResist = loadClassChangeFactory('Resist-cats');
+
 // Dictionary containing load functions ------------------------------------------------
 
 // load functions for 'future' layers
 var loadFunsD = {
   'c3_resil': loadC3Resil,
-  'c3_resist':loadC3Resist
+  'c3_resist':loadC3Resist,
+  'classChange_resil': loadClassChangeResil,
+  'classChange_resist': loadClassChangeResist
 };
 
 // loads the layers for the given variable, species and scenario
@@ -123,7 +159,7 @@ exports.maskD = maskD;
 exports.c3Hist = c3;
 // testing  --------------------------------------------------
  
- if (false) {
+ if (true) {
   var scen = 'RCP45_2031-2060';
   var image  = over.createC3RrOverlay({
         scenRr: scen,
