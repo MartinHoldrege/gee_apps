@@ -174,8 +174,8 @@ exports.c3Hist = c3;
    
    
    
- var varName = Object.keys(varTypeD)[0];
- var scenName = Object.keys(scenD)[0];
+ var varName = Object.keys(varTypeD)[2];
+ var scenName = Object.keys(scenD)[1];
  var maskName = Object.keys(maskD)[0];
  print(varName, scenName, maskName)
  Map.layers().add(loadLayer(varName, scenName, maskName));
