@@ -211,10 +211,13 @@ var getDefaultC9 = function(nameScen) {
   return image;
 };
 
-var loadC9 = function(nameRun, nameScen) {
+var loadC9 = function(nameRun, nameScen, returnImage) {
   // for now calculating on c9 on fly for Default, because the c9 asset has weird 
   // pyramiding that causes black dots on map at high pyramid levels
   // if (nameRun === 'Default') { 
+  if (returnImage === undefined || returnImage === null) {
+    var returnImage = false;
+  }
   if (false) {
     var c9 = getDefaultC9(nameScen);
   } else {
@@ -223,6 +226,9 @@ var loadC9 = function(nameRun, nameScen) {
     var c9 = SEI.calcTransitions(histSEI.select('Q5sc3'), futC3);
   }
   var imageName = 'c9_' + nameRun + '_' + scenD2[nameScen];
+  if(returnImage) {
+    return c9
+  }
   return ui.Map.Layer(c9, figP.visC9, imageName);
 };
 
