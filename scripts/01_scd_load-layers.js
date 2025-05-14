@@ -212,12 +212,13 @@ var getDefaultC9 = function(nameScen) {
 };
 
 var loadC9 = function(nameRun, nameScen, returnImage) {
+    if (returnImage === undefined || returnImage === null) {
+    var returnImage = false;
+  }
+  
   // for now calculating on c9 on fly for Default, because the c9 asset has weird 
   // pyramiding that causes black dots on map at high pyramid levels
   // if (nameRun === 'Default') { 
-  if (returnImage === undefined || returnImage === null) {
-    var returnImage = false;
-  }
   if (false) {
     var c9 = getDefaultC9(nameScen);
   } else {
@@ -227,7 +228,7 @@ var loadC9 = function(nameRun, nameScen, returnImage) {
   }
   var imageName = 'c9_' + nameRun + '_' + scenD2[nameScen];
   if(returnImage) {
-    return c9
+    return c9;
   }
   return ui.Map.Layer(c9, figP.visC9, imageName);
 };
@@ -265,6 +266,7 @@ exports.histLayersD = histLayersD;
 exports.histNamesD = histNamesD;
 exports.scenD = scenD;
 exports.histSEI = histSEI; 
+exports.loadC9 = loadC9;
 
 // testing
 
