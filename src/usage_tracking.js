@@ -133,4 +133,4 @@ exports.ping           = ping;
 exports.pingThrottled  = pingThrottled;
 
 // testing
-initVisit('test-no-app', 'visit', 0);
+// initVisit('test-no-app', 'visit', 0);
