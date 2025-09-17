@@ -24,7 +24,7 @@ var indexHist = 2;
 var indexStates = 3;
 // change to 'visit' when app is operational--for tracking ~ visits to this app 
 // (pasted into tag name used in google cloud metrics)
-var usageSuffix = 'test-visit' 
+var usageSuffix = 'visit' 
 var usageAppName = 'futuresei' // unique name for this app, (pasted into tag name used by cloud metrics)
 
 // dependencies -----------------------------------------------------------
