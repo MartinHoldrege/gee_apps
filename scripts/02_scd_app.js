@@ -362,4 +362,4 @@ ui.root.insert(1,legendsPanel);
 
 // usage ------------------------------------------------------------------------
 // Track approximate visits (one ping per load, deduped by 20 min)
-usage.initVisit(usageAppName, usageSuffix, 0);
+usage.initVisit(usageAppName, usageSuffix);
