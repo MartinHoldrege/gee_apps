@@ -13,8 +13,6 @@
  *       - If `minutes > 0` → dedupe per browser using localStorage
  *         (new ping only after `minutes` have passed).
  *
- *   sendVisitPing()
- *       - Fire a "visit" ping now (uses current appTag).
  *
  *   setAppTag(appTag)
  *       - Set default workload_tag for all computations.
@@ -106,14 +104,15 @@ function initVisit(appTag, suffix, minutes) {
 
   // Default to 20 minutes if minutes is undefined. minutes = 0 means "no dedupe".
   var windowMinutes = (minutes === undefined ? 20 : minutes);
-
+  var suffix2 = (suffix === undefined ? 'visit' : suffix);
+  
   if (!windowMinutes) {
     // minutes = 0: ping every load/run
     ping(suffix);
     return;
   }
 
-  var key = 'ee-visit-' + appTag;
+  var key = 'ee-' + appTag + '-' + suffix2;
   var now = Date.now();
   var maxAge = windowMinutes * 60 * 1000;
 
@@ -129,9 +128,9 @@ function initVisit(appTag, suffix, minutes) {
 // Exports
 exports.initVisit      = initVisit;
 // only need to export these if want to tag other actions in the app
-//exports.setAppTag      = setAppTag;
-//exports.ping           = ping;
-//exports.pingThrottled  = pingThrottled;
+exports.setAppTag      = setAppTag;
+exports.ping           = ping;
+exports.pingThrottled  = pingThrottled;
 
 // testing
 // initVisit('test-no-app', 'visit', 0);
