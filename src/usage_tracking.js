@@ -108,7 +108,7 @@ function initVisit(appTag, suffix, minutes) {
   
   if (!windowMinutes) {
     // minutes = 0: ping every load/run
-    ping(suffix);
+    ping(suffix2);
     return;
   }
 
@@ -133,4 +133,4 @@ exports.ping           = ping;
 exports.pingThrottled  = pingThrottled;
 
 // testing
-// initVisit('test-no-app', 'visit', 0);
+initVisit('test-no-app', 'visit', 0);
