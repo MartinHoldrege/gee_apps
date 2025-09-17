@@ -119,7 +119,7 @@ function initVisit(appTag, suffix, minutes) {
   // Use storage shim (localStorage in Apps; in-memory in Code Editor)
   var prev = Number(_store.getItem(key) || 0);
   if (!prev || (now - prev) > maxAge) {
-    sendVisitPing();
+    ping(suffix2);
     _store.setItem(key, String(now));
   }
 }
