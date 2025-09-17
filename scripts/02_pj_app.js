@@ -22,7 +22,7 @@ var indexStates = 3; // change to 3 when transparency added
 // change to 'visit' when app is operational--for tracking ~ visits to this app 
 // (pasted into tag name used in google cloud metrics)
 var usageSuffix = 'visit'; 
-var usageAppName = 'futurerr'; // unique name for this app, (pasted into tag name used by cloud metrics)
+var usageAppName = 'futurepj'; // unique name for this app, (pasted into tag name used by cloud metrics)
 // dependencies -----------------------------------------------------------
 
 // Load module with functions 
