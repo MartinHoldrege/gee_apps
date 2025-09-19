@@ -19,7 +19,10 @@ var indexBackground = 0;
 var indexMain = 1; // main map layer
 var indexTransp = 2; //transparency over the top
 var indexStates = 3; // change to 3 when transparency added
-
+// change to 'visit' when app is operational--for tracking ~ visits to this app 
+// (pasted into tag name used in google cloud metrics)
+var usageSuffix = 'visit'; 
+var usageAppName = 'futurepj'; // unique name for this app, (pasted into tag name used by cloud metrics)
 // dependencies -----------------------------------------------------------
 
 // Load module with functions 
@@ -29,6 +32,7 @@ var figF= require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
 var figP= require("users/MartinHoldrege/gee_apps:src/fig_params_pj.js");
 var load = require("users/MartinHoldrege/gee_apps:scripts/01_pj_load-layers.js");
 var descript = require("users/MartinHoldrege/gee_apps:scripts/01_pj_description.js");
+var usage = require("users/MartinHoldrege/gee_apps:src/usage_tracking.js"); // for usage tracking
 
 // setup dictionaries ---------------------------------------------------
 
@@ -242,7 +246,9 @@ legendsPanel.add(figP.legends);
 ui.root.insert(1,legendsPanel);
 
 
-
+// usage ------------------------------------------------------------------------
+// Track approximate visits (one ping per load, deduped by 20 min)
+usage.initVisit(usageAppName, usageSuffix);
 
 
 

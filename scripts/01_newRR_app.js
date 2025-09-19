@@ -13,6 +13,7 @@ var figP = require("users/MartinHoldrege/gee_apps:src/fig_params_newRR.js");
 var f = require("users/MartinHoldrege/gee_apps:src/general_functions.js");
 var figF = require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
 var figPScd = require("users/MartinHoldrege/SEI:src/fig_params.js");
+var usage = require("users/MartinHoldrege/gee_apps:src/usage_tracking.js"); // for usage tracking
 
 // params ---------------------------------------------------------------------------------
 
@@ -28,6 +29,12 @@ var visT3 = figP.visT3; // type 3
 
 
 var testRun = false; // fewer images displayed for test run
+
+// change to 'visit' when app is operational--for tracking ~ visits to this app 
+// (pasted into tag name used in google cloud metrics)
+var usageSuffix = 'visit'; 
+var usageAppName = 'futurerr'; // unique name for this app, (pasted into tag name used by cloud metrics)
+
 // read in layers ---------------------------------------------------------------------------
 
 // the mask ingested with a 'sample' pyramid scheme 
@@ -462,3 +469,6 @@ var secondPanel = ui.Panel({widgets: [maskCheckbox, backgroundCheckbox]});
 ui.root.insert(1, secondPanel.add(figP.legendsRr));
 
 
+// usage ------------------------------------------------------------------------
+// Track approximate visits (one ping per load, deduped by 20 min)
+usage.initVisit(usageAppName, usageSuffix);

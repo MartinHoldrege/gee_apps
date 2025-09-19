@@ -22,6 +22,10 @@ var indexBackground = 0;
 var indexFut = 1; 
 var indexHist = 2;
 var indexStates = 3;
+// change to 'visit' when app is operational--for tracking ~ visits to this app 
+// (pasted into tag name used in google cloud metrics)
+var usageSuffix = 'visit'; 
+var usageAppName = 'futuresei'; // unique name for this app, (pasted into tag name used by cloud metrics)
 
 // dependencies -----------------------------------------------------------
 
@@ -33,6 +37,7 @@ var f = require("users/MartinHoldrege/gee_apps:src/general_functions.js");
 var figP= require("users/MartinHoldrege/gee_apps:src/fig_params_scd.js");
 var load = require("users/MartinHoldrege/gee_apps:scripts/01_scd_load-layers.js");
 var descript = require("users/MartinHoldrege/gee_apps:scripts/01_scd_description.js");
+var usage = require("users/MartinHoldrege/gee_apps:src/usage_tracking.js"); // for usage tracking
 
 // setup dictionaries ---------------------------------------------------
 
@@ -355,3 +360,6 @@ legendsPanel.add(legendsTitle);
 legendsPanel.add(figP.legends);
 ui.root.insert(1,legendsPanel);
 
+// usage ------------------------------------------------------------------------
+// Track approximate visits (one ping per load, deduped by 20 min)
+usage.initVisit(usageAppName, usageSuffix);
