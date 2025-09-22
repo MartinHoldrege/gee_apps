@@ -125,7 +125,7 @@ visD.clim_adap = {min: 1, max: 8, palette: colsClimAdap};
 exports.visD = visD; 
 
 // legends ---------------------------------------------------------------------------------
- /*
+
 
 // styles for legend elements
 var styleLegendTitle = {
@@ -143,7 +143,7 @@ var legends = ui.Panel({
     padding: '4px'
   }
 });
-
+ /*
 // suitability
 // continue here
 var legends = figF.makeVisParamsRampLegend2({
@@ -180,9 +180,11 @@ var legends = figF.makeRowLegend(
   styleLegendTitle
   );
 
+*/
+
 exports.legends = legends; 
 
-*/
+
 // testing
 // Map.add(legends);
 
