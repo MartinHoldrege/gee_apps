@@ -3,6 +3,7 @@
 // dependencies ----------------------------------------------------------------------------
 
 var figP = require("users/MartinHoldrege/gee_apps:src/fig_params_pjcom.js");
+var f = require("users/MartinHoldrege/gee_apps:src/general_functions.js");
 
 // parameters ------------------------------------------------------------------------------
 // load data (to put in own scripts)
@@ -34,17 +35,9 @@ var varTypeD = {
   'Climate adaptation category*': 'clim_adap_category'
 };
 
-var reverseDictionary = function(x) {
-  var reverse = {};
-  for (var k in x) {
-    if (x.hasOwnProperty(k)) {
-      reverse[x[k]] = k;
-    }
-  }
-  return  reverse;
-};
+
 // reverse dictionary: value → key
-var reverseVarTypeD = reverseDictionary(varTypeD);
+var reverseVarTypeD = f.reverseDictionary(varTypeD);
 
 // variables that don't have values for current climate conditions (future only)
 var varFutOnly = ['hcfs', 'cs_hcfs_biclass', 'cs_bp_biclass', 'clim_adap_category'];
