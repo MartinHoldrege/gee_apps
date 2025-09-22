@@ -63,9 +63,20 @@ var listIncludes = function(list, item) {
 
 exports.listIncludes = listIncludes;
 
+
 /*
 // Example:
 var x = ['a', 'b']
 print(listIncludes(x, 'b'))
 print(listIncludes(x, 'c'))
 */
+
+exports. reverseDictionary = function(x) {
+  var reverse = {};
+  for (var k in x) {
+    if (x.hasOwnProperty(k)) {
+      reverse[x[k]] = k;
+    }
+  }
+  return  reverse;
+};
