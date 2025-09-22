@@ -58,7 +58,11 @@ var varFutOnly = ['hcfs', 'cs_hcfs_biclass', 'cs_bp_biclass', 'clim_adap_categor
 var blankImage = ee.Image(0).selfMask().rename('layer does not exist');
 
 var blankLayer = function() {
-  ui.Map.Layer(blankImage, {}, 'layer does not exist', false);
+  return ui.Map.Layer(blankImage, {}, 'layer does not exist', false);
+};
+
+var layerLabel = function(varName, scenName) {
+  return varName + ' — ' + scenName;
 };
 
 // load the band of the image of interest
@@ -75,11 +79,16 @@ var loadBand = function(varName, scenName) {
   var bandName = varType + '_' + scen;
   var imgBand;
   if (scen === 'current' && varFutOnly.includes(varType)) {
-    imgBand = blankImage;
-  } else {
-    imgBand = img.select(bandName);
-  }
-  return imgBand;
+    return blankImage;
+  } 
+  
+  // Safe select: if band doesn’t exist, return a masked image
+  var hasBand = img.bandNames().contains(bandName);
+  return ee.Image(ee.Algorithms.If(
+    hasBand,
+    img.select(bandName),
+    blankImage
+  ));
 };
 
 var loadCsMog = function(scenName) {
@@ -96,9 +105,9 @@ var loadCsMog = function(scenName) {
       [1, 2, 3, 4, 5, 6, 7, 8],
       [1, 2, 3, 5, 6, 7, 8, 9]
       )
-      .rename(name[0]);
+      .rename(name.get(0));
   }
-  return ui.Map.Layer(img, visD[varType], img.bandNames());
+  return ui.Map.Layer(img, visD[varType], layerLabel(varName, scenName));
 };
 
 var loadCsHcfs = function(scenName) {
@@ -113,12 +122,12 @@ var loadCsHcfs = function(scenName) {
   // apply to an image
   var remapped = img.remap(from, to)
     .updateMask(img.remap(from, to).neq(-9999))
-    .rename(name[0]);
-  return ui.Map.Layer(img, visD[varType], img.bandNames());
+    .rename(name.get(0));
+  return ui.Map.Layer(remapped, visD[varType], layerLabel(varName, scenName));
 };
 
 var loadCsBp = function(scenName) {
-  var varType = 'cs_bp_biclasss';
+  var varType = 'cs_bp_biclass';
   var varName = reverseVarTypeD[varType];
   var img = loadBand(varName, scenName);
 
@@ -130,8 +139,8 @@ var loadCsBp = function(scenName) {
   // apply to an image
   var remapped = img.remap(from, to)
     .updateMask(img.remap(from, to).neq(-9999))
-    .rename(name[0]);
-  return ui.Map.Layer(img, visD[varType], img.bandNames());
+    .rename(name.get(0));
+  return ui.Map.Layer(remapped, visD[varType], layerLabel(varName, scenName));
 };
 
 // function factory, for load functions for variables that don't need additional custom
@@ -140,8 +149,7 @@ var loadFactory = function(varType) {
   var f = function(scenName) {
     var varName = reverseVarTypeD[varType];
     var img = loadBand(varName, scenName);
-    var name = img.bandNames()[0];
-    return ui.Map.Layer(img, visD[varType], name);
+    return ui.Map.Layer(img, visD[varType], layerLabel(varName, scenName));
   };
   return f;
 };
@@ -181,7 +189,6 @@ exports.scenD = scenD;
 var scenName = Object.keys(scenD)[1];
 var varName = Object.keys(varTypeD)[1];
 
-// Map.layers().add(loadSuit(spName, scenName));
 Map.layers().add(loadLayer(varName, scenName));
 
 
