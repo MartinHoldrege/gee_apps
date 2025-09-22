@@ -182,40 +182,40 @@ exports.scenD = scenD;
 
 if (false) {
 
-// Clear existing layers to avoid duplicates when re-running.
-Map.clear();
-
-// Collect keys (display names) from your dictionaries.
-var varNames  = Object.keys(varTypeD); // e.g., "Community suitability", ...
-var scenNames = Object.keys(scenD);    // e.g., "Current climate", "SSP2-4.5 (2041–2060)", ...
-
-// Optional: a faint divider layer function for visual grouping.
-var dividerLayer = function(title) {
-  // very transparent, invisible "divider" layer with a title only
-  return ui.Map.Layer(blankImage, {}, '—— ' + title + ' ——', false);
-};
-
-// Loop over variables, add a header, then add each scenario layer (hidden by default).
-for (var i = 0; i < varNames.length; i++) {
-  var varName = varNames[i];
-
-  // Group header for this variable
-  Map.layers().add(dividerLayer(varName));
-
-  for (var j = 0; j < scenNames.length; j++) {
-    var scenName = scenNames[j];
-
-    // Build the layer via your loader
-    var layer = loadLayer(varName, scenName);
-
-    // Safety: ensure we got a Layer (your loaders already return a Layer)
-    // Then add it hidden by default to keep the map readable.
-    if (layer) {
-      layer.setShown(false);
-      Map.layers().add(layer);
+  // Clear existing layers to avoid duplicates when re-running.
+  Map.clear();
+  
+  // Collect keys (display names) from your dictionaries.
+  var varNames  = Object.keys(varTypeD); // e.g., "Community suitability", ...
+  var scenNames = Object.keys(scenD);    // e.g., "Current climate", "SSP2-4.5 (2041–2060)", ...
+  
+  // Optional: a faint divider layer function for visual grouping.
+  var dividerLayer = function(title) {
+    // very transparent, invisible "divider" layer with a title only
+    return ui.Map.Layer(blankImage, {}, '—— ' + title + ' ——', false);
+  };
+  
+  // Loop over variables, add a header, then add each scenario layer (hidden by default).
+  for (var i = 0; i < varNames.length; i++) {
+    var varName = varNames[i];
+  
+    // Group header for this variable
+    Map.layers().add(dividerLayer(varName));
+  
+    for (var j = 0; j < scenNames.length; j++) {
+      var scenName = scenNames[j];
+  
+      // Build the layer via your loader
+      var layer = loadLayer(varName, scenName);
+  
+      // Safety: ensure we got a Layer (your loaders already return a Layer)
+      // Then add it hidden by default to keep the map readable.
+      if (layer) {
+        layer.setShown(false);
+        Map.layers().add(layer);
+      }
     }
   }
-}
 
 } // end testing
 
