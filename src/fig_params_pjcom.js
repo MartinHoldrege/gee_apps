@@ -9,12 +9,43 @@
 // dependencies --------------------------------------------------------------------------
 
 var figF = require("users/MartinHoldrege/gee_apps:src/fig_functions.js");
+
 // Get a palette: a list of hex strings
 var palettes = require('users/gena/packages:palettes');
 
 // colors and visualization parameters----------------------------------------------------------
 
 // community suitability & mature and old growth
+var viridis = palettes.matplotlib.viridis[7];
+var visD = {}; // dictionary containing visualizion elements
+
+visD.cs = {min: 0, max: 5.6, palette: viridis};
+visD.hcfs = {min: 0, max: 1, palette: viridis};
+
+var labelsCsHcfs = [
+  'high CS & high HCFS',   // 1
+  'high CS & low HCFS',    // 2
+  'high CS & medium HCFS', // 3
+  'low CS & high HCFS',    // 4
+  'low CS & low HCFS',     // 5
+  'low CS & medium HCFS',  // 6
+  'medium CS & high HCFS', // 7
+  'medium CS & low HCFS',  // 8
+  'medium CS & medium HCFS'// 9
+];
+
+var colsCsHcfs = [
+  '#174f28', // 1 = high CS & high HCFS
+  '#169dd0', // 2 = high CS & low HCFS
+  '#167984', // 3 = high CS & medium HCFS
+  '#dd6a29', // 4 = low CS & high HCFS
+  '#d3d3d3', // 5 = low CS & low HCFS
+  '#d8a386', // 6 = low CS & medium HCFS
+  '#845e29', // 7 = medium CS & high HCFS
+  '#7ebbd2', // 8 = medium CS & low HCFS
+  '#819185'  // 9 = medium CS & medium HCFS
+];
+visD.cs_hcfs_biclass = {min: 1, max: 9, palette: colsCsHcfs};
 
 var labelsCsMog = [
   'high CS & high MOG',
@@ -40,31 +71,7 @@ var colsCsMog = [
   '#806a8a'
 ];
 
-var labelsCsHcfs = [
-  'high CS & high HCFS',   // 1
-  'high CS & low HCFS',    // 2
-  'high CS & medium HCFS', // 3
-  'low CS & high HCFS',    // 4
-  'low CS & low HCFS',     // 5
-  'low CS & medium HCFS',  // 6
-  'medium CS & high HCFS', // 7
-  'medium CS & low HCFS',  // 8
-  'medium CS & medium HCFS'// 9
-];
-
-
-var colsCsHcfs = [
-  '#174f28', // 1 = high CS & high HCFS
-  '#169dd0', // 2 = high CS & low HCFS
-  '#167984', // 3 = high CS & medium HCFS
-  '#dd6a29', // 4 = low CS & high HCFS
-  '#d3d3d3', // 5 = low CS & low HCFS
-  '#d8a386', // 6 = low CS & medium HCFS
-  '#845e29', // 7 = medium CS & high HCFS
-  '#7ebbd2', // 8 = medium CS & low HCFS
-  '#819185'  // 9 = medium CS & medium HCFS
-];
-
+visD.cs_mog_biclass = {min: 1, max: 9, palette: colsCsMog};
 
 var labelsCsBp = [
   'high CS & high BP',    // 1
@@ -78,7 +85,6 @@ var labelsCsBp = [
   'medium CS & medium BP' // 9
 ];
 
-
 var colsCsBp = [
   '#4c6e01', // 1
   '#488fb0', // 2
@@ -91,8 +97,9 @@ var colsCsBp = [
   '#929f6c'  // 9
 ];
 
+visD.cs_bp_biclass = {min: 1, max: 9, palette: colsCsBp};
 
-var labelsClimAdapt = [
+var labelsClimAdap = [
   'category A', // 1
   'category B', // 2
   'category C', // 3
@@ -103,7 +110,7 @@ var labelsClimAdapt = [
   'category H'  // 8
 ];
 
-var colsClimAdapt = [
+var colsClimAdap = [
   '#27408B', // 1
   '#87CEEB', // 2
   '#006400', // 3
@@ -114,11 +121,11 @@ var colsClimAdapt = [
   '#EECFA1'  // 8
 ];
 
-
-
+visD.clim_adap = {min: 1, max: 8, palette: colsClimAdap};
+exports.visD = visD; 
 
 // legends ---------------------------------------------------------------------------------
-
+ /*
 
 // styles for legend elements
 var styleLegendTitle = {
@@ -175,6 +182,7 @@ var legends = figF.makeRowLegend(
 
 exports.legends = legends; 
 
+*/
 // testing
 // Map.add(legends);
 
