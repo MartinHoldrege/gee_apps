@@ -44,8 +44,12 @@ var blankLayer = function() {
 
 // load the image that has multipbe bands (i.e. one for each variable, and the transparency/mask layer)
 var loadImage = function(varType) {
-  
-  var imagePath = path + spD[spName] + '_suitability_layers_01102025';
+  var imagePath;
+  if (varType === 'cs' || varType === 'hcfs') {
+    imagePath = path + 'pj_overlay_fullwest_export_categorical_layers_v2';
+  } else {
+    imagePath = path + 'pj_overlay_fullwest_numeric_layers';
+  }
   return ee.Image(imagePath);
 };
 
