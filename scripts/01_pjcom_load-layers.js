@@ -2,7 +2,7 @@
 
 // dependencies ----------------------------------------------------------------------------
 
-var figP = require("users/MartinHoldrege/gee_apps:src/fig_params_pj.js");
+var figP = require("users/MartinHoldrege/gee_apps:src/fig_params_pjcom.js");
 
 
 // parameters ------------------------------------------------------------------------------
@@ -13,10 +13,9 @@ var path = 'projects/ee-martinholdrege/assets/misc/pjcom/'; // where images are 
 // helper dictionaries -----------------------------------------------------------
 // for various 'lookup' tasks
 
-// names of the different types of runs
+var visD = figP.visD; // dictionary of visualization parameters
 
-
-// scenarios
+// names of the different types scenarios
 var scenD = {
   'Current climate': 'current',
   'SSP2-4.5 (2041–2060)': '245mid',
@@ -27,143 +26,163 @@ var scenD = {
   'SSP5-8.5 (2081–2100)': '585end',
 };
 
+// variables
 var varTypeD = {
   'Community suitability': 'cs',
-  'HCFS (historic contribution to future suitability, a measure of refugia potential)' :'hcfs',
-  'Community suitability & HCFS': 'cs_hcfs_biclass',
+  'HCFS (historic contribution to future suitability, a measure of refugia potential)*' :'hcfs',
+  'Community suitability & HCFS*': 'cs_hcfs_biclass',
   'Community suitability & PJ MOG (mature & old-growth)': 'cs_mog_biclass',
   'Community suitability & BP (burn probability)': 'cs_bp_biclass',
-  'Climate adaptation category': 'clim_adap_category'
+  'Climate adaptation category*': 'clim_adap_category'
 };
+
+var reverseDictionary = function(x) {
+  var reverse = {};
+  for (var k in x) {
+    if (x.hasOwnProperty(k)) {
+      reverse[x[k]] = k;
+    }
+  }
+  return  reverse;
+};
+// reverse dictionary: value → key
+var reverseVarTypeD = reverseDictionary(varTypeD);
+print(reverseVarTypeD);
+
+
+// variables that don't have values for current climate conditions (future only)
+var varFutOnly = ['hcfs', 'cs_hcfs_biclass', 'cs_bp_biclass', 'clim_adap_category'];
 
 // load functions ------------------------------------------------------------
 
+var blankImage = ee.Image(0).selfMask().rename('layer does not exist');
+
 var blankLayer = function() {
-  ui.Map.Layer(ee.Image(0).selfMask(), {}, 'layer does not exist', false);
+  ui.Map.Layer(blankImage, {}, 'layer does not exist', false);
 };
 
-// load the image that has multipbe bands (i.e. one for each variable, and the transparency/mask layer)
-var loadImage = function(varType) {
+// load the band of the image of interest
+var loadBand = function(varName, scenName) {
+  var varType = varTypeD[varName];
+  var scen = scenD[scenName];
   var imagePath;
   if (varType === 'cs' || varType === 'hcfs') {
-    imagePath = path + 'pj_overlay_fullwest_export_categorical_layers_v2';
-  } else {
     imagePath = path + 'pj_overlay_fullwest_numeric_layers';
-  }
-  return ee.Image(imagePath);
-};
-
-var loadTransp = function(varName, spName, scenName) {
-  var varType = varTypeD[varName]
-  // don't want the transparency to load if there is no actual data layer
-  if(varType !== 'suitability' & scenD[scenName] === 'current') {
-    return blankLayer();
-  }
-  
-  var img = loadImage(spName);
-  var mask = img.select('current_suitability').gte(ee.Image(-1)) 
-    .unmask(); // exclude non study area places
-  var transparency = ee.Image(0)
-    // these are places that should be covered by a white transparency layer
-    // ie. to partially obscure areas where the sp. isn't currently found
-    .where(img.select('transparency_mask_binary').eq(1), ee.Image(0.5))
-    .selfMask()
-    .updateMask(mask);
-    
-  var cover = ee.Image(1).mask(transparency);
-  
-  if(varType === 'suitability_change') {
-    var palette = '#CCCCCC'
   } else {
-    var palette = 'white';
+    imagePath = path + 'pj_overlay_fullwest_export_categorical_layers_v2';
   }
-    
-  return ui.Map.Layer(cover, {palette: palette}, 'add transparency to area outside current range');
-};
-
-var loadSuit =  function(spName, scenName) {
-  var scen = scenD[scenName];
-  
-  if (scen === 'current') {
-    var lyrName = 'current_suitability';
+  var img = ee.Image(imagePath);
+  var bandName = varType + '_' + scen;
+  var imgBand;
+  if (scen === 'current' && varFutOnly.includes(varType)) {
+    imgBand = blankImage;
   } else {
-    var lyrName = 'suitability_' + scen;
+    imgBand = img.select(bandName);
   }
- 
-  var image = loadImage(spName);
-  
-  var img = ee.Image(image).select(lyrName); 
-  var imageName = spD[spName] + '_' + lyrName;
-  return ui.Map.Layer(img, figP.visCurSuit, imageName);
+  return imgBand;
 };
 
-
-var loadDeltaSuit = function(spName, scenName) {
-
+var loadCsMog = function(scenName) {
+  var varType = 'cs_mog_biclass';
+  var varName = reverseVarTypeD[varType];
+  var img = loadBand(varName, scenName);
   var scen = scenD[scenName];
   
-  // delta layers can't have 'current' values
-  if (scen === 'current') {
-    return blankLayer()
+  if(scen === 'current') {
+  // The "cs_mog_biclass_current" layer is missing a category, and integer values are slightly different,
+  // so remapping to make it match the others
+    var name = img.bandNames();
+    img = img.remap(
+      [1, 2, 3, 4, 5, 6, 7, 8],
+      [1, 2, 3, 5, 6, 7, 8, 9]
+      )
+      .rename(name[0]);
   }
-  var image = loadImage(spName);
-  var lyrName = 'suitability_change_' + scen;
-  var img = ee.Image(image).select(lyrName); 
-  var imageName = spD[spName] + '_' + lyrName;
-  return ui.Map.Layer(img, figP.visDeltaSuit, imageName);
+  return ui.Map.Layer(img, visD[varType], img.bandNames());
 };
 
+var loadCsHcfs = function(scenName) {
+  var varType = 'cs_hcfs_biclass';
+  var varName = reverseVarTypeD[varType];
+  var img = loadBand(varName, scenName);
 
-var loadDeltaRobust = function(spName, scenName) {
-
-  var scen = scenD[scenName];
-    // delta layers can't have 'current' values
-  if (scen === 'current') {
-    return blankLayer();
-  }
-  var image = loadImage(spName);
-  var lyrName = 'robust_category_' + scen;
-  var img = ee.Image(image).select(lyrName); 
-  var imageName = spD[spName] + '_' + lyrName;
-  return ui.Map.Layer(img, figP.visDeltaRobust, imageName);
+  // original values → new values
+  var from = [1, 2, 3, 4,  5, 6, 7, 8,  9, 10, 11, 12, 13];
+  var to   = [1, 2, 3, -9999, 4, 5, 6, -9999, 7, 8, 9, -9999, -9999];
+  var name = img.bandNames();
+  // apply to an image
+  var remapped = img.remap(from, to)
+    .updateMask(img.remap(from, to).neq(-9999))
+    .rename(name[0]);
+  return ui.Map.Layer(img, visD[varType], img.bandNames());
 };
 
-// Dictionary containing load functions ------------------------------------------------
+var loadCsBp = function(scenName) {
+  var varType = 'cs_bp_biclasss';
+  var varName = reverseVarTypeD[varType];
+  var img = loadBand(varName, scenName);
 
-// load functions for 'future' layers
+  // original values → new values
+  var from = [ 1,  2,  3,     4, 5,  6,  7,     8, 9, 10, 11,    12,    13,    14,    15,    16];
+  var to   = [ 1,  2,  3, -9999, 4,  5,  6, -9999, 7,  8,  9, -9999, -9999, -9999, -9999, -9999];
+
+  var name = img.bandNames();
+  // apply to an image
+  var remapped = img.remap(from, to)
+    .updateMask(img.remap(from, to).neq(-9999))
+    .rename(name[0]);
+  return ui.Map.Layer(img, visD[varType], img.bandNames());
+};
+
+// function factory, for load functions for variables that don't need additional custom
+// modifications to visualize
+var loadFactory = function(varType) {
+  var f = function(scenName) {
+    var varName = reverseVarTypeD[varType];
+    var img = loadBand(varName, scenName);
+    var name = img.bandNames()[0];
+    return ui.Map.Layer(img, visD[varType], name);
+  };
+  return f;
+};
+
+// dictionary of custom load functions for some variables, 
+// other variables rely on the generic load function
 var loadFunsD = {
-  'suitability': loadSuit,
-  'suitability_change': loadDeltaSuit,
-  'robust_category': loadDeltaRobust
-};
+  'cs': loadFactory('cs'),
+  'hcfs': loadFactory('hcfs'),
+  'cs_mog_biclass': loadCsMog,
+  'cs_hcfs_biclass': loadCsHcfs,
+  'cs_bp_biclass': loadCsBp,
+  'clim_adap_category': loadFactory('clim_adap_category'),
+}; 
 
-// loads the layers for the given variable, species and scenario
-var loadLayer = function(varName, spName, scenName) {
-  
-  var varType = varTypeD[varName];
+var loadLayer = function(varName, scenName) {
+  var  varType = varTypeD[varName];
+  var scen = scenD[scenName];
+  if (scen === 'current' && varFutOnly.includes(varType)) {
+    return blankLayer();
+  }
   var f = loadFunsD[varType];
-  return f(spName, scenName);
+  return f(scenName);
 };
 
 
 // exports ---------------------------------------------------------------
 
 exports.loadLayer = loadLayer;
-exports.spD = spD;
 exports.varTypeD = varTypeD;
 exports.scenD = scenD;
-exports.loadTransp = loadTransp;
-exports.exampleImage = ee.Image(path + 'pinus_edulis_gee_test_layers_01072025'); // this is just temporary
+
 
 // testing
-/*
-var spName = Object.keys(spD)[0];
-var scenName = Object.keys(scenD)[0];
-var varName = Object.keys(varTypeD)[1];
-print(spName, scenName, varName)
-// Map.layers().add(loadSuit(spName, scenName));
-Map.layers().add(loadLayer(varName, spName, scenName));
-// Map.layers().add(loadDeltaRobust(spName, scenName));
-// Map.layers().add(loadTransp(spName));
 
-*/
+
+var scenName = Object.keys(scenD)[1];
+var varName = Object.keys(varTypeD)[1];
+
+// Map.layers().add(loadSuit(spName, scenName));
+Map.layers().add(loadLayer(varName, scenName));
+
+
+
