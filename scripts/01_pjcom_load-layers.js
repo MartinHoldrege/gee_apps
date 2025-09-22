@@ -169,7 +169,7 @@ var loadLayer = function(varName, scenName) {
 exports.loadLayer = loadLayer;
 exports.varTypeD = varTypeD;
 exports.scenD = scenD;
-
+exports.path = path;
 
 // ---------- TEST: add all combinations of varName × scenName ----------
 
